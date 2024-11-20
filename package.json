@@ -7,18 +7,32 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.2.0",
+    "@miraiui-org/theme": "1.0.0-alpha.7",
+    "@miraiui-org/vue-button": "1.0.0-alpha.6",
+    "@miraiui-org/vue-message": "1.0.0-alpha.6",
+    "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@prisma/nuxt": "^0.0.35",
+    "@types/node": "^22.9.1",
+    "http-status": "^2.0.0",
     "nuxt": "^3.14.159",
+    "prisma": "^5.22.0",
     "vue": "latest",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "zod": "^3.23.8"
   },
   "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903",
   "devDependencies": {
+    "@nuxt/eslint": "^0.7.1",
     "@prisma/client": "^5.22.0",
-    "@sidebase/nuxt-auth": "^0.9.4"
+    "@sidebase/nuxt-auth": "^0.9.4",
+    "eslint": "^9.15.0",
+    "typescript": "^5.6.3",
+    "vite-plugin-eslint2": "^5.0.2"
   }
 }
