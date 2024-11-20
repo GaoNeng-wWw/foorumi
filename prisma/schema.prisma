@@ -7,32 +7,32 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "./db.db"
+  url      = "file:./db.db"
 }
 
 // Just used login 
 // Separate hotspots
 model Account {
   // Account id
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   // Email login use
-  email      String   @unique
+  email      String    @unique
   // Password login use
   password   String
   // bcrypt used
   salt       String
   // Ban flag
-  ban        Boolean  @default(false)
+  ban        Boolean   @default(false)
   // Ban reason
-  reason     String
+  reason     String?
   // Expire
-  ban_expire DateTime
+  ban_expire DateTime?
 
   create_at DateTime @default(now())
   update_at DateTime @updatedAt
 
   // Account Profile
-  Profile Profile?
+  profile Profile?
 }
 
 // Store permission name,description and relation
@@ -53,11 +53,11 @@ model Permission {
 // Permission set
 model Role {
   // Role id
-  id   Int    @id @default(autoincrement())
+  id         Int          @id @default(autoincrement())
   // Role name
-  name String
+  name       String
   // Role description
-  desc String
+  desc       String
   // Who has this role
   profile    Profile[]
   // What perrmisions for this role
@@ -70,7 +70,7 @@ model Role {
 // Profile in bbs, Other user only can get profile (if not have sufficient permissions)
 model Profile {
   // Profile id
-  id Int @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   // Profile name
   name       String
   // Bio
@@ -82,11 +82,11 @@ model Profile {
   create_at DateTime @default(now())
   update_at DateTime @updatedAt
 
-  Post Post[]
-  Thread Thread[]
-  Reply Reply[]
-  role Role[]
-  area Area[]
+  post   Post[]
+  thread Thread[]
+  reply  Reply[]
+  role   Role[]
+  area   Area[]
 }
 
 // Post set, can have many subarea.
@@ -111,18 +111,18 @@ model Post {
   id Int @id @default(autoincrement())
 
   // title of post
-  title     String
-  
+  title String
+
   // Summary that other users can see without clicking on it
-  content   String
+  content String
 
   author_id Int     @unique
   author    Profile @relation(fields: [author_id], references: [id])
 
   // if hidden is true, only manager, site admin and have users with corresponding permissions can visit
-  hidden        Boolean
+  hidden        Boolean?
   // if hidden is true, Users without corresponding permissions only see "hidden reason"
-  hidden_reason Boolean
+  hidden_reason Boolean?
 
   // Area id
   aid Int
@@ -130,7 +130,6 @@ model Post {
   create_at DateTime @default(now())
   update_at DateTime @updatedAt
 }
-
 
 // A user click post
 // Sent a new post within the post
@@ -140,9 +139,9 @@ model Thread {
   id Int @id @default(autoincrement())
 
   content String
-  
+
   // In which post should this post be displayed
-  parent  Int
+  parent Int
 
   author_id Int     @unique
   author    Profile @relation(fields: [author_id], references: [id])
