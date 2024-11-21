@@ -67,7 +67,7 @@ const onClick = () => {
 
 <template>
   <div
-    class="w-full flex gap-2 group"
+    class="w-full flex gap-2 group h-full"
     :class="{
       'flex-col': labelPosition === 'top',
     }"
@@ -84,6 +84,9 @@ const onClick = () => {
         'bg-default': !error,
       }"
     >
+      <div>
+        <slot name="prefix" />
+      </div>
       <input
         v-model="modelValue"
         class="w-full outline-none border-none text-foreground transition bg-transparent"

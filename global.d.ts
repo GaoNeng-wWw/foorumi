@@ -6,3 +6,8 @@ declare interface ApiCommonError {
     error: string;
   };
 }
+
+declare interface SiteMeta {
+  siteName: string;
+  siteLogo: never; // not implment
+}
