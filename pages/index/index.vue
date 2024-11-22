@@ -6,6 +6,7 @@ import { Button as MButton } from '@miraiui-org/vue-button';
   <nuxt-layout
     name="side"
     aisde-sticky
+    direction="rtl"
   >
     <div class="w-full py-4 space-y-4">
       <post-item
@@ -19,7 +20,7 @@ import { Button as MButton } from '@miraiui-org/vue-button';
     <template
       #aside
     >
-      <div class="hidden sm:block">
+      <div class="hidden py-2 sm:block">
         <div>
           <m-button :type="'primary'">
             发布帖子
