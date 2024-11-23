@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/eslint',
     '@nuxtjs/color-mode',
+    '@nuxt/test-utils/module',
   ],
   devtools: { enabled: true },
   colorMode: {
