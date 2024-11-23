@@ -16,6 +16,7 @@
     "@miraiui-org/vue-button": "1.0.0-alpha.6",
     "@miraiui-org/vue-message": "1.0.0-alpha.6",
     "@miraiui-org/vue-tag": "1.0.0-alpha.6",
+    "@miraiui-org/vue-transition-collapse": "1.0.0-alpha.8",
     "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@prisma/nuxt": "^0.0.35",

@@ -102,6 +102,8 @@ model Area {
 
   create_at DateTime @default(now())
   update_at DateTime @updatedAt
+
+  post Post[]
 }
 
 // Articles published by users in designated areas
@@ -125,10 +127,16 @@ model Post {
   hidden_reason Boolean?
 
   // Area id
-  aid Int
+  aid  Int
+  area Area @relation(fields: [aid], references: [id])
+
+  floor Int     @default(1)
+  pin   Boolean
 
   create_at DateTime @default(now())
   update_at DateTime @updatedAt
+
+  @@index([update_at])
 }
 
 // A user click post

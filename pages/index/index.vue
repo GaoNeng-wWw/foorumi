@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import { Button as MButton } from '@miraiui-org/vue-button';
+import { useAreaTree } from '~/composable/useAreaTree';
+
+const { treeData } = useAreaTree();
 </script>
 
 <template>
@@ -20,11 +23,18 @@ import { Button as MButton } from '@miraiui-org/vue-button';
     <template
       #aside
     >
-      <div class="hidden py-2 sm:block">
+      <div class="py-4 flex flex-col gap-4">
         <div>
           <m-button :type="'primary'">
             发布帖子
           </m-button>
+        </div>
+        <div class="opacity-80 hover:opacity-100 transition duration-normal">
+          <tree-context @node-click="console.log">
+            <tree
+              :data="treeData"
+            />
+          </tree-context>
         </div>
       </div>
     </template>

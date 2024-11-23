@@ -16,7 +16,7 @@ const { direction = 'ltr', aisdeSticky = false } = defineProps<{
       <slot />
     </section>
     <aside
-      class="shrink-0 h-fit grow-0 basis-auto"
+      class="shrink-0 w-40 h-full grow-0 basis-auto hidden sm:block"
       :class="{
         'sticky top-20': aisdeSticky,
       }"

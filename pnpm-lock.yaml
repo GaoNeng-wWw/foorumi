@@ -23,6 +23,9 @@ importers:
       '@miraiui-org/vue-tag':
         specifier: 1.0.0-alpha.6
         version: 1.0.0-alpha.6
+      '@miraiui-org/vue-transition-collapse':
+        specifier: 1.0.0-alpha.8
+        version: 1.0.0-alpha.8
       '@nuxtjs/color-mode':
         specifier: ^3.5.2
         version: 3.5.2(magicast@0.3.5)(rollup@4.27.2)
@@ -687,6 +690,9 @@ packages:
 
   '@miraiui-org/vue-tag@1.0.0-alpha.6':
     resolution: {integrity: sha512-YOWRlS4d47dAfET1sSMc6VY6JA9Y++bPff9xgmsZGk8hjsg9NDvmaj1ULSjadzkmDulOFICOmXUBgcBbxuuUeQ==}
+
+  '@miraiui-org/vue-transition-collapse@1.0.0-alpha.8':
+    resolution: {integrity: sha512-XL9GVZtWZ/gRNEK6W0kXtiGqqFsiQCMokyy4mkYem+WeIJb8tDyOEKm49ZtY0JKdDKsmHiGbpLUfc4gjSwWbPg==}
 
   '@miraiui-org/vue-transition-fade@1.0.0-alpha.6':
     resolution: {integrity: sha512-FVCZszwXFEAa3tyEz7rq2idRquQxU9566SFVsoOpvoftsumrixKkFJJlmjiIOsc47QFtotc8zgPX4g0ebPAR8Q==}
@@ -5004,6 +5010,8 @@ snapshots:
       '@miraiui-org/vue-transition-fade': 1.0.0-alpha.6
 
   '@miraiui-org/vue-tag@1.0.0-alpha.6': {}
+
+  '@miraiui-org/vue-transition-collapse@1.0.0-alpha.8': {}
 
   '@miraiui-org/vue-transition-fade@1.0.0-alpha.6': {}
 
