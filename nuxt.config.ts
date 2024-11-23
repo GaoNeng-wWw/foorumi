@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxtjs/color-mode',
     '@nuxt/test-utils/module',
+    '@nuxtjs/i18n',
   ],
   devtools: { enabled: true },
   colorMode: {
@@ -44,6 +45,9 @@ export default defineNuxtConfig({
         braceStyle: '1tbs',
       },
     },
+  },
+  i18n: {
+
   },
   prisma: {
     installStudio: false,
