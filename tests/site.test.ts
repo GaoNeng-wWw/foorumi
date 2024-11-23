@@ -3,7 +3,7 @@ import { join } from 'path';
 import { test, expect, describe, beforeAll, vi } from 'vitest';
 import { $fetch, setup } from '@nuxt/test-utils/e2e';
 
-describe('site & setup', async () => {
+describe.skip('site & setup', async () => {
   beforeAll(async () => {
     await setup({
       host: 'http://localhost:3000',

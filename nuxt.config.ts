@@ -47,7 +47,12 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
-
+    vueI18n: './i18n/i18n.config.ts',
+    experimental: {
+      localeDetector: 'localeDetector.ts',
+    },
+    locales: ['zhCN', 'enUS'],
+    defaultLocale: 'enUS',
   },
   prisma: {
     installStudio: false,
