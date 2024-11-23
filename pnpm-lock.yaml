@@ -20,6 +20,12 @@ importers:
       '@miraiui-org/vue-message':
         specifier: 1.0.0-alpha.6
         version: 1.0.0-alpha.6
+      '@miraiui-org/vue-tag':
+        specifier: 1.0.0-alpha.6
+        version: 1.0.0-alpha.6
+      '@miraiui-org/vue-transition-collapse':
+        specifier: 1.0.0-alpha.8
+        version: 1.0.0-alpha.8
       '@nuxtjs/color-mode':
         specifier: ^3.5.2
         version: 3.5.2(magicast@0.3.5)(rollup@4.27.2)
@@ -41,6 +47,9 @@ importers:
       prisma:
         specifier: ^5.22.0
         version: 5.22.0
+      tailwindcss-animated:
+        specifier: ^1.1.2
+        version: 1.1.2(tailwindcss@3.4.15)
       vue:
         specifier: latest
         version: 3.5.13(typescript@5.6.3)
@@ -678,6 +687,12 @@ packages:
 
   '@miraiui-org/vue-message@1.0.0-alpha.6':
     resolution: {integrity: sha512-w9mXE+8AvZreSb6TYCcz2TmSjDSLccfkV7dEZCIsT7JGDSi2iXgs8BMlIWBKG1U4kXr/1LLMdOA0ukLhFHp+qQ==}
+
+  '@miraiui-org/vue-tag@1.0.0-alpha.6':
+    resolution: {integrity: sha512-YOWRlS4d47dAfET1sSMc6VY6JA9Y++bPff9xgmsZGk8hjsg9NDvmaj1ULSjadzkmDulOFICOmXUBgcBbxuuUeQ==}
+
+  '@miraiui-org/vue-transition-collapse@1.0.0-alpha.8':
+    resolution: {integrity: sha512-XL9GVZtWZ/gRNEK6W0kXtiGqqFsiQCMokyy4mkYem+WeIJb8tDyOEKm49ZtY0JKdDKsmHiGbpLUfc4gjSwWbPg==}
 
   '@miraiui-org/vue-transition-fade@1.0.0-alpha.6':
     resolution: {integrity: sha512-FVCZszwXFEAa3tyEz7rq2idRquQxU9566SFVsoOpvoftsumrixKkFJJlmjiIOsc47QFtotc8zgPX4g0ebPAR8Q==}
@@ -3929,6 +3944,11 @@ packages:
     peerDependencies:
       tailwindcss: 1 || 2 || 2.0.1-compat || 3
 
+  tailwindcss-animated@1.1.2:
+    resolution: {integrity: sha512-SI4owS5ojserhgEYIZA/uFVdNjU2GMB2P3sjtjmFA52VxoUi+Hht6oR5+RdT+CxrX9cNNYEa+vbTWHvN9zbj3w==}
+    peerDependencies:
+      tailwindcss: '>=3.1.0'
+
   tailwindcss@3.4.15:
     resolution: {integrity: sha512-r4MeXnfBmSOuKUWmXe6h2CcyfzJCEk4F0pptO5jlnYSIViUkVmsawj80N5h2lO3gwcmSb4n3PuN+e+GC1Guylw==}
     engines: {node: '>=14.0.0'}
@@ -4988,6 +5008,10 @@ snapshots:
     dependencies:
       '@miraiui-org/vue-hooks': 1.0.0-alpha.6
       '@miraiui-org/vue-transition-fade': 1.0.0-alpha.6
+
+  '@miraiui-org/vue-tag@1.0.0-alpha.6': {}
+
+  '@miraiui-org/vue-transition-collapse@1.0.0-alpha.8': {}
 
   '@miraiui-org/vue-transition-fade@1.0.0-alpha.6': {}
 
@@ -8774,6 +8798,10 @@ snapshots:
       tailwindcss: 3.4.15
     transitivePeerDependencies:
       - supports-color
+
+  tailwindcss-animated@1.1.2(tailwindcss@3.4.15):
+    dependencies:
+      tailwindcss: 3.4.15
 
   tailwindcss@3.4.15:
     dependencies:

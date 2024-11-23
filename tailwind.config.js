@@ -4,5 +4,6 @@ import { miraiUiPlugin } from '@miraiui-org/theme';
 export default {
   plugins: [
     miraiUiPlugin(),
+    require('tailwindcss-animated'),
   ],
 };
