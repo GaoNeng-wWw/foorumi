@@ -10,6 +10,7 @@ declare interface ApiCommonError {
 declare interface SiteMeta {
   siteName: string;
   siteLogo: never; // not implment
+  isPublic: boolean;
 }
 
 declare type UnRef<T> = T extends Ref<infer P> ? P : unknown;
