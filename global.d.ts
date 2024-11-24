@@ -23,3 +23,16 @@ declare interface Area {
     name: string;
   };
 }
+
+declare interface JwtPayload {
+  id: number;
+}
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    NUXT_TOKEN_PASSWORD: string;
+    NUXT_TOKEN_ACCESS_TOKEN_EXPIRES: string;
+    NUXT_TOKEN_REFRESH_TOKEN_EXPIRES: string;
+    NUXT_SESSION_PASSWORD: string;
+  }
+}

@@ -8,13 +8,23 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@nuxt/test-utils/module',
     '@nuxtjs/i18n',
+    'nuxt-auth-utils',
   ],
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   colorMode: {
     classSuffix: '',
   },
   runtimeConfig: {
     sitePublic: false,
+    authSecret: '123',
+    token: {
+      access_token: {
+        expiresIn: '1d',
+      },
+      refresh_token: {
+        expiresIn: '1d',
+      },
+    },
   },
   compatibilityDate: '2024-04-03',
   nitro: {
