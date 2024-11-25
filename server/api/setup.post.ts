@@ -9,6 +9,7 @@ export const SetupBody = z.object({
   adminUserName: z.string({ required_error: 'require admin user name' }),
   adminPassword: z.string({ required_error: 'require admin password' }),
   siteName: z.string({ required_error: 'site name should not to be empty' }),
+  isPublic: z.optional(z.boolean()),
 });
 
 export default defineEventHandler(async (event) => {
@@ -22,7 +23,7 @@ export default defineEventHandler(async (event) => {
     const [{ message }] = error.issues;
     return sendError(event, createErr(message, status.BAD_REQUEST));
   }
-  const { adminUserName, adminPassword, adminEmail, siteName } = data;
+  const { adminUserName, adminPassword, adminEmail, siteName, isPublic } = data;
 
   const permissionDummy = await prisma.permission.findFirst({ take: 1 });
   const roleDummy = await prisma.role.findFirst({ take: 1 });
@@ -62,7 +63,7 @@ export default defineEventHandler(async (event) => {
       },
     },
   });
-  await storage.setItem('meta', { siteName, adminEmail, adminUserName, adminId: account.id });
+  await storage.setItem('meta', { siteName, adminEmail, adminUserName, adminId: account.id, isPublic });
   await storage.setItem('lock', '1');
   return;
 });

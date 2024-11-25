@@ -6,13 +6,29 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/eslint',
     '@nuxtjs/color-mode',
+    '@nuxt/test-utils/module',
+    '@nuxtjs/i18n',
+    'nuxt-auth-utils',
   ],
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   colorMode: {
     classSuffix: '',
   },
   runtimeConfig: {
     sitePublic: false,
+    authSecret: '123',
+    token: {
+      access_token: {
+        expiresIn: '1d',
+      },
+      refresh_token: {
+        expiresIn: '1d',
+      },
+    },
+  },
+  sourcemap: {
+    client: true,
+    server: true,
   },
   compatibilityDate: '2024-04-03',
   nitro: {
@@ -43,6 +59,14 @@ export default defineNuxtConfig({
         braceStyle: '1tbs',
       },
     },
+  },
+  i18n: {
+    vueI18n: './i18n/i18n.config.ts',
+    experimental: {
+      localeDetector: 'localeDetector.ts',
+    },
+    locales: ['zh', 'en'],
+    defaultLocale: 'en',
   },
   prisma: {
     installStudio: false,

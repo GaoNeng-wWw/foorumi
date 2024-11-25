@@ -10,6 +10,7 @@ declare interface ApiCommonError {
 declare interface SiteMeta {
   siteName: string;
   siteLogo: never; // not implment
+  isPublic: boolean;
 }
 
 declare type UnRef<T> = T extends Ref<infer P> ? P : unknown;
@@ -22,4 +23,27 @@ declare interface Area {
   manager: {
     name: string;
   };
+}
+
+declare interface JwtPayload {
+  id: number;
+}
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    NUXT_TOKEN_PASSWORD: string;
+    NUXT_TOKEN_ACCESS_TOKEN_EXPIRES: string;
+    NUXT_TOKEN_REFRESH_TOKEN_EXPIRES: string;
+    NUXT_SESSION_PASSWORD: string;
+  }
+}
+declare module '#auth-utils' {
+  interface User {
+    access_token: string;
+    refresh_token: string;
+  }
+
+  interface UserSession {
+    user: User;
+  }
 }

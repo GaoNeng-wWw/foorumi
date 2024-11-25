@@ -13,6 +13,9 @@ const props = withDefaults(
     description?: string;
     trigger?: TriggerMethod | TriggerMethod[];
     required?: boolean;
+    err?: boolean;
+    requireIcon?: boolean;
+    descClass?: string;
   }>(),
   {
     type: 'text',
@@ -22,13 +25,24 @@ const props = withDefaults(
     lable: '',
     labelStyle: () => ({}),
     trigger: () => ([]),
+    err: false,
+    requiredIcon: false,
+    descClass: 'font-bold leading-none"',
   },
 );
+
+const showRequireIcon = computed(() => props.requireIcon || props.required);
+const emits = defineEmits(['blur', 'input', 'forcus', 'click']);
 
 const triggerMethod = computed(() => typeof props.trigger === 'string' ? [props.trigger] : props.trigger);
 const { type, size, showLabel, labelPosition } = toRefs(props);
 const modelValue = defineModel<string>({ required: true });
-const invalid = ref(false);
+const invalid = ref(props.err);
+if (props.err) {
+  watch(() => props.err, () => {
+    invalid.value = props.err;
+  });
+}
 const error = computed(() => invalid.value);
 const tip = computed(() => error.value ? props.errorMessage : props.description);
 
@@ -42,23 +56,27 @@ const setInvalid = () => {
 };
 
 const onInput = () => {
+  emits('input');
   if (triggerMethod.value.includes('input')) {
     setInvalid();
   }
 };
 const onFocus = () => {
+  emits('forcus');
   if (triggerMethod.value.includes('focus')) {
     setInvalid();
   }
 };
 
 const onBlur = () => {
+  emits('blur');
   if (triggerMethod.value.includes('blur')) {
     setInvalid();
   }
 };
 
 const onClick = () => {
+  emits('click');
   if (triggerMethod.value.includes('click')) {
     setInvalid();
   }
@@ -67,7 +85,7 @@ const onClick = () => {
 
 <template>
   <div
-    class="w-full flex gap-2 group h-full"
+    class="w-full flex gap-2 group h-fit"
     :class="{
       'flex-col': labelPosition === 'top',
     }"
@@ -76,7 +94,13 @@ const onClick = () => {
     <label
       v-if="showLabel"
       class="text-foreground"
-    >{{ label }}</label>
+    >
+      {{ label }}
+      <span
+        v-if="showRequireIcon"
+        class="text-danger"
+      >*</span>
+    </label>
     <div
       class="flex items-center w-full"
       :class="{
@@ -107,7 +131,8 @@ const onClick = () => {
     </div>
     <span
       v-if="tip"
-      class="group-data-[error=true]:text-danger text-sm font-bold leading-none"
+      class="group-data-[error=true]:text-danger text-sm"
+      :class="descClass"
     >{{ tip }}</span>
   </div>
 </template>
