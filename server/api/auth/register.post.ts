@@ -17,7 +17,6 @@ export const RegisterDTO = z.object({
 export default defineEventHandler(async (event) => {
   const { data, success, error } = await readValidatedBody(event, RegisterDTO.safeParseAsync);
   if (!success) {
-    console.log(error.errors);
     throw createError({
       status: status.BAD_REQUEST,
       message: error.errors[0].message,
@@ -25,27 +24,27 @@ export default defineEventHandler(async (event) => {
   }
   const { email, password, inviteCode, bio, nick } = data;
   const redis = useRedis();
-  // const { isPublic = false } = await redis.getItem<SiteMeta>('meta') ?? { isPublic: false };
+  const { isPublic = false } = await redis.getItem<SiteMeta>('meta') ?? { isPublic: false };
   const t = await useTranslation(event);
-  // if (!isPublic && !inviteCode) {
-  //   throw createError({
-  //     status: status.FORBIDDEN,
-  //     message: t('auth.account.block.reg'),
-  //   });
-  // }
-  // let inviteTable = await redis.get<string[]>(INVITE_NS);
-  // if (!inviteTable) {
-  //   await redis.set<string[]>(INVITE_NS, []);
-  //   inviteTable = [];
-  // }
-  // if (!inviteTable.includes(inviteCode ?? '')) {
-  //   throw createError({
-  //     status: status.FORBIDDEN,
-  //     message: t('auth.account.invite-code.error'),
-  //   });
-  // }
-  // inviteTable = inviteTable.filter(code => code !== inviteCode);
-  // await redis.set(INVITE_NS, inviteTable);
+  if (!isPublic && !inviteCode) {
+    throw createError({
+      status: status.FORBIDDEN,
+      message: t('auth.account.block.reg'),
+    });
+  }
+  let inviteTable = await redis.get<string[]>(INVITE_NS);
+  if (!inviteTable) {
+    await redis.set<string[]>(INVITE_NS, []);
+    inviteTable = [];
+  }
+  if (!inviteTable.includes(inviteCode ?? '')) {
+    throw createError({
+      status: status.FORBIDDEN,
+      message: t('auth.account.invite-code.error'),
+    });
+  }
+  inviteTable = inviteTable.filter(code => code !== inviteCode);
+  await redis.set(INVITE_NS, inviteTable);
   const dummyAccount = await prisma.account.findFirst({
     where: {
       email,

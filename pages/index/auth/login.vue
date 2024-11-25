@@ -50,7 +50,6 @@ const onLogin = () => {
       navigateTo('/');
     })
     .catch((reason) => {
-      console.log(reason);
       useMessage({
         content: reason.data.message,
         type: 'danger',

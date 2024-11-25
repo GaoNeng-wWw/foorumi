@@ -111,7 +111,7 @@ definePageMeta({
           </m-button>
         </div>
         <div class="opacity-80 hover:opacity-100 transition duration-normal">
-          <tree-context @node-click="console.log">
+          <tree-context>
             <tree
               :data="treeData"
             />
