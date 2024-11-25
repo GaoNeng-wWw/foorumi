@@ -20,6 +20,9 @@ importers:
       '@miraiui-org/vue-message':
         specifier: 1.0.0-alpha.6
         version: 1.0.0-alpha.6
+      '@miraiui-org/vue-modal':
+        specifier: 1.0.0-alpha.6
+        version: 1.0.0-alpha.6
       '@miraiui-org/vue-tag':
         specifier: 1.0.0-alpha.6
         version: 1.0.0-alpha.6
@@ -44,6 +47,9 @@ importers:
       '@types/node':
         specifier: ^22.9.1
         version: 22.9.1
+      cookie-es:
+        specifier: ^1.2.2
+        version: 1.2.2
       http-status:
         specifier: ^2.0.0
         version: 2.0.0
@@ -105,6 +111,9 @@ importers:
       supertest:
         specifier: ^7.0.0
         version: 7.0.0
+      tailwindcss:
+        specifier: ^3.4.15
+        version: 3.4.15
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -808,8 +817,14 @@ packages:
   '@miraiui-org/vue-hooks@1.0.0-alpha.6':
     resolution: {integrity: sha512-t42vZvNd0Sm1I5oxFrSIOKzRmYNUhVwwWwAofsz9wuU+3+hxzFFVHTEm6vK+GPISxnmwoY1cmchykWW9aPMg0g==}
 
+  '@miraiui-org/vue-mask@1.0.0-alpha.6':
+    resolution: {integrity: sha512-uZ9qAoh8ul/+X3QFd9aW5UtLcm7qKHtbknloCw/xxRxDFwHMCuEwk7dvuTv5K0sUWLf+33nohjbjIKqTUdu0HA==}
+
   '@miraiui-org/vue-message@1.0.0-alpha.6':
     resolution: {integrity: sha512-w9mXE+8AvZreSb6TYCcz2TmSjDSLccfkV7dEZCIsT7JGDSi2iXgs8BMlIWBKG1U4kXr/1LLMdOA0ukLhFHp+qQ==}
+
+  '@miraiui-org/vue-modal@1.0.0-alpha.6':
+    resolution: {integrity: sha512-jRsOBJ1Sl7GLGmZi3ehK32e6NHv/qhfq8fYr91K55DTrqkR8QSTKcCxrQNn7GYQZjWwEwlWgRqS/iGxXSQQzRQ==}
 
   '@miraiui-org/vue-tag@1.0.0-alpha.6':
     resolution: {integrity: sha512-YOWRlS4d47dAfET1sSMc6VY6JA9Y++bPff9xgmsZGk8hjsg9NDvmaj1ULSjadzkmDulOFICOmXUBgcBbxuuUeQ==}
@@ -5479,10 +5494,20 @@ snapshots:
 
   '@miraiui-org/vue-hooks@1.0.0-alpha.6': {}
 
+  '@miraiui-org/vue-mask@1.0.0-alpha.6':
+    dependencies:
+      '@miraiui-org/vue-hooks': 1.0.0-alpha.6
+
   '@miraiui-org/vue-message@1.0.0-alpha.6':
     dependencies:
       '@miraiui-org/vue-hooks': 1.0.0-alpha.6
       '@miraiui-org/vue-transition-fade': 1.0.0-alpha.6
+
+  '@miraiui-org/vue-modal@1.0.0-alpha.6':
+    dependencies:
+      '@miraiui-org/vue-button': 1.0.0-alpha.6
+      '@miraiui-org/vue-hooks': 1.0.0-alpha.6
+      '@miraiui-org/vue-mask': 1.0.0-alpha.6
 
   '@miraiui-org/vue-tag@1.0.0-alpha.6': {}
 

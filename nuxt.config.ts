@@ -26,6 +26,10 @@ export default defineNuxtConfig({
       },
     },
   },
+  sourcemap: {
+    client: true,
+    server: true,
+  },
   compatibilityDate: '2024-04-03',
   nitro: {
     storage: {
@@ -61,8 +65,8 @@ export default defineNuxtConfig({
     experimental: {
       localeDetector: 'localeDetector.ts',
     },
-    locales: ['zhCN', 'enUS'],
-    defaultLocale: 'enUS',
+    locales: ['zh', 'en'],
+    defaultLocale: 'en',
   },
   prisma: {
     installStudio: false,

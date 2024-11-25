@@ -1,13 +1,13 @@
-import enUS from './enUS';
-import zhCN from './zhCN';
+import en from './enUS';
+import zh from './zhCN';
 
 export default defineI18nConfig(() => {
   return {
     legacy: false,
-    locale: 'zhCN',
+    locale: 'zh',
     messages: {
-      zhCN,
-      enUS,
+      zh,
+      en,
     },
   };
 });

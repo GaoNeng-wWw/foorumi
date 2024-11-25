@@ -6,4 +6,11 @@ export default {
     miraiUiPlugin(),
     require('tailwindcss-animated'),
   ],
+  theme: {
+    extend: {
+      fontSize: {
+        tiny: '12px',
+      },
+    },
+  },
 };

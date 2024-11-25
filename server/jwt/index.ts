@@ -6,7 +6,7 @@ export const verifyToken = (token: string, password: string) => {
 
 export const createToken = (payload: JwtPayload, type: 'access_token' | 'refresh_token', password: string, exp: number) => {
   return jwt.sign({
-    exp,
+    exp: Math.floor(Date.now() / 1000) + exp,
     ...payload,
     type,
   }, password);

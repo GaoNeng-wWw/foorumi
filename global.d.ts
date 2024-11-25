@@ -37,3 +37,13 @@ declare namespace NodeJS {
     NUXT_SESSION_PASSWORD: string;
   }
 }
+declare module '#auth-utils' {
+  interface User {
+    access_token: string;
+    refresh_token: string;
+  }
+
+  interface UserSession {
+    user: User;
+  }
+}

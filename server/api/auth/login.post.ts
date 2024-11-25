@@ -1,7 +1,7 @@
 import status from 'http-status';
 import { z } from 'zod';
 import ms from 'ms';
-import { bcrypt, randomSalt } from '~/lib/encrypt';
+import { bcrypt } from '~/lib/encrypt';
 import prisma from '~/lib/prisma';
 import { createToken } from '@/server/jwt';
 import { accessTokenNs, refreshTokenNs } from '~/server/ns';
@@ -38,9 +38,8 @@ export default defineEventHandler(async (event) => {
       message,
     });
   }
-  const salt = randomSalt(4);
-  const userPassword = bcrypt(password, salt);
-  if (userPassword == account.password) {
+  const userPassword = bcrypt(password, account.salt);
+  if (userPassword !== account.password) {
     throw createError({
       status: status.BAD_REQUEST,
       message: t('auth.account.pwd.error'),
@@ -53,15 +52,16 @@ export default defineEventHandler(async (event) => {
   const access_token = await createToken(
     { id: account.id },
     'access_token',
-    process.env.NUXT_SESSION_PASSWORD,
+    process.env.NUXT_TOKEN_PASSWORD,
     accessTokenTTL,
   );
   const refresh_token = await createToken(
     { id: account.id },
     'refresh_token',
-    process.env.NUXT_SESSION_PASSWORD,
+    process.env.NUXT_TOKEN_PASSWORD,
     refreshTokenTTL,
   );
+
   const redis = useStorage('redis');
   const accessTokenNamespace = accessTokenNs(account.id);
   const refreshTokenNamespace = refreshTokenNs(account.id);
@@ -75,7 +75,6 @@ export default defineEventHandler(async (event) => {
 
   await redis.setItem(accessTokenNamespace, access_token, { ttl: accessTokenTTL });
   await redis.setItem(refreshTokenNamespace, refresh_token, { ttl: refreshTokenTTL });
-
   await setUserSession(event, {
     user: { access_token, refresh_token },
   });

@@ -3,6 +3,10 @@ import { Button as MButton } from '@miraiui-org/vue-button';
 import { useAreaTree } from '~/composable/useAreaTree';
 
 const { treeData } = useAreaTree();
+
+definePageMeta({
+  auth: true,
+});
 </script>
 
 <template>
@@ -12,6 +16,13 @@ const { treeData } = useAreaTree();
     direction="rtl"
   >
     <div class="w-full py-4 space-y-4">
+      <!-- <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      />
       <post-item
         author="ret0"
         author-id="11"
@@ -19,6 +30,76 @@ const { treeData } = useAreaTree();
         pin
         title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
       />
+      <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      />
+      <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      />
+      <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      />
+      <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      />
+      <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      />
+      <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      />
+      <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      />
+      <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      />
+      <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      />
+      <post-item
+        author="ret0"
+        author-id="11"
+        floor="255"
+        pin
+        title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat dicta, hic ad corporis voluptate eaque fugit ullam omnis possimus enim quos quae aspernatur esse et beatae nulla deserunt eveniet maiores?"
+      /> -->
     </div>
     <template
       #aside

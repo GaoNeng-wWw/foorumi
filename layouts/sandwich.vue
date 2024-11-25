@@ -13,7 +13,7 @@ const { header = false, footer = false, headerExtraClass = '', footerExtraClass 
 <template>
   <div
     :class="[
-      'w-full min-h-screen p-4 flex flex-col',
+      'w-full h-full p-4 flex flex-col',
       ...rootExtraClass,
     ]"
   >
@@ -24,6 +24,7 @@ const { header = false, footer = false, headerExtraClass = '', footerExtraClass 
       <slot name="header" />
     </header>
     <main :class="['flex-grow pt-12 pb-4', mainExtraClass]">
+      <!-- <div class="w-full h-full bg-red-500" /> -->
       <slot />
     </main>
     <footer
