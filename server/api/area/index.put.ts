@@ -7,7 +7,7 @@ export const CreateArea = z.object({
   parent: z.optional(z.number()),
 });
 
-export default defineEventHandler(async (event) => {
+export default defineProtectedApi(async (event) => {
   const { data, success } = await readValidatedBody(event, CreateArea.safeParseAsync);
   if (!success) {
     // TODO
@@ -40,4 +40,4 @@ export default defineEventHandler(async (event) => {
     },
   });
   return area;
-});
+}, ['area::create']);

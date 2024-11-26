@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Button as MButton } from '@miraiui-org/vue-button';
 import { useAreaTree } from '~/composable/useAreaTree';
+import { SHOW_ADD_AREA_PERMISSION } from '~/lib/constant';
 
 const { treeData } = useAreaTree();
 
@@ -116,6 +117,12 @@ definePageMeta({
               :data="treeData"
             />
           </tree-context>
+          <span
+            v-permission="SHOW_ADD_AREA_PERMISSION"
+            class="cursor-pointer"
+          >
+            Create Area
+          </span>
         </div>
       </div>
     </template>
