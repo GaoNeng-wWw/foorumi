@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.client && nuxtApp.isHydrating && nuxtApp.payload.serverRendered) {
     return;
   }
-  const { loggedIn, fetch: fetchSession, clear: clearSession, user } = useUserSession();
+  const { loggedIn, fetch: fetchSession, clear: clearSession } = useUserSession();
   if (!loggedIn.value) {
     clearSession();
     return navigateTo('/auth/login');
@@ -16,7 +16,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const runtimeConfig = useRuntimeConfig();
   const serverEvent = useRequestEvent();
   try {
-    console.log(user.value?.refresh_token);
     await $fetch(
       '/api/auth/refresh',
       {
