@@ -13,7 +13,7 @@ definePageMeta({
 <template>
   <nuxt-layout
     name="side"
-    aisde-sticky
+    aside-sticky
     direction="rtl"
   >
     <div class="w-full py-4 space-y-4">
