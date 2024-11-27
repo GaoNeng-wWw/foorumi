@@ -11,7 +11,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     return permissions.value.some(permission => permission.name === requiredPermission) || permissions.value.some(permission => permission.name === '*');
   };
   nuxtApp.vueApp.directive('permission', {
-    beforeMount(el) {
+    created(el) {
       el.style.oldDisplay = el.style.display;
       el.style.display = 'none';
     },
