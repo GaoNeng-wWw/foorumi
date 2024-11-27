@@ -10,6 +10,9 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     'nuxt-auth-utils',
   ],
+  plugins: [
+    '~/plugins/permission',
+  ],
   devtools: { enabled: false },
   colorMode: {
     classSuffix: '',

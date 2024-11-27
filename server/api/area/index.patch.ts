@@ -11,7 +11,7 @@ export const Area = z.object({
   manager_id: z.optional(z.number()),
 });
 
-export default defineEventHandler(async (ctx) => {
+export default defineProtectedApi(async (ctx) => {
   const query = await getValidatedQuery(ctx, UpdateAreaQuery.safeParseAsync);
   if (!query.success) {
     // TODO: throw 400
@@ -27,6 +27,7 @@ export default defineEventHandler(async (ctx) => {
   const area = await prisma.area.findFirst({
     where: {
       id: query.data.id,
+      // manager_id: query.data.
     },
   });
 
@@ -45,4 +46,4 @@ export default defineEventHandler(async (ctx) => {
       manager_id: body.data.manager_id,
     },
   });
-});
+}, ['area::update']);

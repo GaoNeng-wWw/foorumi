@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.client && nuxtApp.isHydrating && nuxtApp.payload.serverRendered) {
     return;
   }
-  const { loggedIn, fecth: fetchSession, clear: clearSession } = useUserSession();
+  const { loggedIn, fetch: fetchSession, clear: clearSession } = useUserSession();
   if (!loggedIn.value) {
     clearSession();
     return navigateTo('/auth/login');
@@ -39,7 +39,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
         onResponseError() {
           clearSession();
           navigateTo('/auth/login');
-          return;
         },
       },
     );

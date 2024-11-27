@@ -1,6 +1,6 @@
 import prisma from '~/lib/prisma';
 
-export default defineCachedEventHandler(async () => {
+export default defineProtectedApi(async () => {
   const areas = await prisma.area.findMany({
     select: {
       name: true,
@@ -15,4 +15,4 @@ export default defineCachedEventHandler(async () => {
     },
   });
   return areas ?? [];
-});
+}, ['area::list']);

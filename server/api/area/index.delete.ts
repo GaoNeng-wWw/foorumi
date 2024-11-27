@@ -5,7 +5,7 @@ export const RemoveArea = z.object({
   id: z.number(),
 });
 
-export default defineEventHandler(async (event) => {
+export default defineProtectedApi(async (event) => {
   const { data, success } = await getValidatedQuery(event, RemoveArea.safeParseAsync);
   if (!success) {
     // TODO: ...
@@ -15,10 +15,16 @@ export default defineEventHandler(async (event) => {
   const area = await prisma.area.delete({
     where: {
       id,
+      manager_id: event.context.user.id,
     },
   });
   if (!area) {
     // throw 404 error
     return;
   }
-});
+  await prisma.area.delete({
+    where: {
+      id: area.id,
+    },
+  });
+}, ['area::delete']);

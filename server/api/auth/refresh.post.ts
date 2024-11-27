@@ -7,7 +7,7 @@ import { accessTokenNs, refreshTokenNs } from '~/server/ns';
 export default defineEventHandler(async (event) => {
   const { user: { access_token, refresh_token } = { access_token: '', refresh_token: '' } } = await getUserSession(event);
   const t = await useTranslation(event);
-  if (!access_token && !refresh_token) {
+  if (!access_token || !refresh_token) {
     throw createError({
       status: status.UNAUTHORIZED,
       statusMessage: status['401_NAME'],
@@ -44,13 +44,13 @@ export default defineEventHandler(async (event) => {
   const newAccessToken = await createToken(
     { id },
     'access_token',
-    process.env.NUXT_SESSION_PASSWORD,
+    process.env.NUXT_TOKEN_PASSWORD,
     accessTokenTTL,
   );
   const newRefreshToken = await createToken(
     { id },
     'refresh_token',
-    process.env.NUXT_SESSION_PASSWORD,
+    process.env.NUXT_TOKEN_PASSWORD,
     refreshTokenTTL,
   );
 

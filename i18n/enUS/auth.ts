@@ -9,6 +9,7 @@ export default {
   'auth.token.expire.confusion': 'Token Confusion',
   'auth.token.expire.refresh-token': 'Refresh Token expire',
   'auth.token.refresh.require-token': 'Require Token',
+  'auth.token.access.expire': 'Access Token expired',
   'ui.auth.login.email': 'Email',
   'ui.auth.login.password': 'Password',
   'ui.auth.login.title': 'Login',
