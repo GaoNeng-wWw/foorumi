@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import { vInfiniteScroll } from '@vueuse/components';
+
 definePageMeta({
   auth: true,
 });
+const el = useTemplateRef<HTMLElement | null>('el');
+const loadMore = () => {
+  console.log('load More');
+};
 </script>
 
 <template>
@@ -10,7 +16,7 @@ definePageMeta({
     direction="rtl"
     aside-sticky
     aside-external-class="w-32 sm:hidden"
-    layout-root-external-class="gap-2 py-4 relative z-0"
+    layout-root-external-class="gap-2 py-4 z-0"
   >
     <template
       #aside
@@ -24,6 +30,13 @@ definePageMeta({
         </div>
       </div>
     </template>
-    <thread-list />
+    <div
+      class="w-full min-h-full"
+    >
+      <thread-list />
+      <client-only>
+        <comment-editor />
+      </client-only>
+    </div>
   </nuxt-layout>
 </template>
