@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     'nuxt-auth-utils',
     '@vueuse/nuxt',
+    'radix-vue/nuxt',
   ],
   plugins: [
     '~/plugins/permission',
