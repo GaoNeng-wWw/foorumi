@@ -1,13 +1,7 @@
 <script setup lang="ts">
-import { vInfiniteScroll } from '@vueuse/components';
-
 definePageMeta({
   auth: true,
 });
-const el = useTemplateRef<HTMLElement | null>('el');
-const loadMore = () => {
-  console.log('load More');
-};
 </script>
 
 <template>
