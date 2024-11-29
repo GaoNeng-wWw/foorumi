@@ -45,9 +45,10 @@ if (props.err) {
 }
 const error = computed(() => invalid.value);
 const tip = computed(() => error.value ? props.errorMessage : props.description);
+const validator = props.validator ?? (props.required ? (val: string) => Boolean(val.length) : () => true);
 
 const setInvalid = () => {
-  const v = props.validator?.(modelValue.value);
+  const v = validator(modelValue.value);
   if (v instanceof Promise) {
     v.then(valid => invalid.value = !valid);
   } else {
@@ -81,6 +82,8 @@ const onClick = () => {
     setInvalid();
   }
 };
+
+defineExpose({ error, valid: setInvalid });
 </script>
 
 <template>

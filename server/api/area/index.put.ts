@@ -3,7 +3,6 @@ import prisma from '~/lib/prisma';
 
 export const CreateArea = z.object({
   name: z.string(),
-  manager_id: z.number(),
   parent: z.optional(z.number()),
 });
 
@@ -13,7 +12,8 @@ export default defineProtectedApi(async (event) => {
     // TODO
     return;
   }
-  const { parent, manager_id, name } = data;
+  const manager_id = event.context.user.id;
+  const { parent, name } = data;
   const account = await prisma.account.findFirst({
     where: {
       id: manager_id,

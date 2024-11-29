@@ -78,10 +78,12 @@ export default defineNuxtConfig({
   },
   tailwindcss: {
     config: {
-      content: ['./pages/**/*.vue',
+      content: [
+        './pages/**/*.vue',
         './components/**/*.vue',
         './node_modules/@miraiui-org/**/*.{js,ts,tsx,vue,md}',
-        './contens/**/*.vue'],
+        './contens/**/*.vue',
+      ],
     },
   },
 });
