@@ -10,7 +10,7 @@ definePageMeta({
     direction="rtl"
     aside-sticky
     aside-external-class="w-32 sm:hidden"
-    layout-root-external-class="gap-2 py-4 relative z-0"
+    layout-root-external-class="gap-2 py-4 z-0"
   >
     <template
       #aside
@@ -24,6 +24,17 @@ definePageMeta({
         </div>
       </div>
     </template>
-    <thread-list />
+    <div
+      class="w-full min-h-full space-y-2"
+    >
+      <thread-list />
+      <pagination
+        :total-item="100"
+        :page-size="10"
+      />
+      <client-only>
+        <comment-editor />
+      </client-only>
+    </div>
   </nuxt-layout>
 </template>

@@ -9,6 +9,8 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module',
     '@nuxtjs/i18n',
     'nuxt-auth-utils',
+    '@vueuse/nuxt',
+    'radix-vue/nuxt',
   ],
   plugins: [
     '~/plugins/permission',

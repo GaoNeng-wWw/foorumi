@@ -2,6 +2,10 @@
 import { Button } from '@miraiui-org/vue-button';
 import { useMessage } from '@miraiui-org/vue-message';
 
+definePageMeta({
+  setup: false,
+});
+
 interface SiteMeta {
   siteName: string;
   adminEmail: string;

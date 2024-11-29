@@ -20,5 +20,6 @@ import { ChevronLeftIcon } from '@heroicons/vue/24/solid';
         </ghost-button>
       </template>
     </thread-item>
+    <div class="px-4" />
   </div>
 </template>

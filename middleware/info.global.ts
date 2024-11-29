@@ -2,12 +2,8 @@ import type { Profile } from '@prisma/client';
 import { PERMISSIONS, PROFILE } from '~/lib/constant';
 
 export default defineNuxtRouteMiddleware((to) => {
-  if (to.path.includes('/auth')) {
+  if (to.path.includes('/auth') || to.path.includes('/setup')) {
     return;
-  }
-  const { loggedIn } = useUserSession();
-  if (!loggedIn.value) {
-    return navigateTo('/auth/login', { replace: true });
   }
   if (
     useState(PROFILE).value || useState(PERMISSIONS).value

@@ -71,7 +71,7 @@ CREATE TABLE `Post` (
     `hidden` BOOLEAN NULL,
     `hidden_reason` BOOLEAN NULL,
     `aid` INTEGER NOT NULL,
-    `floor` INTEGER NOT NULL DEFAULT 1,
+    `floors` INTEGER NOT NULL DEFAULT 1,
     `pin` BOOLEAN NOT NULL,
     `create_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `update_at` DATETIME(3) NOT NULL,
