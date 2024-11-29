@@ -130,7 +130,8 @@ model Post {
   aid  Int
   area Area @relation(fields: [aid], references: [id])
 
-  floor Int     @default(1)
+  // How many "Thread"
+  floors Int     @default(1)
   pin   Boolean
 
   create_at DateTime @default(now())
