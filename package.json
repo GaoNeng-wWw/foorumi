@@ -9,7 +9,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint",
-    "test": "pnpm prisma db push --force-reset && pnpm vitest"
+    "test": "pnpm prisma db push --force-reset && pnpm vitest",
+    "test-only": "pnpm vitest --config vitest.unit.ts"
   },
   "dependencies": {
     "@floating-ui/core": "^1.6.8",
