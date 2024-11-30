@@ -119,3 +119,9 @@ declare interface MininalProfile {
   name: string;
   bio: string;
 }
+
+declare interface AreaTable {
+  name: string;
+  manager: string;
+  manager_id: number;
+}

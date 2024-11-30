@@ -7,6 +7,7 @@ export default defineProtectedApi(async () => {
       parent: true,
       manager: {
         select: {
+          id: true,
           name: true,
         },
       },
@@ -14,5 +15,5 @@ export default defineProtectedApi(async () => {
       id: true,
     },
   });
-  return areas ?? [];
+  return areas;
 }, ['area::list']);

@@ -48,8 +48,8 @@ watch(() => props.columns, (oldColumn, newColumn) => {
 </script>
 
 <template>
-  <div class="w-full h-full border border-foreground/40 rounded-md overflow-auto">
-    <table class="w-full h-full break-words table-fixed">
+  <div class="w-full h-fit border border-foreground/40 rounded-md overflow-auto relative">
+    <table class="w-full break-words">
       <colgroup>
         <col
           v-for="col, idx in columns"
@@ -65,6 +65,9 @@ watch(() => props.columns, (oldColumn, newColumn) => {
             name="extra"
             :row="row"
           />
+        </template>
+        <template #empty>
+          <slot name="empty" />
         </template>
       </app-table-body>
       <slot />

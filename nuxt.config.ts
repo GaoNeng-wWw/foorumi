@@ -22,6 +22,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     sitePublic: false,
     authSecret: '123',
+    pagination: {
+      size: 10,
+    },
     token: {
       access_token: {
         expiresIn: '1d',

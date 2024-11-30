@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { Button as MButton } from '@miraiui-org/vue-button';
-import { useAreaTree } from '~/composable/useAreaTree';
 
 const { treeData } = useAreaTree();
 
