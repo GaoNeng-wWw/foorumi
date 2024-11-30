@@ -2,7 +2,7 @@
 import { table } from './constant';
 import type { Data, TableContext } from './table.type';
 
-const { data, enableExtraColumn } = inject<TableContext>(table)!;
+const { data, enableExtraColumn, border } = inject<TableContext>(table)!;
 const tableData = ref<Data>(data ?? []);
 enableExtraColumn.value = Boolean(useSlots().extra);
 </script>
@@ -12,12 +12,13 @@ enableExtraColumn.value = Boolean(useSlots().extra);
     <tr
       v-for="row, rowIdx in tableData"
       :key="`row-${rowIdx}`"
-      class="border-b border-b-foreground/50 last:border-b-0 text-foreground-800 hover:bg-default/20 transition duration-fast"
+      :data-border="border"
+      class="group border-b border-b-foreground/40 last:border-b-0 text-foreground-800 hover:bg-default/20 transition duration-fast"
     >
       <td
         v-for="col, colIdx in row"
         :key="`col-${colIdx}`"
-        class="text-center py-2 break-words px-2"
+        class="text-center py-2 break-words px-2 last:border-r-0 group-data-[border=true]:border-r group-data-[border=true]:border-r-foreground/20"
       >
         {{ col }}
       </td>

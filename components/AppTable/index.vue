@@ -34,6 +34,7 @@ provide<TableContext>(table, {
   data,
   doSort: onSort,
   enableExtraColumn,
+  border: computed(() => props.border),
 });
 watch(() => columns, () => {
   enableExtraColumn.value = columns.value.some(col => col.extract);

@@ -2,7 +2,7 @@
 import { table } from './constant';
 import type { TableContext } from './table.type';
 
-const { columns, doSort } = inject<TableContext>(table)!;
+const { columns, doSort, border } = inject<TableContext>(table)!;
 
 const SORT_MODES = ['', 'asc', 'desc'] as const;
 const tableHeader = computed(() => columns?.value);
@@ -19,12 +19,17 @@ const toggleSortmode = (id: string) => {
 </script>
 
 <template>
-  <thead class="sticky top-0 bg-default-200">
+  <thead
+    :data-border="border"
+    class="sticky top-0 bg-default-200 group"
+  >
     <tr>
       <th
         v-for="col, idx in tableHeader"
         :key="`col-${col.id}-${idx}`"
-        class="py-3 px-2 last:border-r-0 text-foreground-700 border-b border-b-foreground/50"
+        class="
+        py-3 px-2 text-foreground-700
+        border-b border-b-foreground/50"
       >
         <div
           :data-hover-bg="col.sortable"

@@ -17,6 +17,7 @@ export type TableProps = {
   data?: Data[];
   extractWidth?: number;
   extractTitle?: string;
+  border?: boolean;
 };
 export type TableColumnProps = Index & {};
 
@@ -25,4 +26,5 @@ export type TableContext = {
   data?: Ref<Data[]>;
   doSort: (key: string, mode: '' | 'asc' | 'desc') => void;
   enableExtraColumn: Ref<boolean>;
+  border: Ref<boolean>;
 };

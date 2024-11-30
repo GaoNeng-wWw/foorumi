@@ -11,6 +11,7 @@ const data = Array.from<Data>({ length: 100 }).map((_, k) => ({ name: k, manager
       <app-table
         :data="data"
         class="h-full"
+        border
       >
         <app-table-column
           id="name"
