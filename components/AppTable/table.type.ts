@@ -23,7 +23,7 @@ export type TableColumnProps = Index & {};
 
 export type TableContext = {
   columns?: Ref<Index[]>;
-  data?: Ref<Data[]>;
+  data?: ComputedRef<Data[]>;
   doSort: (key: string, mode: '' | 'asc' | 'desc') => void;
   enableExtraColumn: Ref<boolean>;
   border: Ref<boolean>;

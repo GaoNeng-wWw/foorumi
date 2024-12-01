@@ -1,19 +1,23 @@
+import status from 'http-status';
 import { z } from 'zod';
 import prisma from '~/lib/prisma';
 
 export const CreateArea = z.object({
   name: z.string(),
-  parent: z.optional(z.number()),
+  manager_id: z.optional(z.number()),
 });
 
 export default defineProtectedApi(async (event) => {
-  const { data, success } = await readValidatedBody(event, CreateArea.safeParseAsync);
+  const { data, success, error } = await readValidatedBody(event, CreateArea.safeParseAsync);
   if (!success) {
     // TODO
-    return;
+    return createError({
+      status: status.BAD_REQUEST,
+      statusMessage: status['400_NAME'],
+      message: error.issues[0].message,
+    });
   }
-  const manager_id = event.context.user.id;
-  const { parent, name } = data;
+  const { manager_id, name } = data;
   const account = await prisma.account.findFirst({
     where: {
       id: manager_id,
@@ -23,21 +27,29 @@ export default defineProtectedApi(async (event) => {
     },
   });
   if (!account?.profile) {
-    // TODO: user not exists
-    return;
+    return createError({
+      status: status.NOT_FOUND,
+      statusMessage: status['404_NAME'],
+      message: 'ACCOUNT NOT FOUDN',
+    });
   }
   const { profile } = account;
-  const area = await prisma.area.create({
-    data: {
-      name,
-      manager: {
-        connect: profile,
+  try {
+    const area = await prisma.area.create({
+      data: {
+        name,
+        manager: {
+          connect: profile,
+        },
       },
-      parent,
-      post: {
-        create: [],
+      select: {
+        id: true,
+        manager_id: true,
+        name: true,
       },
-    },
-  });
-  return area;
+    });
+    return area;
+  } catch (e) {
+    console.log(e);
+  }
 }, ['area::create']);

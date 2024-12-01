@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url = "mysql://root:root@localhost:3306/bbs"
+  url      = "mysql://root:root@localhost:3306/bbs"
 }
 
 // Just used login 
@@ -96,7 +96,7 @@ model Area {
   id Int @id @default(autoincrement())
 
   name       String
-  manager_id Int     @unique
+  manager_id Int
   manager    Profile @relation(fields: [manager_id], references: [id])
   parent     Int?
 
@@ -132,7 +132,7 @@ model Post {
 
   // How many "Thread"
   floors Int     @default(1)
-  pin   Boolean
+  pin    Boolean
 
   create_at DateTime @default(now())
   update_at DateTime @updatedAt

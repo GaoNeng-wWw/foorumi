@@ -1,3 +1,4 @@
+import status from 'http-status';
 import { z } from 'zod';
 import prisma from '~/lib/prisma';
 
@@ -17,11 +18,13 @@ export default defineProtectedApi(async (ctx) => {
     // TODO: throw 400
     return;
   }
-  const body = await readValidatedBody(ctx, Area.safeParseAsync);
+  const { success, data, error } = await readValidatedBody(ctx, Area.safeParseAsync);
 
-  if (!body.success) {
-    // TODO: throw 400
-    return;
+  if (!success) {
+    return createError({
+      statusCode: status.BAD_REQUEST,
+      message: error.issues[0].message,
+    });
   }
 
   const area = await prisma.area.findFirst({
@@ -41,9 +44,9 @@ export default defineProtectedApi(async (ctx) => {
       id: query.data.id,
     },
     data: {
-      name: body.data.name,
-      parent: body.data.parent,
-      manager_id: body.data.manager_id,
+      name: data.name,
+      parent: data.parent,
+      manager_id: data.manager_id,
     },
   });
 }, ['area::update']);

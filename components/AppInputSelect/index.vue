@@ -1,0 +1,64 @@
+<script setup lang="ts">
+import { ComboboxAnchor, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxRoot, ComboboxTrigger, ComboboxViewport } from 'radix-vue';
+import { ChevronDownIcon, PlusIcon } from '@heroicons/vue/24/solid';
+import type { InputSelectProps } from './index.props';
+import type { OptionProps } from './option.props';
+
+const { options, filter } = defineProps<InputSelectProps>();
+const modelValue = defineModel<OptionProps | undefined>({ required: true });
+</script>
+
+<template>
+  <ComboboxRoot
+    v-model="modelValue"
+    class="relative"
+    :display-value="(value) => !value?.label ? '' : value.label"
+    :filter-function="filter"
+  >
+    <ComboboxAnchor class="flex items-center justify-center">
+      <ComboboxTrigger class="flex p-2 items-center justify-around bg-default rounded w-full">
+        <slot name="prefix" />
+        <ComboboxInput
+          class="!bg-transparent outline-none h-full placeholder-foreground-700 text-sm"
+          placeholder="Placeholder..."
+        />
+        <combobox-cancel
+          v-if="modelValue"
+          @click="modelValue = undefined"
+        >
+          <slot name="cancel">
+            <plus-icon class="size-4 text-foreground rotate-45" />
+          </slot>
+        </combobox-cancel>
+        <slot name="suffix">
+          <chevron-down-icon class="size-4 text-foreground" />
+        </slot>
+      </ComboboxTrigger>
+    </ComboboxAnchor>
+
+    <ComboboxContent class="absolute z-10 w-full mt-2 min-w-[160px] bg-default-200 overflow-auto rounded border border-default-300">
+      <ComboboxViewport class="p-[5px]">
+        <ComboboxEmpty class="text-mauve8 text-xs font-medium text-center py-2">
+          <slot name="empty" />
+        </ComboboxEmpty>
+        <slot>
+          <template
+            v-for="(option, idx) in options"
+            :key="idx"
+          >
+            <app-input-select-group
+              v-if="option.children?.length"
+              :children="option.children"
+              :label="option.label ?? ''"
+            />
+            <app-input-select-option
+              v-else
+              :label="option.label"
+              :value="option.value"
+            />
+          </template>
+        </slot>
+      </ComboboxViewport>
+    </ComboboxContent>
+  </ComboboxRoot>
+</template>

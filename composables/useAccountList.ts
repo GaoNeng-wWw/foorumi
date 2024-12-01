@@ -1,6 +1,6 @@
 export const useAccountList = ({ initializationPage }: { initializationPage?: Ref<number> | number }) => {
   const page = ref(unref(initializationPage) ?? 1);
-  const { data, error, status } = useFetch('/api/account/list', { method: 'get', query: { page }, cache: 'default', watch: [page] });
+  const { data, error, status } = useFetch('/api/account/list', { method: 'get', query: { page }, cache: 'default', watch: [page], server: false });
   const isFinish = computed(() => data.value?.end);
   const next = () => {
     if (isFinish.value) {
