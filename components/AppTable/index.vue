@@ -31,7 +31,7 @@ const onSort = (key: string, mode: '' | 'asc' | 'desc') => {
 
 provide<TableContext>(table, {
   columns,
-  data: computed(() => props.data ?? []),
+  data: computed(() => data.value),
   doSort: onSort,
   enableExtraColumn,
   border: computed(() => props.border),
@@ -44,6 +44,9 @@ watch(() => props.columns, (oldColumn, newColumn) => {
     return;
   }
   columns.value = props.columns ?? [];
+});
+watch(() => props.data, () => {
+  data.value = props.data;
 });
 </script>
 
