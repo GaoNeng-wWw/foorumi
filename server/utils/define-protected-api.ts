@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/unified-signatures */
-
 import { decode } from '@tsndr/cloudflare-worker-jwt';
 import type { EventHandlerRequest, EventHandler } from 'h3';
 import status from 'http-status';
@@ -8,14 +6,15 @@ import { PERMISSION_NS } from './redis';
 import prisma from '~/lib/prisma';
 
 export function defineProtectedApi<T extends EventHandlerRequest, D>(
-  handler: EventHandler<T, D>, requiredPermissions?: PermissionTable[]): EventHandler<T, D>;
+  handler: EventHandler<T, D>, requiredPermissions?: PermissionTable[]): EventHandler<T, Promise<D>>;
 export function defineProtectedApi<T extends EventHandlerRequest, D>(
-  handler: EventHandler<T, D>, requiredPermissions?: string[]): EventHandler<T, D>;
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
+  handler: EventHandler<T, D>, requiredPermissions?: string[]): EventHandler<T, Promise<D>>;
 export function defineProtectedApi<T extends EventHandlerRequest, D>(
   handler: EventHandler<T, D>,
   requiredPermissions?: string[],
-): EventHandler<T, D> {
-  return defineEventHandler<T, D>(
+): EventHandler<T, Promise<D>> {
+  return defineEventHandler<T>(
     async (event) => {
       const session = await getUserSession(event);
       const redis = useRedis();
@@ -71,6 +70,12 @@ export function defineProtectedApi<T extends EventHandlerRequest, D>(
         });
       }
       const { profile: { role } } = account;
+      if (!role) {
+        throw createError({
+          status: status.UNAUTHORIZED,
+          statusMessage: status['401'],
+        });
+      }
       const permissions = role.flatMap(role => role.permission).map(p => p.name);
       if (
         !permissions.some(permission => permission === '*')
@@ -86,8 +91,15 @@ export function defineProtectedApi<T extends EventHandlerRequest, D>(
           id,
         },
       };
-      const handle = handler(event);
-      return handle;
+      try {
+        const response = await handler(event);
+        return response;
+      } catch (err) {
+        // setResponseStatus(err.statsu)
+        const error: any = err;
+        setResponseStatus(event, error.statusCode ?? 500, error.statusMessage);
+        return { ...error.cause };
+      }
     },
   );
 };
