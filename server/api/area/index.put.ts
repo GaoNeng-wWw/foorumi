@@ -50,6 +50,7 @@ export default defineProtectedApi(async (event) => {
     });
     return area;
   } catch (e) {
-    console.log(e);
+    console.log(event.path);
+    return e;
   }
 }, ['area::create']);
