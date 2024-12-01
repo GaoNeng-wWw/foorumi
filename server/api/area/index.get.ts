@@ -1,7 +1,29 @@
+import status from 'http-status';
 import prisma from '~/lib/prisma';
 
-export default defineProtectedApi(async () => {
+export default defineProtectedApi(async (event) => {
+  const { data, error, success } = await getValidatedQuery(event, PageQuery.safeParseAsync);
+  if (!success) {
+    throw createError({
+      status: status.BAD_REQUEST,
+      message: error.issues[0].message,
+      statusMessage: status['400_NAME'],
+    });
+  }
+  const totalAreas = await prisma.area.count();
+  if (!totalAreas) {
+    return {
+      data: [],
+      total: 0,
+      end: true,
+    };
+  }
+  const { pagination: { size } } = useRuntimeConfig();
+  const skip = size * (data.page - 1);
+  const take = size;
   const areas = await prisma.area.findMany({
+    skip,
+    take,
     select: {
       name: true,
       parent: true,
@@ -15,5 +37,10 @@ export default defineProtectedApi(async () => {
       id: true,
     },
   });
-  return areas;
+  return {
+    data: areas,
+    total: totalAreas,
+    end: (skip + take) === totalAreas,
+    pageSize: take,
+  };
 }, ['area::list']);

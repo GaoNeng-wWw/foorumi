@@ -3,7 +3,7 @@ import { Button as MButton } from '@miraiui-org/vue-button';
 import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'radix-vue';
 import type { OptionProps } from '~/components/AppInputSelect/option.props';
 
-const { data: rawAreas } = await useFetch('/api/area', { method: 'get', server: false });
+const { areaList: rawAreas, totalItems, areaPage } = useAreaList({});
 const page = ref(1);
 const { accountList: rawAccountList } = useAccountList({ initializationPage: page });
 const accountList: Ref<{
@@ -33,7 +33,6 @@ watch(rawAccountList, () => {
       })
       .filter(val => val !== null),
   ];
-  console.log(accountList);
 });
 watch(rawAreas, () => {
   if (!rawAreas.value) {
@@ -44,6 +43,7 @@ watch(rawAreas, () => {
       name: v.name,
       manager: v.manager.name,
       manager_id: v.manager_id,
+      id: v.id,
     };
   }) ?? [];
 }, { immediate: true, deep: true });
@@ -72,6 +72,7 @@ const addArea = () => {
         manager: manager.value.label!,
         manager_id: manager.value.value!,
       });
+      manager.value = undefined;
     },
   });
 };
@@ -124,10 +125,15 @@ const updateArea = (row) => {
         class="h-full"
       >
         <app-table-column
+          id="id"
+          label="ID"
+          :width="60"
+          sortable
+        />
+        <app-table-column
           id="name"
           label="版区名称"
           :width="120"
-          sortable
         />
         <app-table-column
           id="manager"
@@ -137,7 +143,7 @@ const updateArea = (row) => {
         <app-table-column
           id="action"
           label="操作"
-          :width="120"
+          :width="60"
           extract
         />
         <template #extra="{ row }">
@@ -152,7 +158,10 @@ const updateArea = (row) => {
         </template>
       </app-table>
       <div class="ml-auto mr-0">
-        <pagination />
+        <pagination
+          :total-item="totalItems"
+          @page-update="(currentPage) => areaPage = currentPage"
+        />
       </div>
     </div>
   </div>
