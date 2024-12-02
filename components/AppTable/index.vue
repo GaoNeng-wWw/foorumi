@@ -46,7 +46,7 @@ watch(() => props.columns, (oldColumn, newColumn) => {
   columns.value = props.columns ?? [];
 });
 watch(() => props.data, () => {
-  data.value = props.data;
+  data.value = props.data ?? [];
 });
 </script>
 
