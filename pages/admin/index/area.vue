@@ -1,39 +1,21 @@
 <script lang="ts" setup>
+import { Modal } from '@miraiui-org/vue-modal';
 import { Button as MButton } from '@miraiui-org/vue-button';
 import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'radix-vue';
+import UpdateAreaModal from './components/update-area-modal.vue';
+import UserSelect from './components/user-select.vue';
 import type { OptionProps } from '~/components/AppInputSelect/option.props';
 
 const { areaList: rawAreas, totalItems, areaPage } = useAreaList({});
-const page = ref(1);
-const { accountList: rawAccountList } = useAccountList({ initializationPage: page });
-const accountList: Ref<{
-  value: number;
-  label: string;
-}[]> = ref([
-]);
+
+const manager = ref<OptionProps>();
+
 const areaData = reactive({
   name: '',
   manager_id: '',
 });
 const areas = ref<AreaTable[]>([]);
-watch(rawAccountList, () => {
-  if (!rawAccountList.value?.data) {
-    return;
-  }
-  accountList.value = [
-    ...rawAccountList.value.data
-      .map((item) => {
-        if (!item.profile) {
-          return null;
-        }
-        return {
-          value: item.id,
-          label: item.profile.name,
-        };
-      })
-      .filter(val => val !== null),
-  ];
-});
+
 watch(rawAreas, () => {
   if (!rawAreas.value) {
     return;
@@ -47,10 +29,6 @@ watch(rawAreas, () => {
     };
   }) ?? [];
 }, { immediate: true, deep: true });
-const manager = ref<OptionProps>();
-const onSearch = (options: Omit<OptionProps<string>, 'disabled'>[], term: string) => {
-  return options.filter(opt => opt.label && opt.label.toLowerCase().includes(term));
-};
 const addArea = () => {
   if (!manager.value) {
     return;
@@ -71,13 +49,25 @@ const addArea = () => {
         name: _data.name,
         manager: manager.value.label!,
         manager_id: manager.value.value!,
+        id: _data.id,
       });
       manager.value = undefined;
     },
   });
 };
-const updateArea = (row) => {
-  console.log(row);
+const updateAreaModalVisible = ref(false);
+const currentRow = ref<AreaTable>();
+const updateArea = (row: AreaTable) => {
+  updateAreaModalVisible.value = true;
+  currentRow.value = { ...row };
+};
+const onOk = (newData: AreaTable) => {
+  const idx = areas.value.findIndex(item => item.id === newData.id);
+  if (idx === -1) {
+    return;
+  }
+  areas.value.splice(idx, 1, { ...newData });
+  updateAreaModalVisible.value = false;
 };
 </script>
 
@@ -92,9 +82,8 @@ const updateArea = (row) => {
                 添加
               </m-button>
             </popover-trigger>
-            <popover-portal id="add-area-protal">
+            <popover-portal>
               <popover-content
-                id="add-area-form"
                 :side-offset="8"
                 class="p-4 rounded bg-default-200 data-[state=open]:animate-fade-up data-[state=closed]:translate-y-8 data-[state=closed]:opacity-0 space-y-2"
               >
@@ -103,11 +92,9 @@ const updateArea = (row) => {
                   show-label
                   label="板区名称"
                 />
-                <app-input-select
-                  v-model="manager"
-                  :options="accountList"
-                  :filter="onSearch"
-                />
+
+                <user-select v-model="manager" />
+
                 <m-button
                   type="primary"
                   @click="addArea"
@@ -164,5 +151,20 @@ const updateArea = (row) => {
         />
       </div>
     </div>
+    <Modal v-model="updateAreaModalVisible">
+      <update-area-modal
+        v-if="currentRow"
+        :manager-id="currentRow.manager_id"
+        :area-name="currentRow.name"
+        :area-id="currentRow.id"
+        @cancel="() => updateAreaModalVisible = false"
+        @ok="onOk"
+      />
+      <template
+        #footer
+      >
+        <div />
+      </template>
+    </Modal>
   </div>
 </template>

@@ -124,4 +124,5 @@ declare interface AreaTable {
   name: string;
   manager: string;
   manager_id: number;
+  id: number;
 }

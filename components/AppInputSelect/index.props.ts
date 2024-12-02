@@ -6,4 +6,6 @@ export interface InputSelectProps {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   filter?: ComboboxRootProps<any>['filterFunction'];
+
+  err?: boolean;
 }

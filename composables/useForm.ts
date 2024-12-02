@@ -4,7 +4,8 @@ import { ref, unref, watch } from 'vue';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SafeObject = Record<string, any>;
 
-type Validator<T = unknown> = (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Validator<T = any> = (
   (val: T) => {
     error: boolean;
     reason?: string;
@@ -24,7 +25,8 @@ export type UseFormOptions<M extends SafeObject = SafeObject> = {
   };
   model: Reactive<M> | Ref<M>;
   schema?: {
-    [k in keyof M]?: Validator<unknown> & {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [k in keyof M]?: Validator<any> & {};
   };
   immediate?: boolean;
 } & {};

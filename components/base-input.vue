@@ -82,7 +82,9 @@ const onClick = () => {
     setInvalid();
   }
 };
-
+watch(() => props.err, () => {
+  invalid.value = props.err;
+});
 defineExpose({ error, valid: setInvalid });
 </script>
 

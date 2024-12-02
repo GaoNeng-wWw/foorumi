@@ -4,19 +4,20 @@ import { ChevronDownIcon, PlusIcon } from '@heroicons/vue/24/solid';
 import type { InputSelectProps } from './index.props';
 import type { OptionProps } from './option.props';
 
-const { options, filter } = defineProps<InputSelectProps>();
+const { options, filter, err } = defineProps<InputSelectProps>();
 const modelValue = defineModel<OptionProps | undefined>({ required: true });
 </script>
 
 <template>
   <ComboboxRoot
     v-model="modelValue"
-    class="relative"
+    class="relative group"
     :display-value="(value) => !value?.label ? '' : value.label"
     :filter-function="filter"
+    :data-err="err"
   >
     <ComboboxAnchor class="flex items-center justify-center">
-      <ComboboxTrigger class="flex p-2 items-center justify-around bg-default rounded w-full">
+      <ComboboxTrigger class="flex p-2 items-center justify-around bg-default rounded w-full group-data-[err=true]:bg-danger/50">
         <slot name="prefix" />
         <ComboboxInput
           class="!bg-transparent outline-none h-full placeholder-foreground-700 text-sm"
