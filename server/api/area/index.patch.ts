@@ -8,8 +8,10 @@ export const UpdateAreaQuery = z.object({
 
 export const Area = z.object({
   name: z.string(),
-  parent: z.optional(z.number()),
-  manager_id: z.optional(z.number()),
+  parent: z.nullable(
+    z.number(),
+  ),
+  manager_id: z.number(),
 });
 
 export default defineProtectedApi(async (ctx) => {

@@ -96,6 +96,23 @@ const save = (row: AreaTable) => {
     cancelEdit(row);
     return;
   }
+  $fetch('/api/area', {
+    method: 'patch',
+    query: {
+      id: row.id,
+    },
+    body: {
+      name: row.name,
+      parent: row.parent,
+      manager_id: row.manager.value,
+    },
+  })
+    .catch((err) => {
+      useMessage({
+        content: err.data.message,
+        type: 'danger',
+      });
+    });
   table.value?.clearEdit(row);
 };
 const removeRow = (row: AreaTable) => {
