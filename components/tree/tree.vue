@@ -19,7 +19,7 @@ const { openId, toggle } = inject<TREE_PROVIDER>(TREE_SYMBOL)!;
 <template>
   <div
     v-if="data"
-    class="w-full px-2 text-foreground spacey--2"
+    class="w-full px-2 text-foreground space-2"
   >
     <div
       v-for="item in data"
@@ -28,14 +28,22 @@ const { openId, toggle } = inject<TREE_PROVIDER>(TREE_SYMBOL)!;
       :data-leaf="!item.children || !item.children.length"
     >
       <div
-        class="cursor-pointer flex gap-2 group items-center"
+        class="cursor-pointer flex gap-2 group items-center hover:bg-default-200 border border-transparent hover:border-default-400 py-2 rounded-md transition duration-normal"
         :data-show="openId.includes(item.id)"
         @click.stop="() => toggle(item.id, item)"
       >
-        <chevron-down-icon
-          class="size-4 transition group-data-[show=false]:-rotate-90 group-data-[leaf=true]:opacity-0"
-        />
-        {{ item.label }}
+        <div class="w-full flex gap-2 justify-around px-4">
+          <div class="flex gap-2 flex-auto items-center">
+            <chevron-down-icon
+              class="size-4 mt-0.5 transition group-data-[show=false]:-rotate-90 group-data-[leaf=true]:hidden"
+            />
+            {{ item.label }}
+          </div>
+          <slot
+            name="extra"
+            :node="item"
+          />
+        </div>
       </div>
       <transition-collapse>
         <div

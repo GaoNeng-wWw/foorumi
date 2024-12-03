@@ -1,7 +1,7 @@
 import type { TreeData } from '~/components/tree/tree.vue';
 
 export const useAreaTree = () => {
-  const { data, status, error, refresh } = useFetch<Area[]>('/api/area', { method: 'get' });
+  const { data, status, error, refresh } = useFetch('/api/area', { method: 'get', query: { page: 1 }, server: false });
   const toTreeData = (node: Area): TreeData => {
     return {
       id: node.id.toString(),
@@ -13,17 +13,25 @@ export const useAreaTree = () => {
     const tree: TreeData[] = [];
     for (let i = 0; i < areas.length; i++) {
       const area = areas[i];
-      if (area.id === id) {
+      if (area.parent === id) {
         const children = buildTree(areas, area.id);
         const node = toTreeData(area);
         node.children = children;
+        node.meta = {
+          ...area,
+        };
+        delete node.meta.id;
+        delete node.meta.label;
+        delete node.meta.children;
+        delete node.meta.parent;
         tree.push(node);
       }
     }
     return tree;
   };
-  const treeData = computed(() => data.value ? buildTree(data.value) : []);
+  const treeData = computed(() => data.value ? buildTree(data.value.data) : []);
   const isEmpty = computed(() => Boolean(treeData.value.length));
   const loading = computed(() => status.value === 'pending');
-  return { treeData, isEmpty, loading, error, refresh };
+  const flatTree = computed<Area[]>(() => data.value?.data ?? []);
+  return { treeData, isEmpty, loading, error, refresh, flatTree };
 };

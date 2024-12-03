@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import { MoonIcon, SunIcon } from '@heroicons/vue/24/solid';
+import { VxeUI } from 'vxe-table';
+
+const mode = useColorMode();
+
+watch(mode, () => {
+  VxeUI.setTheme(mode.value === 'light' ? 'light' : 'dark');
+}, { immediate: true, deep: true });
 </script>
 
 <template>

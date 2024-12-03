@@ -1,170 +1,228 @@
 <script lang="ts" setup>
-import { Modal } from '@miraiui-org/vue-modal';
-import { Button as MButton } from '@miraiui-org/vue-button';
-import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'radix-vue';
-import UpdateAreaModal from './components/update-area-modal.vue';
+import type { VxeTableInstance } from 'vxe-table';
+import { useMessage } from '@miraiui-org/vue-message';
 import UserSelect from './components/user-select.vue';
-import type { OptionProps } from '~/components/AppInputSelect/option.props';
 
-const { areaList: rawAreas, totalItems, areaPage } = useAreaList({});
+type AreaTable = {
+  id: number;
+  manager: {
+    value: number;
+    label: string;
+  };
+  name: string;
+  parent: number | null;
+};
 
-const manager = ref<OptionProps>();
-
-const areaData = reactive({
-  name: '',
-  manager_id: '',
-});
-const areas = ref<AreaTable[]>([]);
-
-watch(rawAreas, () => {
-  if (!rawAreas.value) {
-    return;
-  }
-  areas.value = rawAreas.value?.map((v) => {
+const table = useTemplateRef<VxeTableInstance<Area>>('table');
+const { flatTree: rawTreeData } = useAreaTree();
+const tableData = ref<AreaTable[]>([]);
+let counter = 0;
+watch(rawTreeData, () => {
+  tableData.value = rawTreeData.value.map((item) => {
     return {
-      name: v.name,
-      manager: v.manager.name,
-      manager_id: v.manager_id,
-      id: v.id,
+      id: item.id,
+      manager: {
+        value: item.manager_id,
+        label: item.manager.name,
+      },
+      name: item.name,
+      parent: item.parent,
     };
-  }) ?? [];
-}, { immediate: true, deep: true });
-const addArea = () => {
-  if (!manager.value) {
-    return;
-  }
-  const { value } = manager.value;
-  areaData.manager_id = value;
-  $fetch('/api/area', {
-    method: 'put',
-    body: {
-      name: areaData.name,
-      manager_id: areaData.manager_id,
-    },
-    onResponse({ response: { _data } }) {
-      if (!manager.value) {
-        return;
-      }
-      areas.value.push({
-        name: _data.name,
-        manager: manager.value.label!,
-        manager_id: manager.value.value!,
-        id: _data.id,
-      });
-      manager.value = undefined;
-    },
   });
-};
-const updateAreaModalVisible = ref(false);
-const currentRow = ref<AreaTable>();
-const updateArea = (row: AreaTable) => {
-  updateAreaModalVisible.value = true;
-  currentRow.value = { ...row };
-};
-const onOk = (newData: AreaTable) => {
-  const idx = areas.value.findIndex(item => item.id === newData.id);
-  if (idx === -1) {
+  counter = Math.max(...tableData.value.map(item => item.id)) + 1;
+}, { immediate: true });
+const addNode = async (parent: Area, mode: 'hierarchy' | 'leveling') => {
+  if (!table.value) {
     return;
   }
-  areas.value.splice(idx, 1, { ...newData });
-  updateAreaModalVisible.value = false;
+  let parentId = parent.id;
+  if (mode === 'leveling') {
+    parentId = table.value.getRowById(parent.id).parent;
+  }
+  const data = {
+    name: Date.now().toString(),
+    manager: {
+      name: '',
+    },
+    manager_id: -1,
+    parent: parentId,
+    id: counter++,
+  } as Area;
+  const { row } = await table.value.insertAt(data, mode === 'hierarchy' ? null : parent);
+  await table.value.setTreeExpand(parent, true);
+  await table.value?.setEditRow(row);
 };
+const editRow = async (row: Area) => {
+  await table.value?.setEditRow(row);
+};
+const cancelEdit = async (row: AreaTable) => {
+  if (table.value?.isInsertByRow(row)) {
+    await table.value.remove(row);
+  }
+  await table.value?.clearEdit(row);
+};
+const save = (row: AreaTable) => {
+  if (table.value?.isInsertByRow(row)) {
+    $fetch('/api/area', {
+      method: 'put',
+      body: {
+        name: row.name,
+        manager_id: row.manager.value,
+        parent: row.parent,
+      },
+    })
+      .then(() => {
+        table.value?.clearEdit(row);
+      });
+    return;
+  }
+  let invalidField = '';
+  let i18nMessage = '';
+  if (!row.manager || !row.manager.value) {
+    invalidField = 'manager';
+    i18nMessage = '管理员不能为空';
+    table.value?.revertData(row, invalidField);
+  }
+  if (!row.name) {
+    invalidField = 'name';
+    i18nMessage = '区域名不能为空';
+    table.value?.revertData(row, invalidField);
+  }
+  if (invalidField) {
+    useMessage({
+      content: i18nMessage,
+      type: 'danger',
+    });
+    cancelEdit(row);
+    return;
+  }
+  table.value?.clearEdit(row);
+};
+const removeRow = (row: AreaTable) => {
+  if (table.value?.isInsertByRow(row)) {
+    table.value.remove(row);
+    counter -= 1;
+  }
+};
+const isEdit = (row: Area) => table.value?.isEditByRow(row);
 </script>
 
 <template>
   <div class="w-full h-full bg-default-100 rounded-md">
     <div class="p-4 flex flex-col h-full gap-4">
       <client-only>
-        <div class="w-full py-2 px-1">
-          <popover-root id="add-area">
-            <popover-trigger id="add-area-trigger">
-              <m-button type="primary">
-                添加
-              </m-button>
-            </popover-trigger>
-            <popover-portal>
-              <popover-content
-                :side-offset="8"
-                class="p-4 rounded bg-default-200 data-[state=open]:animate-fade-up data-[state=closed]:translate-y-8 data-[state=closed]:opacity-0 space-y-2"
-              >
+        <div class="w-full h-full">
+          <vxe-table
+            ref="table"
+            keep-source
+            border
+            max-height="100%"
+            :row-config="{ keyField: 'id', isHover: true, drag: true, useKey: true }"
+            :edit-config="{ trigger: 'manual', mode: 'row', showStatus: true, autoClear: false }"
+            :data="tableData"
+            :tree-config="{
+              transform: true,
+              rowField: 'id',
+              parentField: 'parent',
+            }"
+            :scroll-y="{ enabled: true, gt: 0 }"
+            :column-config="{ resizable: true, useKey: true }"
+          >
+            <vxe-column
+              field="id"
+              name="id"
+              tree-node
+              drag-sort
+            />
+            <vxe-column
+              field="name"
+              title="版区名称"
+              :edit-render="{}"
+            >
+              <template #edit="{ row }">
                 <base-input
-                  v-model="areaData.name"
-                  show-label
-                  label="板区名称"
+                  v-model="row.name"
+                  class="rounded-md"
                 />
-
-                <user-select v-model="manager" />
-
-                <m-button
-                  type="primary"
-                  @click="addArea"
-                >
-                  确认
-                </m-button>
-              </popover-content>
-            </popover-portal>
-          </popover-root>
+              </template>
+            </vxe-column>
+            <vxe-column
+              field="manager"
+              title="管理员"
+              :edit-render="{}"
+            >
+              <template #default="{ row }">
+                <nuxt-link>
+                  {{ row.manager?.label }}
+                </nuxt-link>
+              </template>
+              <template #edit="{ row }">
+                <user-select
+                  v-model="row.manager"
+                  :default-id="row.manager?.value"
+                />
+              </template>
+            </vxe-column>
+            <vxe-column>
+              <template #default="{ row }">
+                <div class="w-full flex items-start gap-4 flex-wrap justify-center">
+                  <div
+                    v-if="isEdit(row)"
+                    class="flex w-full items-center gap-4 "
+                  >
+                    <button
+                      class="text-primary-500"
+                      @click="() => save(row)"
+                    >
+                      保存
+                    </button>
+                    <button
+                      @click="() => cancelEdit(row)"
+                    >
+                      取消编辑
+                    </button>
+                  </div>
+                  <div
+                    v-if="!isEdit(row)"
+                    class="flex w-full gap-4 text-foreground [&_button:hover]:text-primary-500"
+                  >
+                    <button
+                      @click="() => addNode(row, 'hierarchy')"
+                    >
+                      添加子节点
+                    </button>
+                    <button
+                      @click="() => addNode(row, 'leveling')"
+                    >
+                      添加同级节点
+                    </button>
+                  </div>
+                  <div
+                    v-if="!isEdit(row)"
+                    class="flex w-full gap-4"
+                  >
+                    <button
+                      class="text-foreground"
+                      @click="() => editRow(row)"
+                    >
+                      编辑
+                    </button>
+                    <button class="text-primary">
+                      移动
+                    </button>
+                    <button
+                      class="text-danger"
+                      @click="() => removeRow(row)"
+                    >
+                      删除
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </vxe-column>
+          </vxe-table>
         </div>
       </client-only>
-      <app-table
-        :data="areas"
-        border
-        class="h-full"
-      >
-        <app-table-column
-          id="id"
-          label="ID"
-          :width="60"
-          sortable
-        />
-        <app-table-column
-          id="name"
-          label="版区名称"
-          :width="120"
-        />
-        <app-table-column
-          id="manager"
-          label="版区管理员"
-          :width="120"
-        />
-        <app-table-column
-          id="action"
-          label="操作"
-          :width="60"
-          extract
-        />
-        <template #extra="{ row }">
-          <div class="space-x-4">
-            <m-button @click="() => updateArea(row)">
-              修改
-            </m-button>
-            <m-button type="danger">
-              删除
-            </m-button>
-          </div>
-        </template>
-      </app-table>
-      <div class="ml-auto mr-0">
-        <pagination
-          :total-item="totalItems"
-          @page-update="(currentPage) => areaPage = currentPage"
-        />
-      </div>
     </div>
-    <Modal v-model="updateAreaModalVisible">
-      <update-area-modal
-        v-if="currentRow"
-        :manager-id="currentRow.manager_id"
-        :area-name="currentRow.name"
-        :area-id="currentRow.id"
-        @cancel="() => updateAreaModalVisible = false"
-        @ok="onOk"
-      />
-      <template
-        #footer
-      >
-        <div />
-      </template>
-    </Modal>
   </div>
 </template>

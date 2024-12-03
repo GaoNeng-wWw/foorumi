@@ -18,9 +18,8 @@ export default defineProtectedApi(async (event) => {
       end: true,
     };
   }
-  const { pagination: { size } } = useRuntimeConfig();
-  const skip = size * (data.page - 1);
-  const take = size;
+  const skip = (data.page - 1) * data.size;
+  const take = data.size;
   const areas = await prisma.area.findMany({
     skip,
     take,
