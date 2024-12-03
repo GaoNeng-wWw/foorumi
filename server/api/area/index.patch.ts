@@ -39,7 +39,7 @@ export default defineProtectedApi(async (ctx) => {
   });
 
   if (!area) {
-    return createError({
+    throw createError({
       statusCode: status.NOT_FOUND,
       message: 'Area Not found',
     });

@@ -62,6 +62,22 @@ const cancelEdit = async (row: AreaTable) => {
   await table.value?.clearEdit(row);
 };
 const save = (row: AreaTable) => {
+  let invalidField = '';
+  let i18nMessage = '';
+  if (!row.manager || !row.manager.value) {
+    invalidField = 'manager';
+    i18nMessage = '管理员不能为空';
+  } else if (!row.name) {
+    invalidField = 'name';
+    i18nMessage = '区域名不能为空';
+  }
+  if (invalidField) {
+    useMessage({
+      content: i18nMessage,
+      type: 'danger',
+    });
+    return;
+  }
   if (table.value?.isInsertByRow(row)) {
     $fetch('/api/area', {
       method: 'put',
@@ -71,29 +87,13 @@ const save = (row: AreaTable) => {
         parent: row.parent,
       },
     })
-      .then(() => {
+      .then((resp) => {
+        const res = resp as Pick<Area, 'id' | 'name' | 'parent'>;
+        row.id = res.id;
+        row.name = res.name;
+        row.parent = res.parent;
         table.value?.clearEdit(row);
       });
-    return;
-  }
-  let invalidField = '';
-  let i18nMessage = '';
-  if (!row.manager || !row.manager.value) {
-    invalidField = 'manager';
-    i18nMessage = '管理员不能为空';
-    table.value?.revertData(row, invalidField);
-  }
-  if (!row.name) {
-    invalidField = 'name';
-    i18nMessage = '区域名不能为空';
-    table.value?.revertData(row, invalidField);
-  }
-  if (invalidField) {
-    useMessage({
-      content: i18nMessage,
-      type: 'danger',
-    });
-    cancelEdit(row);
     return;
   }
   $fetch('/api/area', {
@@ -107,6 +107,13 @@ const save = (row: AreaTable) => {
       manager_id: row.manager.value,
     },
   })
+    .then(() => {
+      // TODO: I18N
+      useMessage({
+        content: '修改成功',
+      });
+      return;
+    })
     .catch((err) => {
       useMessage({
         content: err.data.message,
@@ -116,10 +123,31 @@ const save = (row: AreaTable) => {
   table.value?.clearEdit(row);
 };
 const removeRow = (row: AreaTable) => {
-  if (table.value?.isInsertByRow(row)) {
-    table.value.remove(row);
-    counter -= 1;
-  }
+  $fetch('/api/area', {
+    method: 'delete',
+    query: {
+      id: row.id,
+    },
+  })
+    .then(() => {
+      // TODO: 1I8
+      useMessage({
+        content: '删除成功',
+        type: 'success',
+      });
+    })
+    .catch((err) => {
+      if (err.statusCode === 404) {
+        return;
+      }
+      useMessage({
+        content: err.data.message,
+        type: 'danger',
+      });
+    })
+    .finally(() => {
+      table.value?.remove(row);
+    });
 };
 const isEdit = (row: Area) => table.value?.isEditByRow(row);
 </script>
@@ -149,7 +177,6 @@ const isEdit = (row: Area) => table.value?.isEditByRow(row);
               field="id"
               name="id"
               tree-node
-              drag-sort
             />
             <vxe-column
               field="name"
