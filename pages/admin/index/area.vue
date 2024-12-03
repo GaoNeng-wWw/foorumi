@@ -92,7 +92,15 @@ const save = (row: AreaTable) => {
         row.id = res.id;
         row.name = res.name;
         row.parent = res.parent;
-        table.value?.clearEdit(row);
+        return table.value?.remove(row);
+      })
+      .then((resp) => {
+        if (!resp) {
+          return;
+        }
+        tableData.value.push({
+          ...resp.row,
+        });
       });
     return;
   }

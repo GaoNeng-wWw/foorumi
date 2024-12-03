@@ -1,7 +1,7 @@
 import type { TreeData } from '~/components/tree/tree.vue';
 
 export const useAreaTree = () => {
-  const { data, status, error, refresh } = useFetch('/api/area', { method: 'get', query: { page: 1 }, server: false });
+  const { data, status, error, refresh } = useFetch('/api/area', { method: 'get', query: { page: 1, size: 100 }, server: false });
   const toTreeData = (node: Area): TreeData => {
     return {
       id: node.id.toString(),
