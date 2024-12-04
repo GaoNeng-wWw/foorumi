@@ -9,7 +9,7 @@ export type TreeSelectData<T> = {
 
 const show = defineModel<boolean>('show', { required: false, default: false });
 const node = defineModel<TreeSelectData<T>>('node', { required: false });
-const value = defineModel<string>('value', { required: false });
+const value = defineModel<string | null>('value', { required: false });
 
 const storgeValue = ref(value.value ?? '');
 
@@ -39,7 +39,7 @@ const realData = computed(() => {
 });
 const onSelect = (node: TreeData<{ value: T }>[]) => {
   const values = node.filter(item => item.meta && item.meta.value).map(item => item.meta?.value).filter(item => item !== undefined);
-  value.value = values[0].toString() ?? '';
+  value.value = values[0] === null || values[0] === undefined ? null : values[0].toString() ?? '';
 };
 
 watch(() => node, () => {

@@ -38,10 +38,10 @@ const toggle = (id: string, node: TreeData<T>) => {
 };
 const select = (node: TreeData<T>) => {
   if (!multiple) {
-    if (!selected.value.length) {
-      selected.value = [node];
-    } else {
+    if (selected.value.includes(node)) {
       selected.value = [];
+    } else {
+      selected.value = [node];
     }
     emits('select', selected.value);
     return;

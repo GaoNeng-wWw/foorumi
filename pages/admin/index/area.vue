@@ -14,7 +14,7 @@ type AreaTable = {
 };
 
 const table = useTemplateRef<VxeTableInstance<Area>>('table');
-const { flatTree: rawTreeData, treeSelectData } = useAreaTree();
+const { flatTree: rawTreeData, treeSelectData, refresh } = useAreaTree();
 const tableData = ref<AreaTable[]>([]);
 let counter = 0;
 watch(rawTreeData, () => {
@@ -101,6 +101,7 @@ const save = (row: AreaTable) => {
         tableData.value.push({
           ...resp.row,
         });
+        return refresh();
       });
     return;
   }
@@ -122,13 +123,22 @@ const save = (row: AreaTable) => {
       });
       return;
     })
+    .then(() => {
+      table.value?.clearEdit(row);
+      const rowDataIndex = tableData.value.findIndex(item => item.id === row.id);
+      refresh()
+        .then(() => {
+          tableData.value.splice(rowDataIndex, 1, {
+            ...row,
+          });
+        });
+    })
     .catch((err) => {
       useMessage({
         content: err.data.message,
         type: 'danger',
       });
     });
-  table.value?.clearEdit(row);
 };
 const removeRow = (row: AreaTable) => {
   $fetch('/api/area', {
@@ -144,6 +154,10 @@ const removeRow = (row: AreaTable) => {
         type: 'success',
       });
     })
+    .then(() => {
+      tableData.value = tableData.value.filter(item => item.id !== row.id);
+      refresh();
+    })
     .catch((err) => {
       if (err.statusCode === 404) {
         return;
@@ -158,15 +172,11 @@ const removeRow = (row: AreaTable) => {
     });
 };
 
-const move = (row: AreaTable & { _parent: number | null }, newParent: string) => {
+const move = (row: AreaTable & { _parent: number | null }, newParent: string | null) => {
   if (!table.value) {
     return;
   }
-  const parentId = Number.parseInt(newParent);
-  if (Number.isNaN(parentId)) {
-    return;
-  }
-  if (parentId === row.id) {
+  if (newParent !== null && Number.parseInt(newParent) === row.id) {
     // TODO: I18N
     useMessage({
       content: `不能将区域${row.name}移动到${row.name}`,
@@ -176,38 +186,26 @@ const move = (row: AreaTable & { _parent: number | null }, newParent: string) =>
     table.value.reloadRow(row);
     return;
   }
-  const rowDataIdx = tableData.value.findIndex(item => item.id === row.id);
-  if (rowDataIdx === -1) {
-    return;
-  }
-  const rowData = tableData.value[rowDataIdx];
-  rowData.parent = parentId;
-  tableData.value.splice(rowDataIdx, 1, rowData);
-
-  table.value.reloadData(tableData.value);
-
-  const parentRow = tableData.value.find(item => item.id === parentId);
-  if (!parentRow) {
-    return;
-  }
-  rowData.parent = parentId;
-  row.parent = parentId;
-
   $fetch('/api/area', {
     method: 'patch',
     query: {
       id: row.id,
     },
     body: {
-      parent: parentId,
+      parent: newParent === null ? null : Number.parseInt(newParent),
       name: row.name,
       manager_id: row.manager.value,
     },
   })
     .then(() => {
       useMessage({
-        content: `成功将区域 ${row.name} 移动到 ${parentRow.name}`,
+        content: '移动成功',
+        type: 'success',
       });
+      return refresh();
+    })
+    .then(() => {
+      return table.value?.reloadData(tableData.value);
     })
     .catch((err) => {
       useMessage({
@@ -237,6 +235,7 @@ const isEdit = (row: Area) => table.value?.isEditByRow(row);
               transform: true,
               rowField: 'id',
               parentField: 'parent',
+              showLine: true,
             }"
             :scroll-y="{ enabled: true, gt: 0 }"
             :column-config="{ resizable: true, useKey: true }"
