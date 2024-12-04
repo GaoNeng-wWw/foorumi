@@ -14,7 +14,7 @@ type AreaTable = {
 };
 
 const table = useTemplateRef<VxeTableInstance<Area>>('table');
-const { flatTree: rawTreeData } = useAreaTree();
+const { flatTree: rawTreeData, treeSelectData } = useAreaTree();
 const tableData = ref<AreaTable[]>([]);
 let counter = 0;
 watch(rawTreeData, () => {
@@ -157,6 +157,66 @@ const removeRow = (row: AreaTable) => {
       table.value?.remove(row);
     });
 };
+
+const move = (row: AreaTable & { _parent: number | null }, newParent: string) => {
+  if (!table.value) {
+    return;
+  }
+  const parentId = Number.parseInt(newParent);
+  if (Number.isNaN(parentId)) {
+    return;
+  }
+  if (parentId === row.id) {
+    // TODO: I18N
+    useMessage({
+      content: `不能将区域${row.name}移动到${row.name}`,
+      type: 'danger',
+    });
+    row._parent = row.parent;
+    table.value.reloadRow(row);
+    return;
+  }
+  const rowDataIdx = tableData.value.findIndex(item => item.id === row.id);
+  if (rowDataIdx === -1) {
+    return;
+  }
+  const rowData = tableData.value[rowDataIdx];
+  rowData.parent = parentId;
+  tableData.value.splice(rowDataIdx, 1, rowData);
+
+  table.value.reloadData(tableData.value);
+
+  const parentRow = tableData.value.find(item => item.id === parentId);
+  if (!parentRow) {
+    return;
+  }
+  rowData.parent = parentId;
+  row.parent = parentId;
+
+  $fetch('/api/area', {
+    method: 'patch',
+    query: {
+      id: row.id,
+    },
+    body: {
+      parent: parentId,
+      name: row.name,
+      manager_id: row.manager.value,
+    },
+  })
+    .then(() => {
+      useMessage({
+        content: `成功将区域 ${row.name} 移动到 ${parentRow.name}`,
+      });
+    })
+    .catch((err) => {
+      useMessage({
+        content: err.data.message,
+        type: 'danger',
+      });
+    });
+};
+
 const isEdit = (row: Area) => table.value?.isEditByRow(row);
 </script>
 
@@ -259,9 +319,21 @@ const isEdit = (row: Area) => table.value?.isEditByRow(row);
                     >
                       编辑
                     </button>
-                    <button class="text-primary">
-                      移动
-                    </button>
+                    <app-tree-select
+                      v-model:value="row._parent"
+                      :data="treeSelectData"
+                      :side-offset="16"
+                      :default-select-id="!row.parent ? [] : [row.parent.toString()]"
+                      content-class="min-w-64"
+                      destory
+                      @update:value="(value) => move(row, value)"
+                    >
+                      <template #trigger>
+                        <button class="text-primary">
+                          移动
+                        </button>
+                      </template>
+                    </app-tree-select>
                     <button
                       class="text-danger"
                       @click="() => removeRow(row)"

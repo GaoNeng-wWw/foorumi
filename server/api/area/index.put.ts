@@ -5,7 +5,7 @@ import prisma from '~/lib/prisma';
 export const CreateArea = z.object({
   name: z.string(),
   manager_id: z.optional(z.number()),
-  parent: z.optional(z.number({ coerce: true })),
+  parent: z.nullable(z.number({ coerce: true })).default(null),
 });
 
 export default defineProtectedApi(async (event) => {
