@@ -25,7 +25,19 @@ const emits = defineEmits<{
   select: [TreeData<T>[]];
 }>();
 const openId = ref<string[]>([]);
-const selectedData = data.filter(item => defaultSelect.includes(item.id));
+const selectedData: Ref<TreeData<T>[]> = ref([]);
+
+const flatData = (items: TreeData<T>[]) => {
+  const ans: TreeData<T>[] = [];
+  for (const item of items) {
+    ans.push(item, ...flatData(item.children ?? []));
+  }
+  return ans;
+};
+
+watch(() => [data, defaultSelect], () => {
+  selectedData.value = flatData(data).filter(item => defaultSelect.includes(item.id)) ?? [];
+}, { immediate: true, deep: true });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const selected: Ref<TreeData<any>[]> = ref(selectedData);
 const toggle = (id: string, node: TreeData<T>) => {

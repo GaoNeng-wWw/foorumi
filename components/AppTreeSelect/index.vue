@@ -23,6 +23,12 @@ const { defaultSelectId = [], destory = false, data = [], contentWidthFollowTrig
   defaultSelectId?: number[];
 }>();
 
+const defaultSelect: Ref<string[]> = ref([]);
+
+watch(() => defaultSelectId, () => {
+  defaultSelect.value = defaultSelectId.map(id => id.toString()) ?? [];
+}, { immediate: true, deep: true });
+
 const transform = (treeData: TreeSelectData<T>): TreeData<{ value: T }> => {
   return {
     id: treeData.value.toString(),
@@ -71,7 +77,7 @@ watch(value, () => {
     <div class="px-1 py-2 bg-default-200 rounded">
       <tree
         :data="realData"
-        :default-select="defaultSelectId.map(item => item.toString())"
+        :default-select="defaultSelect"
         @select="onSelect"
       />
     </div>
