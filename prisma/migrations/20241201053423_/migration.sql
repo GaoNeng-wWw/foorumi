@@ -58,7 +58,6 @@ CREATE TABLE `Area` (
     `create_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `update_at` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `Area_manager_id_key`(`manager_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

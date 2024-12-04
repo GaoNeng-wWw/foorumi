@@ -22,6 +22,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     sitePublic: false,
     authSecret: '123',
+    pagination: {
+      size: 10,
+    },
     token: {
       access_token: {
         expiresIn: '1d',
@@ -78,10 +81,12 @@ export default defineNuxtConfig({
   },
   tailwindcss: {
     config: {
-      content: ['./pages/**/*.vue',
+      content: [
+        './pages/**/*.vue',
         './components/**/*.vue',
         './node_modules/@miraiui-org/**/*.{js,ts,tsx,vue,md}',
-        './contens/**/*.vue'],
+        './contens/**/*.vue',
+      ],
     },
   },
 });

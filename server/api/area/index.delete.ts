@@ -1,26 +1,32 @@
+import status from 'http-status';
 import { z } from 'zod';
 import prisma from '~/lib/prisma';
 
 export const RemoveArea = z.object({
-  id: z.number(),
+  id: z.number({ coerce: true }),
 });
 
 export default defineProtectedApi(async (event) => {
-  const { data, success } = await getValidatedQuery(event, RemoveArea.safeParseAsync);
+  const { data, success, error } = await getValidatedQuery(event, RemoveArea.safeParseAsync);
   if (!success) {
     // TODO: ...
-    return;
+    throw createError({
+      status: status.BAD_REQUEST,
+      message: error.issues[0].message,
+    });
   }
   const { id } = data;
-  const area = await prisma.area.delete({
+  const area = await prisma.area.findFirst({
     where: {
       id,
-      manager_id: event.context.user.id,
     },
   });
   if (!area) {
     // throw 404 error
-    return;
+    throw createError({
+      statusCode: status.NOT_FOUND,
+      message: 'Area not found',
+    });
   }
   await prisma.area.delete({
     where: {
