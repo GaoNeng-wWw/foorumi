@@ -19,7 +19,7 @@ const { direction = 'ltr', asideSticky = false, asideExternalClass = '', layoutR
       <slot />
     </section>
     <aside
-      class="shrink-0 w-40 h-full grow-0 basis-auto hidden sm:block"
+      class="shrink-0 w-80 h-full grow-0 basis-auto hidden sm:block"
       :class="{
         'sticky top-20': asideSticky,
         [asideExternalClass]: true,
