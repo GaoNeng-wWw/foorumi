@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/eslint',
     '@nuxtjs/color-mode',
-    '@nuxt/test-utils/module',
+    // '@nuxt/test-utils/module',
     '@nuxtjs/i18n',
     'nuxt-auth-utils',
     '@vueuse/nuxt',

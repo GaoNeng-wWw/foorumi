@@ -26,6 +26,7 @@
     "@miraiui-org/vue-tag": "1.0.0-alpha.6",
     "@miraiui-org/vue-transition-collapse": "1.0.0-alpha.8",
     "@miraiui-org/vue-transition-slide-fade": "1.0.0-alpha.4",
+    "@nuxt/eslint": "^0.7.2",
     "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/i18n": "^9.1.0",
     "@nuxtjs/tailwindcss": "^6.12.2",
@@ -49,11 +50,11 @@
     "vue": "latest",
     "vue-router": "latest",
     "vxe-table": "4.9.11",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "tailwindcss": "^3.4.16"
   },
   "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903",
   "devDependencies": {
-    "@nuxt/eslint": "^0.7.1",
     "@nuxt/test-utils": "^3.14.4",
     "@prisma/client": "^5.22.0",
     "@types/jsonwebtoken": "^9.0.7",
@@ -64,7 +65,6 @@
     "happy-dom": "^15.11.6",
     "playwright-core": "^1.49.0",
     "supertest": "^7.0.0",
-    "tailwindcss": "^3.4.15",
     "typescript": "^5.6.3",
     "vite-plugin-eslint2": "^5.0.2",
     "vitest": "^2.1.5"
