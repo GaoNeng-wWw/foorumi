@@ -153,3 +153,4 @@ ALTER TABLE `_ProfileToRole` ADD CONSTRAINT `_ProfileToRole_A_fkey` FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE `_ProfileToRole` ADD CONSTRAINT `_ProfileToRole_B_fkey` FOREIGN KEY (`B`) REFERENCES `Role`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+

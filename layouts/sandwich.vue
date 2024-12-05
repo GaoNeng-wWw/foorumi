@@ -23,8 +23,7 @@ const { header = false, footer = false, headerExtraClass = '', footerExtraClass 
     >
       <slot name="header" />
     </header>
-    <main :class="['flex-grow pt-12 pb-4', mainExtraClass]">
-      <!-- <div class="w-full h-full bg-red-500" /> -->
+    <main :class="['flex-grow pt-12 pb-4 h-full overflow-auto', mainExtraClass]">
       <slot />
     </main>
     <footer

@@ -17,4 +17,6 @@ declare module '#auth-utils' {
   }
 }
 
+declare module 'vue-virtual-scroll-list' {}
+
 export default {};

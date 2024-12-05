@@ -9,7 +9,7 @@ const { direction = 'ltr', asideSticky = false, asideExternalClass = '', layoutR
 
 <template>
   <div
-    class="flex w-full gap-4"
+    class="flex w-full gap-4 h-full"
     :class="{
       'flex-row-reverse': direction === 'rtl',
       [layoutRootExternalClass]: true,
