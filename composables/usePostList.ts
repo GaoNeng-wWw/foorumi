@@ -35,16 +35,16 @@ export const usePostList = (
   } = opts;
   const page = ref(unref(currentPage) ?? 1);
   const area = ref(opts.area?.value);
-  const { data, status, error } = useFetch('/api/posts/list', {
-    query: {
+  const { data, status, error } = useFetch(`/api/posts/list`, {
+    params: {
       pin: unref(pin),
       page,
       size: pageSize?.value,
       type: type?.value,
+      area_id: area,
     },
-    server: !import.meta.dev,
     watch: [page, area],
-    cache: 'force-cache',
+    server: !import.meta.dev,
   });
   const postList: Ref<PostList['data']> = ref([]);
   const nextPage = () => {
@@ -66,12 +66,11 @@ export const usePostList = (
 
   watch(() => opts.area, () => {
     postList.value = [];
+    area.value = opts.area?.value.toString();
     page.value = 1;
-    area.value = opts.area?.value;
   }, { deep: true });
   const loading = computed(() => status.value === 'pending');
   const canLoadMore = () => {
-    console.log(page.value, data.value?.total);
     return page.value !== data.value?.total && !loading.value;
   };
   return {

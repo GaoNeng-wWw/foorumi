@@ -1,5 +1,8 @@
 <template>
-  <tree-list :data="data" />
+  <tree-list
+    :data="data"
+    :padding="false"
+  />
 </template>
 
 <script lang="ts" setup generic="T">

@@ -5,6 +5,7 @@ import prisma from '~/lib/prisma';
 const GetPostListQuery = z.object({
   type: z.enum(['hot', 'new']).default('hot'),
   pin: z.boolean({ coerce: true }).default(false),
+  area_id: z.number({ coerce: true }).optional(),
 });
 
 export default defineProtectedApi(async (event) => {
@@ -36,8 +37,19 @@ export default defineProtectedApi(async (event) => {
       floors: true,
     },
     where: {
-      hidden: null,
-      pin: data.pin,
+      AND: [
+        {
+          hidden: null,
+        },
+        {
+          pin: data.pin,
+        },
+        {
+          area: {
+            id: data.area_id ? data.area_id : undefined,
+          },
+        },
+      ],
     },
   });
   if (!posts.length) {
