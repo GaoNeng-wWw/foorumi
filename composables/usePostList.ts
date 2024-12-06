@@ -1,7 +1,7 @@
 import type { SerializeObject } from 'nitropack/types';
 
 export interface UsePostList {
-  area: ComputedRef<string | undefined>;
+  area: ComputedRef<string>;
   pageSize: ComputedRef<number>;
   currentPage: ComputedRef<number>;
   pin: ComputedRef<boolean> | boolean;
@@ -34,6 +34,7 @@ export const usePostList = (
     type,
   } = opts;
   const page = ref(unref(currentPage) ?? 1);
+  const area = ref(opts.area?.value);
   const { data, status, error } = useFetch('/api/posts/list', {
     query: {
       pin: unref(pin),
@@ -42,7 +43,8 @@ export const usePostList = (
       type: type?.value,
     },
     server: !import.meta.dev,
-    watch: [page],
+    watch: [page, area],
+    cache: 'force-cache',
   });
   const postList: Ref<PostList['data']> = ref([]);
   const nextPage = () => {
@@ -55,13 +57,21 @@ export const usePostList = (
     }
     page.value -= 1;
   };
-  watch(data, () => {
-    if (data.value?.data.length) {
-      postList.value.push(...data.value.data);
-    }
-  }, { immediate: true, deep: true });
+
+  watch(
+    () => data,
+    () => {
+      postList.value.push(...data?.value?.data ?? []);
+    }, { immediate: true, deep: true });
+
+  watch(() => opts.area, () => {
+    postList.value = [];
+    page.value = 1;
+    area.value = opts.area?.value;
+  }, { deep: true });
   const loading = computed(() => status.value === 'pending');
   const canLoadMore = () => {
+    console.log(page.value, data.value?.total);
     return page.value !== data.value?.total && !loading.value;
   };
   return {

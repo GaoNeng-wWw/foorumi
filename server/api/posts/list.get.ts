@@ -49,7 +49,7 @@ export default defineProtectedApi(async (event) => {
   }
   const count = await prisma.post.count({
     where: {
-      hidden: false,
+      hidden: null,
     },
   });
   return {

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Button as MButton } from '@miraiui-org/vue-button';
 import postEditor from './component/post-editor.vue';
+import type { TreeData } from '~/components/tree/index.vue';
 
 const { treeData } = useAreaTree();
 const isFullscreen = ref(false);
@@ -30,6 +31,18 @@ const restoreMinimze = () => {
   showEditor.value = true;
 };
 
+const area: Ref<string | undefined> = ref();
+
+const filterPostList = ([node]: TreeData<{
+  [x: string]: unknown;
+}>[]) => {
+  if (!node) {
+    area.value = '';
+    return;
+  }
+  area.value = node.id;
+};
+
 definePageMeta({
   auth: true,
 });
@@ -42,7 +55,7 @@ definePageMeta({
     direction="rtl"
   >
     <div class="w-full h-full">
-      <post-list />
+      <post-list :area="area" />
     </div>
     <teleport
       v-if="editModalVisibility"
@@ -84,11 +97,11 @@ definePageMeta({
           </m-button>
         </div>
         <div class="opacity-80 hover:opacity-100 transition duration-normal">
-          <tree-context>
-            <tree
-              :data="treeData"
-            />
-          </tree-context>
+          <tree
+            :data="treeData"
+            :multiple="false"
+            @select="filterPostList"
+          />
         </div>
       </div>
     </template>

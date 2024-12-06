@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { area, pageSize = 20 } = defineProps<{
+const { area = '', pageSize = 20 } = defineProps<{
   area?: string;
   pageSize?: number;
   pin?: boolean;

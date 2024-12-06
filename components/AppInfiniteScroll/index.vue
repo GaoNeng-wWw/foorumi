@@ -51,9 +51,8 @@ onMounted(() => {
           <slot />
         </div>
         <div
-          v-if="!realCanloadMore"
           ref="trigger"
-          class="w-full"
+          class="w-full trigger"
         >
           <slot
             name="empty"
