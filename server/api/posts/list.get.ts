@@ -36,7 +36,7 @@ export default defineProtectedApi(async (event) => {
       floors: true,
     },
     where: {
-      hidden: false,
+      hidden: null,
       pin: data.pin,
     },
   });

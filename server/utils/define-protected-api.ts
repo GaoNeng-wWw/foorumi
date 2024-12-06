@@ -78,7 +78,8 @@ export function defineProtectedApi<T extends EventHandlerRequest, D>(
       }
       const permissions = role.flatMap(role => role.permission).map(p => p.name);
       if (
-        !permissions.some(permission => permission === '*')
+        requiredPermissions?.length
+        && !permissions.some(permission => permission === '*')
         && !permissions.every(permission => requiredPermissions?.includes(permission))
       ) {
         throw createError({

@@ -112,6 +112,7 @@ const { addNode, editRow, cancelEdit, save, removeRow, move, isEdit, treeSelectD
                       :data="treeSelectData"
                       :side-offset="16"
                       :default-select-id="(row.parent === null || row.parent === undefined) ? [] : [row.parent.toString()]"
+                      :align="'end'"
                       content-class="min-w-64"
                       destory
                       @update:value="(value) => move(row, value)"

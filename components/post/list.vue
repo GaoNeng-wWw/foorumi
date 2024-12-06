@@ -21,8 +21,8 @@ const { postList: pinPostList, loading: pinLoading } = usePostList({
       <post-item
         v-for="item in pinPostList"
         v-show="!pinLoading"
-        :id="item.id"
         :key="item.id"
+        :post-id="item.id"
         :title="item.title"
         :author="item.author.name"
         :author-id="item.author_id.toString()"
@@ -37,8 +37,8 @@ const { postList: pinPostList, loading: pinLoading } = usePostList({
     >
       <post-item
         v-for="item in postList"
-        :id="item.id"
         :key="item.id"
+        :post-id="item.id"
         :title="item.title"
         :author="item.author.name"
         :author-id="item.author_id.toString()"

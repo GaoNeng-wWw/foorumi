@@ -4,6 +4,25 @@ import { Button } from '@miraiui-org/vue-button';
 import 'quill/dist/quill.bubble.css';
 import 'quill/dist/quill.core.css';
 
+const props = withDefaults(
+  defineProps<{
+    rootClass?: string;
+    toolBarClass?: string;
+    wrapperClass?: string;
+    inputClass?: string;
+    footerClass?: string;
+    placeholder?: string;
+  }>(),
+  {
+    rootClass: '',
+    toolBarClass: '',
+    wrapperClass: '',
+    inputClass: '',
+    footerClass: '',
+    placeholder: '',
+  },
+);
+
 let Quill: typeof import('quill').default;
 if (import.meta.client) {
   Quill = (await import('quill')).default;
@@ -27,6 +46,7 @@ onMounted(() => {
         userOnly: true,
       },
     },
+    placeholder: props.placeholder,
   });
   quill.on('editor-change', () => {
     canUndo.value = Boolean(quill.history.stack.undo.length);
@@ -50,11 +70,17 @@ const onClickSend = () => {
 </script>
 
 <template>
-  <div class="w-full px-4 py-2">
-    <div class="w-full flex-col bg-background dark:bg-default-200 p-4 rounded-md space-y-4">
+  <div class="w-full h-full px-4 py-2">
+    <div
+      :class="[
+        !props.rootClass ? 'w-full h-full flex flex-col bg-background dark:bg-default-200 p-4 rounded-md gap-4' : props.rootClass,
+      ]"
+    >
       <div
         id="toolbar"
-        class="w-full flex gap-4 pl-4"
+        :class="[
+          props.toolBarClass ? props.toolBarClass : 'w-full flex gap-4 pl-4',
+        ]"
       >
         <button class="ql-bold">
           <bold-icon class="ql-bold size-4 text-foreground cursor-pointer" />
@@ -72,11 +98,20 @@ const onClickSend = () => {
           />
         </button>
       </div>
-      <div class="min-h-32 overflow-auto bg-default-100 rounded-md w-full break-words  resize-y">
-        <div ref="editor" />
+      <div
+        :class="[
+          props.wrapperClass ? props.wrapperClass : 'min-h-32 overflow-auto bg-default-100 rounded-md w-full break-words resize-y',
+        ]"
+      >
+        <div
+          ref="editor"
+          class="relative text-default-foreground"
+        />
       </div>
       <div
-        class="w-full"
+        :class="[
+          props.footerClass ? props.footerClass : 'w-full h-fit flex-grow-0 flex-shrink basis-auto',
+        ]"
       >
         <Button
           type="primary"
@@ -99,5 +134,14 @@ const onClickSend = () => {
 <style>
 .ql-editor p{
   word-break: break-all;
+}
+.ql-editor.ql-blank::before{
+  font-style: normal;
+}
+.dark .ql-editor.ql-blank::before {
+  color: #141414;
+}
+.dark .ql-editor.ql-blank::before {
+  color: #ccc;
 }
 </style>
