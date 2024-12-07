@@ -41,6 +41,9 @@ importers:
       '@miraiui-org/vue-transition-collapse':
         specifier: 1.0.0-alpha.8
         version: 1.0.0-alpha.8
+      '@miraiui-org/vue-transition-fade':
+        specifier: 1.0.0-alpha.6
+        version: 1.0.0-alpha.6
       '@miraiui-org/vue-transition-slide-fade':
         specifier: 1.0.0-alpha.4
         version: 1.0.0-alpha.4

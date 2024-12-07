@@ -1,5 +1,7 @@
 // import type { NitroFetchRequest, NitroFetchOptions } from 'nitropack/types';
-
+declare interface AppState {
+  drawer: boolean;
+}
 declare interface ApiCommonError {
   statusCode: number;
   stack: unknown[];

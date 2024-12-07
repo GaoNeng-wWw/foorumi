@@ -20,7 +20,7 @@ const onClickNode = (node: TreeData<T>) => {
 <template>
   <div
     :data-padding="padding"
-    class="w-full group text-foreground data-[padding]:px-4"
+    class="w-full group text-foreground data-[padding=true]:px-4"
   >
     <template
       v-for="(node, idx) in data"
