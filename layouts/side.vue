@@ -30,33 +30,23 @@ const closeDrawer = () => {
       to="body"
       :disabled="!appState.drawer"
     >
-      <transition
-        enter-active-class="transition duration-normal"
-        leave-active-class="transition duration-normal"
-        leave-to-class="-translate-x-full"
-        leave-from-class="translate-x-0"
-        enter-from-class="-translate-x-full"
-        enter-to-class="translate-x-0"
-      >
-        <aside
-          :key="appState.drawer ? 'draw': ' static'"
-          :data-drawer="appState.drawer"
-          :data-sticky="asideSticky"
-          class="
+      <aside
+        :data-drawer="appState.drawer"
+        :data-sticky="asideSticky"
+        class="
           transition
-          shrink-0 w-80 h-full grow-0 basis-auto data-[drawer=false]:hidden
-          data-[drawer=false]:md:block data-[drawer=false]:md:static
+          shrink-0 w-80 h-full grow-0 basis-auto data-[drawer=true]:animate-fade-right animate-duration-300
+          data-[drawer=false]:md:block data-[drawer=false]:md:static data-[drawer=false]:hidden
           data-[drawer=true]:bg-default-200 data-[drawer=true]:z-50 data-[drawer=true]:p-4
           data-[drawer=true]:fixed data-[drawer=true]:top-0 data-[drawer=true]:left-0
           data-[sticky=true]:data-[drawer=false]:sticky data-[sticky=true]:data-[drawer=false]:top-20
       "
-          :class="{
-            [asideExternalClass]: true,
-          }"
-        >
-          <slot name="aside" />
-        </aside>
-      </transition>
+        :class="{
+          [asideExternalClass]: true,
+        }"
+      >
+        <slot name="aside" />
+      </aside>
       <transition-fade>
         <div
           v-if="appState.drawer"

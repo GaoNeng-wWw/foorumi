@@ -12,15 +12,14 @@ type PostList = {
   size: number;
   total: number;
   data: SerializeObject<{
-    update_at: Date;
+    pin: boolean;
+    floors: number;
     id: number;
     title: string;
-    content: string;
     author_id: number;
-    hidden: boolean;
-    hidden_reason: boolean;
-    aid: number;
-    create_at: Date;
+    author: {
+      name: string;
+    };
   }>[];
 };
 
@@ -46,10 +45,16 @@ export const usePostList = (
     watch: [page, area],
     server: !import.meta.dev,
   });
-  const postList: Ref<PostList['data']> = ref([]);
+  const unsafePostList: Ref<Set<PostList['data'][number]>> = ref(new Set());
+  const idSet: Ref<Set<number>> = ref(new Set());
+  const postList: ComputedRef<PostList['data']> = computed(() => {
+    if (unsafePostList.value.size) {
+      return Array.from<SerializeObject<PostList['data'][number]>>(unsafePostList.value);
+    }
+    return [];
+  });
   const nextPage = () => {
     page.value += 1;
-    console.log(page.value);
   };
   const prevPage = () => {
     if (page.value <= 1) {
@@ -57,15 +62,35 @@ export const usePostList = (
     }
     page.value -= 1;
   };
-
-  watch(
-    () => data,
-    () => {
-      postList.value.push(...data?.value?.data ?? []);
-    }, { immediate: true, deep: true });
+  // watch(postList, () => {
+  //   // console.log(postList.value, page.value);
+  // }, { deep: true,
+  //   onTrigger(event) {
+  //     debugger;
+  //     // console.log('trigger', event, event.target);
+  //   },
+  //   onTrack(event) {
+  //     // console.log('track', event);
+  //   },
+  // });
+  watch(data, () => {
+    if (page.value === 1 && postList.value.length > 0) {
+      unsafePostList.value = new Set();
+      idSet.value = new Set();
+    }
+    data.value?.data.forEach((item) => {
+      if (idSet.value.has(item.id)) {
+        return;
+      }
+      unsafePostList.value.add(item);
+      idSet.value.add(item.id);
+    });
+  }, { immediate: true, deep: true });
 
   watch(() => opts.area, () => {
-    postList.value = [];
+    unsafePostList.value = new Set();
+    idSet.value = new Set();
+    console.log(postList.value);
     area.value = opts.area?.value.toString();
     page.value = 1;
   }, { deep: true });
