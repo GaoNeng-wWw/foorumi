@@ -16,6 +16,7 @@ const forwardProps = useForwardProps(props);
 <template>
   <popover-root
     v-model:open="open"
+    :data-popover="true"
     :class="['w-full', props.rootClass]"
   >
     <popover-trigger :class="['w-fit', props.rootClass]">
@@ -55,3 +56,9 @@ const forwardProps = useForwardProps(props);
     </popover-portal>
   </popover-root>
 </template>
+
+<style>
+div[data-radix-popper-content-wrapper] {
+  z-index: 999 !important;
+}
+</style>

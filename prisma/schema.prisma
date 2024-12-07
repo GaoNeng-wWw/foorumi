@@ -118,7 +118,7 @@ model Post {
   // Summary that other users can see without clicking on it
   content String
 
-  author_id Int     @unique
+  author_id Int    
   author    Profile @relation(fields: [author_id], references: [id])
 
   // if hidden is true, only manager, site admin and have users with corresponding permissions can visit

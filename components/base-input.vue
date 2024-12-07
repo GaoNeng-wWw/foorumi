@@ -16,6 +16,9 @@ const props = withDefaults(
     err?: boolean;
     requireIcon?: boolean;
     descClass?: string;
+    inputClass?: string;
+    inputWrapperClass?: string;
+    placeholder?: string;
   }>(),
   {
     type: 'text',
@@ -28,6 +31,9 @@ const props = withDefaults(
     err: false,
     requiredIcon: false,
     descClass: 'font-bold leading-none"',
+    inputClass: '',
+    inputWrapperClass: '',
+    placeholder: '',
   },
 );
 
@@ -107,13 +113,14 @@ defineExpose({ error, valid: setInvalid });
       >*</span>
     </label>
     <div
-      class="flex items-center w-full"
+      class="flex items-center w-full rounded"
       :class="{
         'bg-danger/50': error,
         'bg-default': !error,
+        [props.inputWrapperClass]: true,
       }"
     >
-      <div>
+      <div class="shrink-0 px-2">
         <slot name="prefix" />
       </div>
       <input
@@ -123,8 +130,10 @@ defineExpose({ error, valid: setInvalid });
           'py-1 px-2': size === 'sm',
           'py-2 px-3': size === 'md',
           'py-3 px-4': size === 'lg',
+          'placeholder-danger-800': error,
         }"
         :type="type"
+        :placeholder="props.placeholder"
         @focus="onFocus"
         @blur="onBlur"
         @input="onInput"

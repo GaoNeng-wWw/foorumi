@@ -1,5 +1,7 @@
 // import type { NitroFetchRequest, NitroFetchOptions } from 'nitropack/types';
-
+declare interface AppState {
+  drawer: boolean;
+}
 declare interface ApiCommonError {
   statusCode: number;
   stack: unknown[];
@@ -61,6 +63,8 @@ declare type PermissionTable =
   | 'post::hidden'
   // 访问一个帖子
   | 'post::visit'
+  // 加载帖子列表
+  | 'post::list-load'
   // 在一个帖子下创建一个评论
   | 'comment::create'
   // 隐藏自己的评论

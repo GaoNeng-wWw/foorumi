@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { ChevronDownIcon } from '@heroicons/vue/24/solid';
 
-const { id, leaf, selected, expand } = defineProps<{
+const { id, leaf, selected, expand, padding = false } = defineProps<{
   id: string;
   leaf?: boolean;
   selected?: boolean;
   expand?: boolean;
   isFirst?: boolean;
+  padding: boolean;
 }>();
 const emits = defineEmits<{
   clickNode: [string];
@@ -22,11 +23,11 @@ const onClickNode = () => {
 
 <template>
   <div
-
+    :data-padding="padding"
     :data-leaf="leaf"
     :data-selected="selected"
     :data-expand="expand"
-    class="w-full flex items-center justify-center gap-2 group data-[leaf=true]:px-8"
+    class="w-full flex items-center justify-center gap-2 group data-[leaf=true]:px-8 data-[padding=false]:px-0"
   >
     <div
       v-if="!leaf "
@@ -41,7 +42,7 @@ const onClickNode = () => {
       </slot>
     </div>
     <div
-      class="flex-auto group-data-[selected=true]:bg-primary-200 hover:bg-default p-1 my-0.5 px-2 rounded-md cursor-pointer transition duration-300"
+      class="flex-auto break-all group-data-[selected=true]:bg-primary-200 hover:bg-default p-1 my-0.5 px-2 rounded-md cursor-pointer transition duration-300"
       @click="onClickNode"
     >
       <slot />
