@@ -162,6 +162,8 @@ model Thread {
   update_at DateTime @updatedAt
 
   post Post @relation(fields: [parent], references: [id])
+
+  floor BigInt @default(1)
 }
 
 // eg.

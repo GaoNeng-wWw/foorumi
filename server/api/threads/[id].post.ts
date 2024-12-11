@@ -45,6 +45,12 @@ export default defineProtectedApi(async (event) => {
     });
   }
 
+  const redis = useRedis();
+  const key = TRHEADS(postId);
+  const counter = await redis.getItem(key);
+  const cnt = !counter ? 1 : Number.parseInt(counter.toString() ?? '1') + 1;
+  await redis.setItem(key, cnt);
+
   const thread = await prisma.thread.create({
     data: {
       content,
@@ -56,6 +62,7 @@ export default defineProtectedApi(async (event) => {
       post: {
         connect: targetPost,
       },
+      floor: cnt,
     },
     select: {
       content: true,
@@ -69,16 +76,10 @@ export default defineProtectedApi(async (event) => {
       create_at: true,
       update_at: true,
       id: true,
+      floor: true,
     },
   });
-  const redis = useRedis();
-  const key = TRHEADS(postId);
-  const counter = await redis.getItem(key);
-  if (!counter) {
-    await redis.setItem(key, 1);
-  } else {
-    await redis.setItem(key, Number.parseInt(counter.toString() ?? '1') + 1);
-  }
+
   return {
     id: thread.id,
     content: thread.content,
@@ -87,5 +88,6 @@ export default defineProtectedApi(async (event) => {
       bio: thread.author.bio,
       id: thread.author.account_id,
     },
+    floor: thread.floor.toString(),
   };
 }, ['post::create']);

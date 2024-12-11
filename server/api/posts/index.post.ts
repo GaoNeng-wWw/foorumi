@@ -59,9 +59,12 @@ export default defineProtectedApi(async (ctx) => {
             connect: profile,
           },
           content,
+          floor: 1,
         },
       },
     },
   });
+  const redis = useRedis();
+  await redis.setItem(TRHEADS(post.id), 1);
   return post;
 });

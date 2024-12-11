@@ -24,6 +24,7 @@ const onPageUpdate = (page: number) => {
         :author-id="thread.authorId"
         :author-name="thread.authorName"
         :content="thread.content"
+        :floor="thread.floor"
       >
         <template #title-prefix>
           <ghost-button @click="() => $router.back()">

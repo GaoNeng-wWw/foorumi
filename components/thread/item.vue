@@ -8,6 +8,7 @@ const {
   authorId,
   authorName,
   content,
+  floor = '',
 } = defineProps<{
   showHeader?: boolean;
   showToolBar?: boolean;
@@ -15,6 +16,7 @@ const {
   authorId: number;
   authorName: string;
   content: string;
+  floor: string;
 }>();
 </script>
 
@@ -47,6 +49,7 @@ const {
           <thread-toolbar
             v-if="showToolBar"
             v-model="showReply"
+            :floor="floor"
           />
           <div class="w-full">
             <reply-list

@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 const showReply = defineModel<boolean>();
+const { floor } = defineProps<{
+  floor: string;
+}>();
 </script>
 
 <template>
@@ -7,7 +10,7 @@ const showReply = defineModel<boolean>();
     <div class="ml-auto space-x-4">
       <span>举报</span>
       <div class="space-x-2 inline-block">
-        <span>#1</span>
+        <span>#{{ floor }}</span>
         <span
           class="cursor-pointer"
           @click="showReply = !showReply"

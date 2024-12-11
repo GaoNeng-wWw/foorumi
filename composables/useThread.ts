@@ -36,6 +36,7 @@ export type Thread = {
   showUpdateAt: string;
   createAt: Date;
   updateAt: Date;
+  floor: string;
 };
 
 export type UseThreadsOptions = {
@@ -94,6 +95,7 @@ export const useThreads = (
         content: rawThread.content,
         createAt: new Date(rawThread.create_at),
         updateAt: new Date(rawThread.update_at),
+        floor: rawThread.floor,
       };
     });
   });

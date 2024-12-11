@@ -27,6 +27,7 @@ export default defineProtectedApi(async (event) => {
       content: true,
       create_at: true,
       update_at: true,
+      floor: true,
       author: {
         include: {
           account: {
@@ -62,6 +63,7 @@ export default defineProtectedApi(async (event) => {
       create_at: thread.create_at,
       update_at: thread.update_at,
       author: flatAuthor(thread.author),
+      floor: thread.floor.toString(),
     };
   });
   const redis = useRedis();
