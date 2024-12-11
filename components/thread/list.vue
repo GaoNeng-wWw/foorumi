@@ -36,7 +36,7 @@ const onPageUpdate = (page: number) => {
     <div class="mt-2">
       <pagination
         :total-item="totalItems"
-        :size="size"
+        :page-size="size"
         @page-update="onPageUpdate"
       />
     </div>
