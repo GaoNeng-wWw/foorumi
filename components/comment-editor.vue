@@ -55,17 +55,28 @@ onMounted(() => {
 
 const buttonState = ref<'pending' | 'loading'>('pending');
 
-const emit = defineEmits<{ send: [string]; undo: [] }>();
+const setButtoonStateToPending = () => {
+  buttonState.value = 'pending';
+};
+
+const emit = defineEmits<{
+  send: [{
+    content: string;
+    success: () => void;
+    isEmpty: boolean;
+  }];
+  undo: [];
+}>();
 const undo = () => {
   quill.history.undo();
   emit('undo');
 };
 const onClickSend = () => {
   buttonState.value = 'loading';
-  emit('send', quill.getSemanticHTML());
-  setTimeout(() => {
-    buttonState.value = 'pending';
-  }, 5000);
+  const isEmpty = quill.getContents().length() === 1;
+  const content = quill.getSemanticHTML();
+  const success = setButtoonStateToPending;
+  emit('send', { isEmpty, content, success });
 };
 </script>
 

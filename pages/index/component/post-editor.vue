@@ -24,15 +24,17 @@ const props = withDefaults(
   },
 );
 
-const onSend = (html: string) => {
+const onSend = ({ content, success }: { content: string; success: () => void }) => {
   if (!postTitle.value.length) {
     canPost.value = false;
     titleErrMessage.value = '帖子名不能为空';
+    success();
     return;
   }
   if (!sendTo.value || !sendTo.value.value) {
     canPost.value = false;
     titleErrMessage.value = '您必须选择一个要发布到的版块';
+    success();
     return;
   }
   canPost.value = true;
@@ -40,7 +42,7 @@ const onSend = (html: string) => {
   $fetch('/api/posts', {
     body: {
       title: postTitle.value,
-      content: html,
+      content: content,
       area_id: sendTo.value.value,
     },
     method: 'post',
@@ -51,11 +53,13 @@ const onSend = (html: string) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       useMessage({
         type: 'danger',
         content: err.data.message,
       });
+    })
+    .finally(() => {
+      success();
     });
 };
 </script>

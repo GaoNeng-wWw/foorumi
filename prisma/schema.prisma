@@ -116,6 +116,7 @@ model Post {
   title String
 
   // Summary that other users can see without clicking on it
+  // TODO: keep empty now
   content String
 
   author_id Int    
@@ -137,6 +138,8 @@ model Post {
   create_at DateTime @default(now())
   update_at DateTime @updatedAt
 
+  threads Thread[]
+
   @@index([update_at])
 }
 
@@ -152,11 +155,13 @@ model Thread {
   // In which post should this post be displayed
   parent Int
 
-  author_id Int     @unique
+  author_id Int
   author    Profile @relation(fields: [author_id], references: [id])
 
   create_at DateTime @default(now())
   update_at DateTime @updatedAt
+
+  post Post @relation(fields: [parent], references: [id])
 }
 
 // eg.

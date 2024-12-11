@@ -45,13 +45,21 @@ export default defineProtectedApi(async (ctx) => {
   const post = await prisma.post.create({
     data: {
       title: title,
-      content: content,
+      content: '',
       pin: false,
       author: {
         connect: profile,
       },
       area: {
         connect: area,
+      },
+      threads: {
+        create: {
+          author: {
+            connect: profile,
+          },
+          content,
+        },
       },
     },
   });
