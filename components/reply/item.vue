@@ -1,6 +1,9 @@
 <script lang="ts" setup>
-const { leaf = true } = defineProps<{
+const { leaf = true, content = '', authorName, authorId } = defineProps<{
   leaf?: boolean;
+  content?: string;
+  authorName?: string;
+  authorId?: number;
 }>();
 </script>
 
@@ -12,20 +15,16 @@ const { leaf = true } = defineProps<{
     <div class="w-full space-y-2">
       <div class=" grid grid-cols-[40px_minmax(0,1fr)] items-center gap-2">
         <div class="size-10 shrink-0 bg-red-500" />
-        <p class=" font-bold">
-          User A
-        </p>
+        <nuxt-link :to="`/user/${authorId}`">
+          <p class=" font-bold">
+            {{ authorName }}
+          </p>
+        </nuxt-link>
       </div>
       <div class="space-y-2 grid grid-cols-[40px_minmax(0,1fr)] gap-2">
-        <div />
-        <div>
-          <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Est culpa sunt, exercitationem illo animi autem aliquam voluptatibus quas et inventore dolores, non soluta reiciendis maiores nostrum quisquam fuga dolorum nemo!</span>
-          <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Est culpa sunt, exercitationem illo animi autem aliquam voluptatibus quas et inventore dolores, non soluta reiciendis maiores nostrum quisquam fuga dolorum nemo!</span>
-          <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Est culpa sunt, exercitationem illo animi autem aliquam voluptatibus quas et inventore dolores, non soluta reiciendis maiores nostrum quisquam fuga dolorum nemo!</span>
-        </div>
+        <div v-html="content" />
       </div>
       <div class="mt-2 grid grid-cols-[40px_minmax(0,1fr)] gap-2">
-        <div />
         <div>
           <span class=" dark:text-blue-400 text-blue-500 cursor-pointer">回复</span>
         </div>

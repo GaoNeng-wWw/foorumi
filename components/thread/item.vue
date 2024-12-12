@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { ThreadContext } from './context.type';
+
 const showReply = ref(false);
 
 const {
@@ -18,6 +20,7 @@ const {
   content: string;
   floor: string;
 }>();
+const { id } = inject<ThreadContext>('THREAD')!;
 </script>
 
 <template>
@@ -53,7 +56,9 @@ const {
           />
           <div class="w-full">
             <reply-list
+              :id="id"
               :show="showReply"
+              :floor="floor"
               class="border-0 bg-default-300"
             />
           </div>

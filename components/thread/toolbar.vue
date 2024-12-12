@@ -3,6 +3,13 @@ const showReply = defineModel<boolean>();
 const { floor } = defineProps<{
   floor: string;
 }>();
+const emits = defineEmits<{
+  reply: [];
+}>();
+const onClickReply = () => {
+  showReply.value = !showReply.value;
+  emits('reply');
+};
 </script>
 
 <template>
@@ -13,7 +20,7 @@ const { floor } = defineProps<{
         <span>#{{ floor }}</span>
         <span
           class="cursor-pointer"
-          @click="showReply = !showReply"
+          @click="onClickReply"
         >回复</span>
       </div>
     </div>

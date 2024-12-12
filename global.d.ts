@@ -103,6 +103,10 @@ declare type PermissionTable =
   | 'profile::update::self'
   // 修改他人的个人信息
   | 'profile::update::other'
+  // 创建一个回复
+  | 'reply::create'
+  // 展开回复
+  | 'reply::query'
   ;
 
 declare type Operator = 'and' | 'or' | 'not' | 'AND' | 'OR' | 'NOT' | 'And' | 'Or' | 'Not' | '&' | '|' | '!';

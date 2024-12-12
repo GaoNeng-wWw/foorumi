@@ -12,6 +12,7 @@ const props = withDefaults(
     inputClass?: string;
     footerClass?: string;
     placeholder?: string;
+    mainClass?: string;
   }>(),
   {
     rootClass: '',
@@ -20,6 +21,7 @@ const props = withDefaults(
     inputClass: '',
     footerClass: '',
     placeholder: '',
+    mainClass: '',
   },
 );
 
@@ -81,7 +83,7 @@ const onClickSend = () => {
 </script>
 
 <template>
-  <div class="w-full h-full px-4 py-2">
+  <div :class="[props.mainClass ? props.mainClass : 'w-full h-full px-4 py-2']">
     <div
       :class="[
         !props.rootClass ? 'w-full h-full flex flex-col bg-background dark:bg-default-200 p-4 rounded-md gap-4' : props.rootClass,

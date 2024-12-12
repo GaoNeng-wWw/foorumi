@@ -33,6 +33,8 @@ model Account {
 
   // Account Profile
   profile Profile?
+  threadReply  ThreadReply[]
+  ReplyComment  ReplyComment[]
 }
 
 // Store permission name,description and relation
@@ -84,7 +86,6 @@ model Profile {
 
   post   Post[]
   thread Thread[]
-  reply  Reply[]
   role   Role[]
   area   Area[]
 }
@@ -172,13 +173,27 @@ model Thread {
 // Alice send a new comment "NOPE, TYPESCRIPT IS NO.1"
 // The message sent by Alice is called a reply
 // Reply can have children reply. That is, the reply to the reply.
-model Reply {
-  id        Int     @id @default(autoincrement())
-  parent    Int
-  content   String
-  author_id Int     @unique
-  author    Profile @relation(fields: [author_id], references: [id])
-
+model ThreadReply {
+  id   Int  @id @default(autoincrement())
+  // Thread Id
+  parent  Int
+  floor BigInt
+  content String
+  author  Account @relation(fields: [author_id], references: [id])
+  author_id Int
+  hot BigInt  @default(1)
   create_at DateTime @default(now())
   update_at DateTime @updatedAt
+}
+
+model ReplyComment {
+  id   Int  @id @default(autoincrement())
+  // Reply/Comment Id
+  parent  Int
+  content String
+  author  Account @relation(fields: [author_id], references: [id])
+  author_id Int
+  hot BigInt  @default(1)
+  create_at DateTime @default(now())
+  update_at DateTime @updatedAt  
 }

@@ -88,6 +88,7 @@ export function defineProtectedApi<T extends EventHandlerRequest, D>(
         });
       }
       event.context = {
+        ...event.context,
         user: {
           id,
         },

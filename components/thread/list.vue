@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ChevronLeftIcon } from '@heroicons/vue/24/solid';
+import type { ThreadContext } from './context.type';
 
 const { id } = defineProps<{
   id: number;
@@ -12,6 +13,7 @@ const onPageUpdate = (page: number) => {
   to(page);
   scrollTo({ top: 0, behavior: 'smooth' });
 };
+provide<ThreadContext>('THREAD', { id: computed(() => id) });
 </script>
 
 <template>

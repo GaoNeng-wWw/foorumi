@@ -12,7 +12,6 @@ export default defineProtectedApi(async (event) => {
       id: false,
       post: false,
       thread: false,
-      reply: false,
       role: {
         include: {
           permission: {
