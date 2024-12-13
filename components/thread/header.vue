@@ -27,11 +27,7 @@ const emits = defineEmits<{
       <slot
         name="suffix"
         @click="() => emits('suffixClick')"
-      >
-        <ghost-button>
-          只看楼主
-        </ghost-button>
-      </slot>
+      />
     </div>
   </div>
 </template>

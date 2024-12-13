@@ -5,7 +5,7 @@ import type { ThreadContext } from './context.type';
 const { id } = defineProps<{
   id: number;
 }>();
-const { threadList: staticThreadList, totalItems, size, to } = useThreads({
+const { threadList: staticThreadList, totalItems, size, author_id, to, filterByAuthorId } = useThreads({
   id: computed(() => id),
 });
 const threadList = computed(() => [...staticThreadList.value]);
@@ -31,6 +31,14 @@ provide<ThreadContext>('THREAD', { id: computed(() => id) });
         <template #title-prefix>
           <ghost-button @click="() => $router.back()">
             <chevron-left-icon class="size-6 flex-shrink-0" />
+          </ghost-button>
+        </template>
+        <template #title-suffix>
+          <ghost-button
+            :active="author_id === thread.authorId"
+            @click="() => filterByAuthorId(thread.authorId)"
+          >
+            只看楼主
           </ghost-button>
         </template>
       </thread-item>

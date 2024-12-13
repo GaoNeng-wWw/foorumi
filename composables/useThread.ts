@@ -58,6 +58,7 @@ export const useThreads = (
   const pageSize = computed(() => size);
   const threadId = computed(() => isRef(id) ? id.value : id);
   const page = ref(defaultPage);
+  const author_id: Ref<number | undefined> = ref(undefined);
   const { data, error, status } = useFetch(`/api/threads/`, {
     query: {
       size: pageSize,
@@ -65,10 +66,11 @@ export const useThreads = (
     },
     params: {
       id: unref(threadId),
+      author: unref(author_id),
     },
     method: 'get',
     server: false,
-    watch: [threadId],
+    watch: [threadId, author_id],
     lazy: true,
   });
   const loading = useDebounce(computed(() => status.value === 'pending'), 200);
@@ -81,6 +83,13 @@ export const useThreads = (
   };
   const to = (to: number) => {
     page.value = to;
+  };
+  const filterByAuthorId = (id: number) => {
+    if (author_id.value === id) {
+      author_id.value = undefined;
+      return;
+    }
+    author_id.value = id;
   };
   const threadList = computed(() => {
     if (!data.value?.data || !data.value.data.length) {
@@ -102,10 +111,12 @@ export const useThreads = (
   return {
     loading,
     reason,
+    threadList,
+    author_id,
     nextPage,
     prevPage,
     to,
-    threadList,
+    filterByAuthorId,
     totalItems: computed(() => data.value?.total),
     size: computed(() => data.value?.size),
   };

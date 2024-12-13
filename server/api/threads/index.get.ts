@@ -7,6 +7,7 @@ import { TRHEADS } from '~/server/utils';
 export default defineProtectedApi(async (event) => {
   const { data, error, success } = await getValidatedQuery(event, PageQuery.merge(z.object({
     id: z.number({ coerce: true }),
+    author: z.optional(z.number()),
   })).safeParseAsync);
   if (!success) {
     throw createError({
@@ -22,6 +23,7 @@ export default defineProtectedApi(async (event) => {
       post: {
         id,
       },
+      author_id: data.author,
     },
     select: {
       content: true,
@@ -67,9 +69,20 @@ export default defineProtectedApi(async (event) => {
     };
   });
   const redis = useRedis();
+  let cnt = Number.parseInt(await redis.getItem(TRHEADS(id)) ?? '0');
+  if (data.author) {
+    cnt = await prisma.thread.count({
+      where: {
+        post: {
+          id,
+        },
+        author_id: data.author,
+      },
+    });
+  }
   return {
     data: ret,
-    total: Number.parseInt(await redis.getItem(TRHEADS(id)) ?? '0'),
+    total: cnt,
     size,
   };
 });
