@@ -1,8 +1,9 @@
 import status from 'http-status';
 import { z } from 'zod';
 
+import { flatAuthor } from './utils/flat-author';
 import prisma from '~/lib/prisma';
-import { TRHEADS } from '~/server/utils';
+import { HIDDEN_THREADS, TRHEADS } from '~/server/utils';
 
 export default defineProtectedApi(async (event) => {
   const { data, error, success } = await getValidatedQuery(event, PageQuery.merge(z.object({
@@ -18,6 +19,7 @@ export default defineProtectedApi(async (event) => {
   const { page, size } = data;
   const skip = (page - 1) * size;
   const id = data.id;
+  const canGetHiddenThread = event.context.user.permissions.includes('thread::list::hidden');
   const threads = await prisma.thread.findMany({
     where: {
       post: {
@@ -26,10 +28,13 @@ export default defineProtectedApi(async (event) => {
       author_id: data.author,
     },
     select: {
+      id: true,
       content: true,
       create_at: true,
       update_at: true,
       floor: true,
+      hidden: true,
+      reason: true,
       author: {
         include: {
           account: {
@@ -61,15 +66,19 @@ export default defineProtectedApi(async (event) => {
   }
   const ret = threads.filter(thread => thread.author !== null).map((thread) => {
     return {
-      content: thread.content,
+      content: thread.hidden && !canGetHiddenThread ? '' : thread.content,
       create_at: thread.create_at,
       update_at: thread.update_at,
       author: flatAuthor(thread.author),
       floor: thread.floor.toString(),
+      id: thread.id,
+      hidden: thread.hidden,
+      reason: thread.reason,
     };
   });
   const redis = useRedis();
   let cnt = Number.parseInt(await redis.getItem(TRHEADS(id)) ?? '0');
+  const hidden_cnt = Number.parseInt(await redis.getItem(HIDDEN_THREADS(id)) ?? '0');
   if (data.author) {
     cnt = await prisma.thread.count({
       where: {
@@ -82,26 +91,7 @@ export default defineProtectedApi(async (event) => {
   }
   return {
     data: ret,
-    total: cnt,
+    total: canGetHiddenThread ? hidden_cnt + cnt : hidden_cnt > cnt ? 0 : Math.abs(hidden_cnt - cnt),
     size,
   };
-});
-type NestAuthor = {
-  account: {
-    id: number;
-  };
-  name: string;
-  bio: string;
-};
-type FlatAuthor = {
-  id: number;
-  name: string;
-  bio: string;
-};
-function flatAuthor(author: NestAuthor): FlatAuthor {
-  return {
-    id: author.account.id,
-    name: author.name,
-    bio: author.bio,
-  };
-}
+}, ['thread::list', 'thread::list::hidden']);

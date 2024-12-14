@@ -97,6 +97,8 @@ declare type PermissionTable =
   | 'thread::hidden::other'
   // 列出跟帖内容
   | 'thread::list'
+  // 列出隐藏的thread
+  | 'thread::list::hidden'
   // 获取公开个人信息
   | 'profile::get'
   // 修改自己的个人信息

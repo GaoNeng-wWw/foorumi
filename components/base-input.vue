@@ -43,6 +43,7 @@ const emits = defineEmits(['blur', 'input', 'forcus', 'click']);
 const triggerMethod = computed(() => typeof props.trigger === 'string' ? [props.trigger] : props.trigger);
 const { type, size, showLabel, labelPosition } = toRefs(props);
 const modelValue = defineModel<string>({ required: true });
+const prefix = useSlots().prefix;
 const invalid = ref(props.err);
 if (props.err) {
   watch(() => props.err, () => {
@@ -120,7 +121,10 @@ defineExpose({ error, valid: setInvalid });
         [props.inputWrapperClass]: true,
       }"
     >
-      <div class="shrink-0 px-2">
+      <div
+        v-if="prefix"
+        class="shrink-0 px-2"
+      >
         <slot name="prefix" />
       </div>
       <input

@@ -29,6 +29,7 @@ export type RawThreadList = SerializeObject<{
 }>;
 
 export type Thread = {
+  id: number;
   authorId: number;
   authorName: string;
   content: string;
@@ -37,6 +38,8 @@ export type Thread = {
   createAt: Date;
   updateAt: Date;
   floor: string;
+  hidden: boolean;
+  reason: string;
 };
 
 export type UseThreadsOptions = {
@@ -105,6 +108,9 @@ export const useThreads = (
         createAt: new Date(rawThread.create_at),
         updateAt: new Date(rawThread.update_at),
         floor: rawThread.floor,
+        id: rawThread.id,
+        hidden: rawThread.hidden,
+        reason: rawThread.reason,
       };
     });
   });

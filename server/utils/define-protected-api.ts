@@ -3,6 +3,7 @@ import type { EventHandlerRequest, EventHandler } from 'h3';
 import status from 'http-status';
 import { accessTokenNs } from '../ns';
 import { PERMISSION_NS } from './redis';
+import type { Unit } from './permission-tree';
 import prisma from '~/lib/prisma';
 
 export function defineProtectedApi<T extends EventHandlerRequest, D>(
@@ -80,7 +81,7 @@ export function defineProtectedApi<T extends EventHandlerRequest, D>(
       if (
         requiredPermissions?.length
         && !permissions.some(permission => permission === '*')
-        && !permissions.every(permission => requiredPermissions?.includes(permission))
+        && permissions.every(permission => !requiredPermissions?.includes(permission))
       ) {
         throw createError({
           status: status.FORBIDDEN,
@@ -91,6 +92,7 @@ export function defineProtectedApi<T extends EventHandlerRequest, D>(
         ...event.context,
         user: {
           id,
+          permissions,
         },
       };
       try {

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ThreadContext } from './context.type';
+import { THREAD_ITEM_CONTEXT_KEY, type ThreadContext } from './context.type';
 
 const showReply = ref(false);
 
@@ -11,6 +11,8 @@ const {
   authorName,
   content,
   floor = '',
+  threadId,
+  hidden, hiddenReason,
 } = defineProps<{
   showHeader?: boolean;
   showToolBar?: boolean;
@@ -19,8 +21,25 @@ const {
   authorName: string;
   content: string;
   floor: string;
+  threadId: number;
+  hidden: boolean;
+  hiddenReason: string;
 }>();
+const isHidden = ref(hidden);
+const reason = ref(hiddenReason);
 const { id } = inject<ThreadContext>('THREAD')!;
+const onHiddenSuccess = (id: number, reason: string) => {
+  console.log(id, reason);
+};
+provide(THREAD_ITEM_CONTEXT_KEY, {
+  threadId: computed(() => threadId),
+});
+watch(() => hidden, () => {
+  isHidden.value = hidden;
+}, { immediate: true });
+watch(() => hiddenReason, () => {
+  reason.value = hiddenReason;
+}, { immediate: true });
 </script>
 
 <template>
@@ -46,13 +65,26 @@ const { id } = inject<ThreadContext>('THREAD')!;
         <div class="text-base text-foreground leading-7 flex-shrink-0 flex-grow basis-60">
           <!-- We filter html in server side -->
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="content" />
+          <div
+            v-if="!isHidden"
+            v-html="content"
+          />
+          <app-alert
+            v-else
+            type="warning"
+            title="该楼层被管理员隐藏"
+            :content="`理由是: ${hiddenReason}`"
+          />
         </div>
         <div class="">
           <thread-toolbar
             v-if="showToolBar"
             v-model="showReply"
+            v-model:is-hidden="isHidden"
+            v-model:reason="reason"
             :floor="floor"
+            :author-id="authorId"
+            @hidden-success="onHiddenSuccess"
           />
           <div class="w-full">
             <reply-list

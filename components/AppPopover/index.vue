@@ -27,7 +27,7 @@ const forwardProps = useForwardProps(props);
         :data-content-follow-trigger="props.contentFollowTriggerWidth"
         :class="['w-fit data-[content-follow-trigger=true]:w-[var(--radix-popover-trigger-width)]', props.contentClass]"
         v-bind="{ ...forwardProps, ...$attrs }"
-        force-mount
+        :force-mount="props.forceMount"
       >
         <transition
           enter-active-class="transition duration-normal"

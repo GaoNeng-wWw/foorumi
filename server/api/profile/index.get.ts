@@ -24,6 +24,7 @@ export default defineProtectedApi(async (event) => {
       },
       name: true,
       bio: true,
+      account_id: true,
     },
   });
   if (!profile) {

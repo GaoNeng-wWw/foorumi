@@ -27,6 +27,9 @@ provide<ThreadContext>('THREAD', { id: computed(() => id) });
         :author-name="thread.authorName"
         :content="thread.content"
         :floor="thread.floor"
+        :thread-id="thread.id"
+        :hidden="thread.hidden"
+        :hidden-reason="thread.reason"
       >
         <template #title-prefix>
           <ghost-button @click="() => $router.back()">
