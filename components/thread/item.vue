@@ -27,9 +27,14 @@ const {
 }>();
 const isHidden = ref(hidden);
 const reason = ref(hiddenReason);
+const _content = ref(content);
 const { id } = inject<ThreadContext>('THREAD')!;
-const onHiddenSuccess = (id: number, reason: string) => {
-  console.log(id, reason);
+const onHiddenSuccess = (_reason: string) => {
+  reason.value = _reason;
+  isHidden.value = true;
+};
+const patch = (content: string) => {
+  _content.value = content;
 };
 provide(THREAD_ITEM_CONTEXT_KEY, {
   threadId: computed(() => threadId),
@@ -39,6 +44,9 @@ watch(() => hidden, () => {
 }, { immediate: true });
 watch(() => hiddenReason, () => {
   reason.value = hiddenReason;
+}, { immediate: true });
+watch(() => content, () => {
+  _content.value = content;
 }, { immediate: true });
 </script>
 
@@ -67,7 +75,7 @@ watch(() => hiddenReason, () => {
           <!-- eslint-disable-next-line vue/no-v-html -->
           <div
             v-if="!isHidden"
-            v-html="content"
+            v-html="_content"
           />
           <app-alert
             v-else
@@ -84,6 +92,7 @@ watch(() => hiddenReason, () => {
             v-model:reason="reason"
             :floor="floor"
             :author-id="authorId"
+            :patch="patch"
             @hidden-success="onHiddenSuccess"
           />
           <div class="w-full">

@@ -11,14 +11,15 @@ const profile = useState<Pick<Profile, 'name' | 'bio' | 'account_id'> | null>(PR
 const showReply = defineModel<boolean>();
 const hidden = defineModel<boolean>('isHidden');
 const hiddenReason = defineModel<string>('reason', { default: '' });
-const { floor, authorId } = defineProps<{
+const { floor, authorId, patch } = defineProps<{
   floor: string;
   authorId: number;
+  patch?: (content: string) => void;
 }>();
 const show = ref(false);
 const emits = defineEmits<{
   reply: [];
-  hiddenSuccess: [number, string];
+  hiddenSuccess: [string];
 }>();
 const onClickReply = () => {
   showReply.value = !showReply.value;
@@ -61,9 +62,13 @@ const setUnHidden = () => {
       hidden: false,
     },
   })
-    .then(() => {
+    .then((newThread) => {
       hidden.value = false;
-      router.go(0);
+      if (!newThread) {
+        router.go(0);
+        return;
+      }
+      patch?.(newThread.content);
     })
     .catch((err) => {
       useMessage({
@@ -80,7 +85,7 @@ const submitHidden = () => {
     },
   })
     .then(() => {
-      emits('hiddenSuccess', unref(threadId), unref(hiddenReason));
+      emits('hiddenSuccess', unref(hiddenReason));
     })
     .catch((err) => {
       useMessage({

@@ -1,5 +1,7 @@
 import status from 'http-status';
 import { z } from 'zod';
+import { NORMAL_SELECT } from './utils/select-constant';
+import { flatAuthor } from './utils/flat-author';
 import prisma from '~/lib/prisma';
 
 const PatchThreadParam = z.object({
@@ -42,7 +44,7 @@ export default defineProtectedApi(async (event) => {
     });
   }
 
-  await prisma.thread.update({
+  const newThread = await prisma.thread.update({
     where: {
       id,
     },
@@ -50,6 +52,19 @@ export default defineProtectedApi(async (event) => {
       content: data.content || undefined,
       hidden: data.hidden,
     },
+    select: {
+      ...NORMAL_SELECT,
+      id: true,
+    },
   });
-  return;
+  return {
+    content: newThread.content,
+    create_at: newThread.create_at,
+    update_at: newThread.update_at,
+    author: flatAuthor(newThread.author),
+    floor: newThread.floor.toString(),
+    id: newThread.id,
+    hidden: false,
+    reason: '',
+  };
 }, ['thread::update::other', 'thread::update::self']);
