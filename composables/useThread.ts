@@ -17,7 +17,10 @@ export type RawThread = SerializeObject<{
 }>;
 
 export type RawThreadList = SerializeObject<{
-  data: RawThread;
+  data: {
+    title: string;
+    threads: RawThread[];
+  };
   /**
    * @description total threads
    */
@@ -94,11 +97,12 @@ export const useThreads = (
     }
     author_id.value = id;
   };
+  const threadTitle = computed(() => data.value?.data ? data.value.data.title : '');
   const threadList = computed(() => {
-    if (!data.value?.data || !data.value.data.length) {
+    if (!data.value?.data || !data.value.data.threads.length) {
       return [];
     }
-    return data.value.data.map<Thread>((rawThread) => {
+    return data.value.data.threads.map<Thread>((rawThread) => {
       return {
         authorId: rawThread.author.id,
         authorName: rawThread.author.name,
@@ -118,6 +122,7 @@ export const useThreads = (
     loading,
     reason,
     threadList,
+    threadTitle,
     author_id,
     nextPage,
     prevPage,

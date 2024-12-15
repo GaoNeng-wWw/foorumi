@@ -59,11 +59,22 @@ export default defineProtectedApi(async (event) => {
   });
   if (!threads.length) {
     return {
-      data: [],
+      data: {
+        title: '',
+        threads: [],
+      },
       total: 0,
       size,
     };
   }
+  const { title } = await prisma.post.findFirst({
+    where: {
+      id,
+    },
+    select: {
+      title: true,
+    },
+  }) ?? { title: '' };
   const ret = threads.filter(thread => thread.author !== null).map((thread) => {
     return {
       content: thread.hidden && !canGetHiddenThread ? '' : thread.content,
@@ -90,7 +101,10 @@ export default defineProtectedApi(async (event) => {
     });
   }
   return {
-    data: ret,
+    data: {
+      title,
+      threads: ret,
+    },
     total: canGetHiddenThread ? hidden_cnt + cnt : hidden_cnt > cnt ? 0 : Math.abs(hidden_cnt - cnt),
     size,
   };

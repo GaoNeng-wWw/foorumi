@@ -12,12 +12,15 @@ const {
   content,
   floor = '',
   threadId,
-  hidden, hiddenReason,
+  hidden,
+  hiddenReason,
+  title,
 } = defineProps<{
   showHeader?: boolean;
   showToolBar?: boolean;
   showAside?: boolean;
   authorId: number;
+  title: string;
   authorName: string;
   content: string;
   floor: string;
@@ -48,13 +51,14 @@ watch(() => hiddenReason, () => {
 watch(() => content, () => {
   _content.value = content;
 }, { immediate: true });
+console.log(title);
 </script>
 
 <template>
   <div class="w-full z-0 group first:pt-4">
     <thread-header
       v-if="showHeader"
-      title="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus eos asperiores itaque omnis quam, iure delectus beatae quia, voluptate sed sequi ad cupiditate eligendi ipsam? Deleniti a eligendi inventore sint."
+      :title="title"
     >
       <template #prefix>
         <slot name="title-prefix" />

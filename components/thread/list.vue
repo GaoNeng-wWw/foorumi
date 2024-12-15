@@ -5,7 +5,7 @@ import type { ThreadContext } from './context.type';
 const { id } = defineProps<{
   id: number;
 }>();
-const { threadList: staticThreadList, totalItems, size, author_id, to, filterByAuthorId } = useThreads({
+const { threadList: staticThreadList, totalItems, size, author_id, to, filterByAuthorId, threadTitle } = useThreads({
   id: computed(() => id),
 });
 const threadList = computed(() => [...staticThreadList.value]);
@@ -30,6 +30,7 @@ provide<ThreadContext>('THREAD', { id: computed(() => id) });
         :thread-id="thread.id"
         :hidden="thread.hidden"
         :hidden-reason="thread.reason"
+        :title="threadTitle"
       >
         <template #title-prefix>
           <ghost-button @click="() => $router.back()">
