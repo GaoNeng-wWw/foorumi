@@ -97,12 +97,18 @@ declare type PermissionTable =
   | 'thread::hidden::other'
   // 列出跟帖内容
   | 'thread::list'
+  // 列出隐藏的thread
+  | 'thread::list::hidden'
   // 获取公开个人信息
   | 'profile::get'
   // 修改自己的个人信息
   | 'profile::update::self'
   // 修改他人的个人信息
   | 'profile::update::other'
+  // 创建一个回复
+  | 'reply::create'
+  // 展开回复
+  | 'reply::query'
   ;
 
 declare type Operator = 'and' | 'or' | 'not' | 'AND' | 'OR' | 'NOT' | 'And' | 'Or' | 'Not' | '&' | '|' | '!';

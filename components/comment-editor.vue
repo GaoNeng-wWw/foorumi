@@ -12,6 +12,7 @@ const props = withDefaults(
     inputClass?: string;
     footerClass?: string;
     placeholder?: string;
+    mainClass?: string;
   }>(),
   {
     rootClass: '',
@@ -20,6 +21,7 @@ const props = withDefaults(
     inputClass: '',
     footerClass: '',
     placeholder: '',
+    mainClass: '',
   },
 );
 
@@ -55,22 +57,33 @@ onMounted(() => {
 
 const buttonState = ref<'pending' | 'loading'>('pending');
 
-const emit = defineEmits<{ send: [string]; undo: [] }>();
+const setButtoonStateToPending = () => {
+  buttonState.value = 'pending';
+};
+
+const emit = defineEmits<{
+  send: [{
+    content: string;
+    success: () => void;
+    isEmpty: boolean;
+  }];
+  undo: [];
+}>();
 const undo = () => {
   quill.history.undo();
   emit('undo');
 };
 const onClickSend = () => {
   buttonState.value = 'loading';
-  emit('send', quill.getSemanticHTML());
-  setTimeout(() => {
-    buttonState.value = 'pending';
-  }, 5000);
+  const isEmpty = quill.getContents().length() === 1;
+  const content = quill.getSemanticHTML();
+  const success = setButtoonStateToPending;
+  emit('send', { isEmpty, content, success });
 };
 </script>
 
 <template>
-  <div class="w-full h-full px-4 py-2">
+  <div :class="[props.mainClass ? props.mainClass : 'w-full h-full px-4 py-2']">
     <div
       :class="[
         !props.rootClass ? 'w-full h-full flex flex-col bg-background dark:bg-default-200 p-4 rounded-md gap-4' : props.rootClass,

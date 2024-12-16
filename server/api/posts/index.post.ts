@@ -45,7 +45,7 @@ export default defineProtectedApi(async (ctx) => {
   const post = await prisma.post.create({
     data: {
       title: title,
-      content: content,
+      content: '',
       pin: false,
       author: {
         connect: profile,
@@ -53,7 +53,18 @@ export default defineProtectedApi(async (ctx) => {
       area: {
         connect: area,
       },
+      threads: {
+        create: {
+          author: {
+            connect: profile,
+          },
+          content: filterXSS(content),
+          floor: 1,
+        },
+      },
     },
   });
+  const redis = useRedis();
+  await redis.setItem(TRHEADS(post.id), 1);
   return post;
 });

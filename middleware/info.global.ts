@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware((to) => {
     return;
   }
   const { data } = useFetch('/api/profile', { method: 'get' });
-  useState<Pick<Profile, 'name' | 'bio'> | null>(PROFILE, () => {
+  useState<Pick<Profile, 'name' | 'bio' | 'account_id'> | null>(PROFILE, () => {
     return computed(() => {
       return data.value;
     });

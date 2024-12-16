@@ -12,7 +12,6 @@ export default defineProtectedApi(async (event) => {
       id: false,
       post: false,
       thread: false,
-      reply: false,
       role: {
         include: {
           permission: {
@@ -25,6 +24,7 @@ export default defineProtectedApi(async (event) => {
       },
       name: true,
       bio: true,
+      account_id: true,
     },
   });
   if (!profile) {
