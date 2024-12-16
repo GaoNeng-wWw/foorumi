@@ -4,6 +4,7 @@ export const POSTLIST_COUNT_NS = (areaId: number) => `post-list::${areaId}::tota
 export const TRHEADS = (postId: number) => `thread::${postId}::total`;
 export const HIDDEN_THREADS = (postId: number) => `thread::${postId}::hidden::total`;
 export const THREAD_REPLY = (threadId: number, floor: number) => `thread::reply::${threadId}::${floor}::total`;
+export const BAN_LIST = (id: number) => `BAN::${id}`;
 export const useRedis = () => {
   return useStorage('redis');
 };

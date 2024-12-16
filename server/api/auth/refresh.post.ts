@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
   await redis.setItem(refreshTokenNamespace, refresh_token, { ttl: refreshTokenTTL });
 
   await setUserSession(event, {
-    user: { access_token: newAccessToken, refresh_token: newRefreshToken },
+    user: { access_token: newAccessToken, refresh_token: newRefreshToken, id },
   });
-  return { access_token: newAccessToken, refresh_token: newRefreshToken };
+  return { access_token: newAccessToken, refresh_token: newRefreshToken, id };
 });

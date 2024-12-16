@@ -76,11 +76,12 @@ export default defineEventHandler(async (event) => {
   await redis.setItem(accessTokenNamespace, access_token, { ttl: accessTokenTTL });
   await redis.setItem(refreshTokenNamespace, refresh_token, { ttl: refreshTokenTTL });
   await setUserSession(event, {
-    user: { access_token, refresh_token },
+    user: { access_token, refresh_token, id: account.id },
   });
 
   return {
     access_token,
     refresh_token,
+    id: account.id,
   };
 });
