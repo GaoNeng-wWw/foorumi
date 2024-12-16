@@ -76,7 +76,7 @@ console.log(title);
       <div class="flex flex-col justify-between px-4 py-4 bg-default-200 border-b border-default-400 min-h-60">
         <div class="text-base text-foreground leading-7 flex-shrink-0 flex-grow basis-60">
           <!-- We filter html in server side -->
-          <!-- eslint-disable-next-line vue/no-v-html -->
+          <!-- eslint-disable vue/no-v-html -->
           <div
             v-if="!isHidden"
             v-html="_content"

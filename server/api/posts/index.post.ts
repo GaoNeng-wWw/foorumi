@@ -58,7 +58,7 @@ export default defineProtectedApi(async (ctx) => {
           author: {
             connect: profile,
           },
-          content,
+          content: filterXSS(content),
           floor: 1,
         },
       },

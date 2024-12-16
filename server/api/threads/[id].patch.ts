@@ -49,7 +49,7 @@ export default defineProtectedApi(async (event) => {
       id,
     },
     data: {
-      content: data.content || undefined,
+      content: data.content ? filterXSS(data.content) : undefined,
       hidden: data.hidden,
     },
     select: {

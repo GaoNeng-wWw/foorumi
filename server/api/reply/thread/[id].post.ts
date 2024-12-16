@@ -55,7 +55,7 @@ export default defineProtectedApi(async (event) => {
       author: {
         connect: account,
       },
-      content: bodyData.content,
+      content: filterXSS(bodyData.content),
       parent: id,
       floor: BigInt(bodyData.floor),
     },

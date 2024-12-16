@@ -22,6 +22,7 @@ const { leaf = true, content = '', authorName, authorId } = defineProps<{
         </nuxt-link>
       </div>
       <div class="space-y-2 grid grid-cols-[40px_minmax(0,1fr)] gap-2">
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <div v-html="content" />
       </div>
       <div class="mt-2 grid grid-cols-[40px_minmax(0,1fr)] gap-2">

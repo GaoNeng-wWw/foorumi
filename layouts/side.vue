@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { TransitionFade } from '@miraiui-org/vue-transition-fade';
-import { Button as MButton } from '@miraiui-org/vue-button';
 
 const { direction = 'ltr', asideSticky = false, asideExternalClass = '', layoutRootExternalClass = '' } = defineProps<{
   direction?: 'rtl' | 'ltr';

@@ -53,7 +53,7 @@ export default defineProtectedApi(async (event) => {
 
   const thread = await prisma.thread.create({
     data: {
-      content,
+      content: filterXSS(content),
       author: {
         connect: {
           ...profile,
