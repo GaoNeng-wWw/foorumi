@@ -109,6 +109,26 @@ declare type PermissionTable =
   | 'reply::create'
   // 展开回复
   | 'reply::query'
+  // 创建一个角色
+  | 'role::create'
+  // 删除一个角色
+  | 'role::remove'
+  // 更新一个角色
+  | 'role::update'
+  // 获取角色
+  | 'role::query'
+  // 获取角色详细信息
+  | 'role::info::get'
+  // 创建一个权限
+  | 'permission::create'
+  // 删除一个权限
+  | 'permission::remove'
+  // 修改一个权限
+  | 'permission::update'
+  // 查询权限列表
+  | 'permission::query'
+  // 获取权限详细信息
+  | 'permission::get'
   ;
 
 declare type Operator = 'and' | 'or' | 'not' | 'AND' | 'OR' | 'NOT' | 'And' | 'Or' | 'Not' | '&' | '|' | '!';

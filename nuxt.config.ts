@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-
   modules: [
     '@prisma/nuxt',
     '@nuxtjs/tailwindcss',
@@ -15,7 +14,7 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/permission',
   ],
-  devtools: { enabled: false },
+  devtools: { enabled: import.meta.dev },
   colorMode: {
     classSuffix: '',
   },
