@@ -158,3 +158,9 @@ declare interface AreaTable {
   manager_id: number;
   id: number;
 }
+
+declare interface PaginatedData<T> {
+  data: T[];
+  total: number;
+  size: number;
+}
