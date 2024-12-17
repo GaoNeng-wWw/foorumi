@@ -1,4 +1,3 @@
-import type { Profile } from '@prisma/client';
 import { PERMISSIONS, PROFILE } from '~/lib/constant';
 
 export default defineNuxtRouteMiddleware((to) => {
@@ -10,15 +9,14 @@ export default defineNuxtRouteMiddleware((to) => {
   ) {
     return;
   }
-  const { data } = useFetch('/api/profile', { method: 'get' });
-  useState<Pick<Profile, 'name' | 'bio' | 'account_id'> | null>(PROFILE, () => {
-    return computed(() => {
-      return data.value;
-    });
-  });
+  const { data } = useFetch<MininalProfile>('/api/profile', { method: 'get', server: false });
+  useState<MininalProfile | null>(PROFILE, () => data);
 
   useState(PERMISSIONS, () => {
     return computed(() => {
+      if (!data.value) {
+        return [];
+      }
       return data.value?.role
         .flatMap(role => role.permission)
         .map(permission => ({ ...permission }));

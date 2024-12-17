@@ -123,11 +123,13 @@ declare type PermissionOption = {
 // }
 
 declare interface MininalProfile {
-  role: import('prisma/prisma-client').Role[] & {
+  role: {
+    name: string;
     permission: import('prisma/prisma-client').Permission[];
-  };
+  }[];
   name: string;
   bio: string;
+  account_id: number;
 }
 
 declare interface AreaTable {

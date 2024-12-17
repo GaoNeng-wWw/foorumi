@@ -10,7 +10,6 @@ const onClickSend = ({ content, success, isEmpty }: { content: string; success: 
   if (isEmpty) {
     return success();
   }
-  console.log(content);
   $fetch(
     `/api/threads/${realId.value}`,
     {

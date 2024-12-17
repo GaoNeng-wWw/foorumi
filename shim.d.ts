@@ -9,6 +9,7 @@ declare module 'h3' {
 
 declare module '#auth-utils' {
   interface User {
+    id: number;
     access_token: string;
     refresh_token: string;
   }

@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { TransitionFade } from '@miraiui-org/vue-transition-fade';
 
-const { direction = 'ltr', asideSticky = false, asideExternalClass = '', layoutRootExternalClass = '' } = defineProps<{
+const { direction = 'ltr', asideSticky = false, asideExternalClass = '', layoutRootExternalClass = '', sectionExternalClass = '' } = defineProps<{
   direction?: 'rtl' | 'ltr';
   asideSticky?: boolean;
   asideExternalClass?: string;
   layoutRootExternalClass?: string;
+  sectionExternalClass?: string;
 }>();
 const appState = useState<AppState>('appState');
 
@@ -22,7 +23,7 @@ const closeDrawer = () => {
       [layoutRootExternalClass]: true,
     }"
   >
-    <section class="flex-grow flex-shrink">
+    <section :class="['flex-grow', 'flex-shrink', sectionExternalClass]">
       <slot />
     </section>
     <teleport
