@@ -5,7 +5,8 @@ export interface UsePostList {
   pageSize: ComputedRef<number>;
   currentPage: ComputedRef<number>;
   pin: ComputedRef<boolean> | boolean;
-  type: ComputedRef<'update_at' | 'floors'>;
+  type: ComputedRef<'new' | 'hot'>;
+  authorId: ComputedRef<number>;
 }
 
 type PostList = {
@@ -20,6 +21,8 @@ type PostList = {
     author: {
       name: string;
     };
+    create_at: string;
+    update_at: string;
   }>[];
 };
 
@@ -31,9 +34,11 @@ export const usePostList = (
     currentPage,
     pin,
     type,
+
   } = opts;
   const page = ref(unref(currentPage) ?? 1);
   const area = ref(opts.area?.value);
+  const authorId = ref(opts.authorId?.value);
   const { data, status, error } = useFetch(`/api/posts/list`, {
     params: {
       pin: unref(pin),
@@ -41,8 +46,9 @@ export const usePostList = (
       size: pageSize?.value,
       type: type?.value,
       area_id: area,
+      author_id: authorId?.value,
     },
-    watch: [page, area],
+    watch: [page, area, authorId],
     server: !import.meta.dev,
   });
   const unsafePostList: Ref<Set<PostList['data'][number]>> = ref(new Set());
@@ -62,17 +68,6 @@ export const usePostList = (
     }
     page.value -= 1;
   };
-  // watch(postList, () => {
-  //   // console.log(postList.value, page.value);
-  // }, { deep: true,
-  //   onTrigger(event) {
-  //     debugger;
-  //     // console.log('trigger', event, event.target);
-  //   },
-  //   onTrack(event) {
-  //     // console.log('track', event);
-  //   },
-  // });
   watch(data, () => {
     if (page.value === 1 && postList.value.length > 0) {
       unsafePostList.value = new Set();
@@ -90,9 +85,11 @@ export const usePostList = (
   watch(() => opts.area, () => {
     unsafePostList.value = new Set();
     idSet.value = new Set();
-    console.log(postList.value);
     area.value = opts.area?.value.toString();
     page.value = 1;
+  }, { deep: true });
+  watch(() => opts.authorId, () => {
+    authorId.value = opts.authorId?.value;
   }, { deep: true });
   const loading = computed(() => status.value === 'pending');
   const canLoadMore = () => {

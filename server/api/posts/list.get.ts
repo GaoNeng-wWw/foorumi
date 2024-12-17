@@ -6,6 +6,7 @@ const GetPostListQuery = z.object({
   type: z.enum(['hot', 'new']).default('hot'),
   pin: z.boolean({ coerce: true }).default(false),
   area_id: z.number({ coerce: true }).optional(),
+  author_id: z.number({ coerce: true }).optional(),
 });
 
 export default defineProtectedApi(async (event) => {
@@ -35,6 +36,8 @@ export default defineProtectedApi(async (event) => {
       id: true,
       pin: true,
       floors: true,
+      create_at: true,
+      update_at: true,
     },
     where: {
       AND: [
@@ -48,6 +51,7 @@ export default defineProtectedApi(async (event) => {
           area: {
             id: data.area_id ? data.area_id : undefined,
           },
+          author_id: data.author_id,
         },
       ],
     },
