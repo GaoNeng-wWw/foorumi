@@ -48,8 +48,8 @@ watch(data, () => {
     v-if="status === 'success' && data"
     class="w-full"
   >
-    <div class="w-full px-4 py-4 flex gap-2">
-      <div class="bg-default size-20" />
+    <div class="w-full px-4 py-4 flex items-center justify-center max-[320px]:flex-wrap gap-2">
+      <div class="bg-default size-20 shrink-0" />
       <div class="flex-auto flex flex-col justify-around">
         <input
           v-model="profile.name"
@@ -57,7 +57,7 @@ watch(data, () => {
           class="
             p-2 rounded bg-transparent outline-none cursor-pointer transition duration-normal
             hover:bg-background dark:hover:bg-default/50 focus:bg-background focus:dark:bg-default/50
-            data-[can-edit=false]:pointer-events-none
+            data-[can-edit=false]:pointer-events-none max-[320px]:text-center
           "
           tabindex="-1"
           @blur="patchProfile"
@@ -68,7 +68,7 @@ watch(data, () => {
           class="
             p-2 rounded bg-transparent outline-none cursor-pointer transition duration-normal
             hover:bg-background dark:hover:bg-default/50 focus:bg-background focus:dark:bg-default/50
-            data-[can-edit=false]:pointer-events-none
+            data-[can-edit=false]:pointer-events-none max-[320px]:text-center
           "
           tabindex="-1"
           @blur="patchProfile"

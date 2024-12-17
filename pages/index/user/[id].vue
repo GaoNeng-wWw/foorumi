@@ -11,6 +11,7 @@ const { params: { id } } = route;
     <nuxt-layout
       name="side"
       aside-external-class="hidden sm:block"
+      section-external-class="flex-auto w-full"
     >
       <div class="space-y-4">
         <div class="w-full border border-foreground/10 bg-default-200 rounded-md">
