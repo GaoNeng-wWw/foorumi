@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import { ComboboxItem } from 'radix-vue';
+
 import type { OptionProps } from './option.props';
 
-const props = defineProps<OptionProps>();
+const props = defineProps<
+  OptionProps & { checkbox?: boolean; checked?: boolean }
+>();
+const emits = defineEmits<{ select: [any] }>();
 </script>
 
 <template>
@@ -17,9 +21,10 @@ const props = defineProps<OptionProps>();
       data-[disabled]:bg-transparent
       hover:bg-slate-100 dark:hover:bg-default-300 gap-2
     "
+    @select="(e) => emits('select', e)"
   >
     <slot name="prefix" />
-    <slot> {{ props.label }} </slot>
+    <slot> {{ props.label }}</slot>
     <slot name="suffix" />
   </combobox-item>
 </template>

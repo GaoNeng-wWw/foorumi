@@ -1,16 +1,32 @@
 <script lang="ts" setup>
 import { Button as MButton } from '@miraiui-org/vue-button';
 import { useMessage } from '@miraiui-org/vue-message';
-import type { Role } from '@prisma/client';
+import type { Role, Permission } from '@prisma/client';
 import type { SerializeObject } from 'nitropack/types';
+import type { InputSelectOptions } from '~/components/AppInputSelect/index.props';
+import type { OptionProps } from '~/components/AppInputSelect/option.props';
 
 const role = reactive({
   name: '',
   desc: '',
 });
 
+const { data: permissionData } = useFetch('/api/permission', { method: 'get', query: { all: true }, server: false });
 const { data: payload } = useFetch<PaginatedData<SerializeObject<Role>> | null>('/api/role', { method: 'get', server: false });
 const data = ref<SerializeObject<Role>[]>([]);
+
+const addedPermission = ref<OptionProps[]>([
+  { label: '*', value: 1 },
+]);
+const permissions = computed<SerializeObject<Permission>[]>(() => permissionData.value?.data ?? []);
+const permissionsInput = computed<InputSelectOptions>(() => {
+  return permissions.value.map((p) => {
+    return {
+      value: p.id,
+      label: p.name,
+    };
+  });
+});
 
 const removeUser = (id: number) => {
   $fetch(`/api/role/${id}`, { method: 'delete' })
@@ -74,7 +90,7 @@ watch(payload, () => {
           新增角色
         </m-button>
       </template>
-      <div class="p-2 bg-background shadow dark:bg-default-200 rounded-md space-y-2">
+      <div class="p-2 max-w-sm bg-background shadow dark:bg-default-200 rounded-md space-y-2">
         <base-input
           v-model="role.name"
           label="角色名"
@@ -90,6 +106,19 @@ watch(payload, () => {
           show-label
           input-wrapper-class="group-data[error='true']:bg-danger/50 group-data[error='false']:!bg-default-200 group-data[error='false']:dark:!bg-default-300"
         />
+
+        <div class="space-y-1">
+          <label>
+            权限选择
+          </label>
+          <app-input-select
+            v-model="addedPermission"
+            :options="permissionsInput"
+            :max-height="128"
+            multiple
+            show-select-all
+          />
+        </div>
 
         <m-button
           class="w-full"
