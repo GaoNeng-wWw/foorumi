@@ -6,6 +6,10 @@ const data = [
     label: '区域管理',
     link: '/admin/area',
   },
+  {
+    label: '权限管理',
+    link: '/admin/permission',
+  },
 ] as SideBarData[];
 </script>
 
