@@ -4,6 +4,10 @@ import { Button as MButton } from '@miraiui-org/vue-button';
 import type { Permission } from '@prisma/client';
 import type { SerializeObject } from 'nitropack/types';
 
+definePageMeta({
+  auth: true,
+});
+
 const permission = reactive({
   name: '',
   desc: '',
