@@ -10,6 +10,10 @@ const data = [
     label: '权限管理',
     link: '/admin/permission',
   },
+  {
+    label: '角色管理',
+    link: '/admin/role',
+  },
 ] as SideBarData[];
 </script>
 
