@@ -13,5 +13,6 @@ export default defineProtectedApi(async (event) => {
     where: {
       id: Number.parseInt(_id),
     },
+    include: { permission: true },
   });
 }, ['role::info::get']);

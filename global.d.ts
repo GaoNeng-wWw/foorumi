@@ -164,3 +164,5 @@ declare interface PaginatedData<T> {
   total: number;
   size: number;
 }
+
+declare type AcceptableValue = string | number | boolean | Record<string, any>;

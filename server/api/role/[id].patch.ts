@@ -37,9 +37,11 @@ export default defineProtectedApi(async (event) => {
     data: {
       name: data.name,
       desc: data.desc,
-      permission: {
-        connect: permissions,
-      },
+      permission: data.permissionIds
+        ? {
+            set: [...permissions.map(p => ({ id: p.id }))],
+          }
+        : undefined,
     },
   });
   return newRole;
