@@ -31,6 +31,7 @@ export const useRole = () => {
   });
   const table = useTemplateRef<VxeTableInstance>('table');
   const totalItems = computed(() => payload.value?.total ?? 0);
+  const size = computed(() => payload.value?.size ?? 20);
   const { isOpen: isDialogOpen, open: openDialog, close: hiddenDialog } = useDialog({});
   const data = ref<SerializeObject<Role>[]>([]);
 
@@ -176,7 +177,7 @@ export const useRole = () => {
   }, { immediate: true, deep: true });
 
   return {
-    permissionsInput, table, totalItems, role, data, page,
+    permissionsInput, table, totalItems, role, data, page, size,
     restoreRole, removeUser, closeDialog, detailPatch, patchRole, addRole, getRoleInfo, isDialogOpen, openDialog,
   };
 };

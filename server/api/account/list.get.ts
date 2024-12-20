@@ -4,7 +4,6 @@ import { PageQuery } from '~/server/utils/pagination';
 
 export default defineProtectedApi(async (event) => {
   const { data, success, error } = await getValidatedQuery(event, PageQuery.safeParseAsync);
-  console.log(error);
   if (!success) {
     throw createError({
       status: status.BAD_REQUEST,
@@ -22,8 +21,19 @@ export default defineProtectedApi(async (event) => {
       profile: {
         select: {
           name: true,
+          bio: true,
+          role: {
+            select: {
+              id: true,
+              name: true,
+              desc: true,
+            },
+          },
         },
       },
+      ban: true,
+      ban_expire: true,
+      reason: true,
     },
   });
   if (!accounts) {

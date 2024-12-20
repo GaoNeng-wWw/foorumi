@@ -46,7 +46,10 @@ const selectAll = (ev) => {
       class="flex items-center justify-center"
     >
       <ComboboxTrigger class="flex p-2 items-center justify-around bg-default rounded w-full group-data-[err=true]:bg-danger/50">
-        <slot name="prefix" />
+        <slot
+          v-if="$slots.prefix"
+          name="prefix"
+        />
         <div class="flex-auto">
           <ComboboxInput
             v-if="!multiple"
@@ -91,7 +94,7 @@ const selectAll = (ev) => {
     <combobox-portal>
       <ComboboxContent
         position="popper"
-        class="w-full mt-2 min-w-[160px] bg-default-200 bg-opacity-100 rounded border border-default-300 z-50"
+        class="w-[--radix-combobox-trigger-width] mt-2 min-w-[160px] bg-default-200 bg-opacity-100 rounded border border-default-300 z-50"
       >
         <scroll-area-root
           class="overflow-hidden"
