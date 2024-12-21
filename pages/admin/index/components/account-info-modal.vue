@@ -1,53 +1,58 @@
 <script lang="ts" setup>
 import { Button as MButton } from '@miraiui-org/vue-button';
 import type { Simplify } from 'nitropack/types';
+import type { AppTagSelectOption } from '~/components/AppTagSelect/index.type';
 import type { AdminAccountData } from '~/composables/useAccountList';
 
-type RoleOption = {
-  label: string;
-  value: number;
-};
 const { data } = defineProps<{
   data: Simplify<AdminAccountData | null>;
 }>();
 
-const { data: roles, page, totalItems, size } = useRole();
-const isLoading = ref(false);
-const isEnd = computed(() => (size.value * page.value) >= totalItems.value);
-const roleOptions: Ref<RoleOption[]> = ref([]);
-
-watch(roles, () => {
-  roleOptions.value.push(
-    ...roles.value.map(role => ({
-      label: role.name,
-      value: role.id,
-    })),
-  );
-  isLoading.value = false;
-}, { immediate: true, deep: true });
-watch([isEnd, isLoading], () => {
-  if (isEnd.value) {
-    return;
-  }
-  page.value = page.value + 1;
-}, { immediate: true });
+const { allRole: roles } = useRole();
+const roleOptions: Ref<AppTagSelectOption<number>[]> = computed(() => {
+  return roles.value
+    ? roles.value.map((role) => {
+      return {
+        label: role.name,
+        value: role.id,
+      };
+    })
+    : [];
+});
 
 const visible = defineModel<boolean>({ default: false });
 const info: Ref<AdminAccountData | null> = ref(unref(data));
-const rolesSelectData = ref([]);
+const rolesSelectData = ref<number[]>([]);
 const emits = defineEmits<{
-  ok: [AdminAccountData | null];
+  ok: [AdminAccountData | null, number[]];
 }>();
 watch(() => data, () => {
   if (!data) {
     return;
   }
   info.value = data;
+  rolesSelectData.value = info.value.profile?.role.map((role) => {
+    return role.id;
+  }) ?? [];
 }, { immediate: true, deep: true });
+
+const errors = reactive({
+  banExpire: '',
+});
+
+watch(info, () => {
+  if (info.value?.ban && info.value?.ban_expire && errors.banExpire) {
+    errors.banExpire = '';
+  }
+}, { deep: true });
+
 const onOk = () => {
-  emits('ok', info.value);
-  visible.value = false;
-  info.value = null;
+  if (info.value?.ban && !info.value.ban_expire) {
+    errors.banExpire = '您必须设定一个封禁过期时间';
+    visible.value = true;
+    return;
+  }
+  emits('ok', info.value, rolesSelectData.value);
 };
 </script>
 
@@ -76,15 +81,32 @@ const onOk = () => {
               <label>
                 绑定角色
               </label>
-              <app-input-select
+              <app-tag-select
                 v-model="rolesSelectData"
                 :options="roleOptions"
                 :max-height="128"
               />
             </div>
+            <div class="flex items-center gap-2">
+              <label
+                for="ban"
+                class="cursor-pointer"
+              >
+                封禁
+              </label>
+              <app-check-box
+                id="ban"
+                v-model="info!.ban"
+                name="ban"
+              />
+            </div>
             <div class="space-y-1">
               <label>封禁结束日期</label>
-              <app-date-picker v-model="info!.ban_expire" />
+              <app-date-picker
+                v-model="info!.ban_expire"
+                :error="Boolean(errors.banExpire.length)"
+                :desc="errors.banExpire"
+              />
             </div>
             <base-input
               v-model="info!.reason!"
@@ -98,7 +120,7 @@ const onOk = () => {
           <dialog-close as-child>
             <m-button
               type="primary"
-              @click="onOk"
+              @click.prevent="onOk"
             >
               确认
             </m-button>

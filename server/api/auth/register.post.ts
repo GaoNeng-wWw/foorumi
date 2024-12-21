@@ -37,7 +37,8 @@ export default defineEventHandler(async (event) => {
     await redis.set<string[]>(INVITE_NS, []);
     inviteTable = [];
   }
-  if (!inviteTable.includes(inviteCode ?? '')) {
+  if (!isPublic && !inviteTable.includes(inviteCode ?? '')) {
+    console.log(isPublic);
     throw createError({
       status: status.FORBIDDEN,
       message: t('auth.account.invite-code.error'),

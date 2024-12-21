@@ -21,6 +21,9 @@ const displayValue = (val: AcceptableValue) => {
 };
 const findValueByLabel = (label: string) => options.filter(opt => opt.label === label)[0].value;
 const tags = computed(() => {
+  if (!selectedOptions.value.length) {
+    return [];
+  }
   if (!multiple) {
     return [displayValue(selectedOptions.value)];
   }
@@ -30,8 +33,13 @@ const onSelect = (val: T | undefined) => {
   if (!val) {
     return;
   }
+  if (!multiple) {
+    selectedOptions.value = [options.filter(opt => opt.value === val)[0].value];
+    return;
+  }
   if (selectedOptions.value.includes(val)) {
-    selectedOptions.value = selectedOptions.value.filter(v => v !== val);
+    const idx = selectedOptions.value.indexOf(val);
+    selectedOptions.value.splice(idx, 1);
     return;
   }
   selectedOptions.value.push(val);
@@ -66,8 +74,9 @@ const isSelectAll = computed(() => {
     :display-value="displayValue"
   >
     <combobox-anchor class="flex items-start justify-center h-full max-h-32">
-      <combobox-trigger class="flex p-2 overflow-auto items-start justify-around bg-default rounded w-full min-h-8 max-h-32">
+      <combobox-trigger class="flex p-2 overflow-auto items-start bg-default rounded w-full min-h-8 max-h-32">
         <tags-input-root
+          v-if="tags.length > 0"
           class="flex gap-2 rounded flex-wrap h-full"
           delimiter=""
         >
@@ -75,14 +84,14 @@ const isSelectAll = computed(() => {
             v-for="tag in tags"
             :key="tag"
             :value="tag"
-            class="h-fit px-2 py-px bg-primary rounded text-primary-foreground flex gap-2 items-center"
+            class="h-fit px-2 py-1 bg-primary rounded text-primary-foreground flex gap-1 items-center"
           >
             <tags-input-item-text class="text-sm" />
             <tags-input-item-delete
-              class="p-0.5 bg-transparent"
+              class="bg-transparent"
               @click="() => onRemove(tag)"
             >
-              <x-mark-icon class="size-3 text-primary-foreground" />
+              <x-mark-icon class="size-4 text-primary-foreground" />
             </tags-input-item-delete>
           </tags-input-item>
         </tags-input-root>
@@ -107,6 +116,7 @@ const isSelectAll = computed(() => {
             >
               <!-- TODO: I18N -->
               <combobox-item
+                v-if="multiple"
                 value="__SELECT__INTERNAL__SELECT_ALL__"
                 label="全选"
                 class="
@@ -154,47 +164,53 @@ const isSelectAll = computed(() => {
                 :key="idx"
               >
                 <combobox-item
-                  :value="opt.value"
-                  :label="opt.label"
-                  class="
-                    flex items-center px-6 text-tiny rounded-md cursor-pointer py-2 transition duration-fast
-                    data-[state='checked']:dark:bg-default-300 data-[state='checked']:bg-slate-100 last:mb-0 mb-1
-                    data-[disabled]:bg-opacity-70 data-[disabled]:text-foreground/70 data-[disabled]:cursor-not-allowed
-                    data-[disabled]:bg-transparent
-                    hover:bg-slate-100 dark:hover:bg-default-300 gap-2
-                  "
-                  @select.prevent="({ detail: { value } }) => onSelect(value)"
+                  as-child
+                  tag="div"
                 >
-                  <checkbox-root
-                    v-if="multiple"
-                    class="w-5 h-5 border border-default-500 rounded group data-[state='checked']:border-primary"
-                    :checked="selectedOptions.includes(opt.value)"
+                  <div
+                    :value="opt.value"
+                    :label="opt.label"
+                    :data-state="selectedOptions.includes(opt.value) ? 'checked' : ''"
+                    class="
+                      flex items-center px-6 text-tiny rounded-md cursor-pointer py-2 transition duration-fast
+                      data-[state='checked']:dark:bg-default-300 data-[state='checked']:bg-slate-100 last:mb-0 mb-1
+                      data-[disabled]:bg-opacity-70 data-[disabled]:text-foreground/70 data-[disabled]:cursor-not-allowed
+                      data-[disabled]:bg-transparent
+                      hover:bg-slate-100 dark:hover:bg-default-300 gap-2
+                    "
+                    @click.prevent="() => onSelect(opt.value)"
                   >
-                    <template #default="{ checked }">
-                      <checkbox-indicator
-                        class="
+                    <checkbox-root
+                      v-if="multiple"
+                      class="w-5 h-5 border border-default-500 rounded group data-[state='checked']:border-primary"
+                      :checked="selectedOptions.includes(opt.value)"
+                    >
+                      <template #default="{ checked }">
+                        <checkbox-indicator
+                          class="
                         bg-default w-full h-full flex items-center justify-center transition duration-normal
                         data-[state='checked']:bg-primary
                       "
-                        force-mount
-                      >
-                        <transition
-                          enter-active-class="transition duration-normal ease-epic"
-                          leave-active-class="transition duration-normal ease-epic"
-                          enter-from-class="scale-0"
-                          enter-to-class="scale-100"
-                          leave-from-class="scale-100"
-                          leave-to-class="scale-0"
+                          force-mount
                         >
-                          <check-icon
-                            v-if="checked"
-                            class="size-4 text-primary-foreground"
-                          />
-                        </transition>
-                      </checkbox-indicator>
-                    </template>
-                  </checkbox-root>
-                  {{ opt.label }}
+                          <transition
+                            enter-active-class="transition duration-normal ease-epic"
+                            leave-active-class="transition duration-normal ease-epic"
+                            enter-from-class="scale-0"
+                            enter-to-class="scale-100"
+                            leave-from-class="scale-100"
+                            leave-to-class="scale-0"
+                          >
+                            <check-icon
+                              v-if="checked"
+                              class="size-4 text-primary-foreground"
+                            />
+                          </transition>
+                        </checkbox-indicator>
+                      </template>
+                    </checkbox-root>
+                    {{ opt.label }}
+                  </div>
                 </combobox-item>
               </template>
             </combobox-viewport>
