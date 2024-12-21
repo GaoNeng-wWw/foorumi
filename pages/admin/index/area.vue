@@ -1,8 +1,11 @@
 <script lang="ts" setup>
+import { Button as MButton } from '@miraiui-org/vue-button';
 import type { VxeTableInstance } from 'vxe-table';
+import addAreaModal from './components/add-area-modal.vue';
 import UserSelect from './components/user-select.vue';
 
 const table = useTemplateRef<VxeTableInstance<Area>>('table');
+const showAddModal = ref(false);
 
 const { addNode, editRow, cancelEdit, save, removeRow, move, isEdit, treeSelectData, tableData } = useAreaTable({ table });
 </script>
@@ -10,6 +13,12 @@ const { addNode, editRow, cancelEdit, save, removeRow, move, isEdit, treeSelectD
 <template>
   <div class="w-full h-full bg-default-100 rounded-md">
     <div class="p-4 flex flex-col h-full gap-4">
+      <div class="w-full h-fit flex-grow-0 flex-shrink-0">
+        <m-button @click="showAddModal = true">
+          <!-- TODO: I18N -->
+          新增区域
+        </m-button>
+      </div>
       <client-only>
         <div class="w-full h-full">
           <vxe-table
@@ -137,5 +146,6 @@ const { addNode, editRow, cancelEdit, save, removeRow, move, isEdit, treeSelectD
         </div>
       </client-only>
     </div>
+    <add-area-modal v-model="showAddModal" />
   </div>
 </template>
