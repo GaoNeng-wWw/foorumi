@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     classSuffix: '',
   },
   runtimeConfig: {
-    sitePublic: false,
+    sitePublic: true,
     authSecret: '123',
     pagination: {
       size: 10,

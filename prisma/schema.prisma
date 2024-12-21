@@ -26,7 +26,7 @@ model Account {
   // Ban reason
   reason     String?
   // Expire
-  ban_expire DateTime?
+  ban_expire String?
 
   create_at DateTime @default(now())
   update_at DateTime @updatedAt

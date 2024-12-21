@@ -3,6 +3,10 @@ import type { SideBarData } from '~/components/admin/side-bar.vue';
 
 const data = [
   {
+    label: '账号管理',
+    link: '/admin/account',
+  },
+  {
     label: '区域管理',
     link: '/admin/area',
   },
