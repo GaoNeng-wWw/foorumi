@@ -61,9 +61,11 @@ export const useThreads = (
     defaultPage = 1,
   }: UseThreadsOptions,
 ) => {
-  const pageSize = computed(() => size);
+  const router = useRouter();
+  const route = useRoute();
+  const pageSize = computed(() => unref(size));
   const threadId = computed(() => isRef(id) ? id.value : id);
-  const page = ref(defaultPage);
+  const page = ref(Number.parseInt(route.params.page?.toString() ?? '1') ?? defaultPage);
   const author_id: Ref<number | undefined> = ref(undefined);
   const { data, error, status } = useFetch(`/api/threads/`, {
     query: {
@@ -89,6 +91,13 @@ export const useThreads = (
   };
   const to = (to: number) => {
     page.value = to;
+    const currentPath = route.path;
+    router.push({
+      path: currentPath,
+      query: {
+        page: to,
+      },
+    });
   };
   const filterByAuthorId = (id: number) => {
     if (author_id.value === id) {
@@ -118,6 +127,10 @@ export const useThreads = (
       };
     });
   });
+  const toLast = () => {
+    page.value = Math.ceil((data.value?.total ?? 1) / (unref(pageSize) ?? 1));
+    // console.log((data.value?.total ?? 1) / (unref(pageSize) ?? 1));
+  };
   return {
     loading,
     reason,
@@ -128,7 +141,9 @@ export const useThreads = (
     prevPage,
     to,
     filterByAuthorId,
+    toLast,
     totalItems: computed(() => data.value?.total),
     size: computed(() => data.value?.size),
+    page,
   };
 };

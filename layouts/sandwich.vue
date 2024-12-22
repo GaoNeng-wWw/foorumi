@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { header = false, footer = false, headerExtraClass = '', footerExtraClass = '', mainExtraClass = '', rootExtraClass = '', headerFixed = false } = defineProps<{
+const { header = false } = defineProps<{
   header?: boolean;
   headerExtraClass?: string;
   headerFixed?: boolean;
@@ -18,7 +18,7 @@ const { header = false, footer = false, headerExtraClass = '', footerExtraClass 
     >
       <slot name="header" />
     </header>
-    <main class="px-4 h-full overflow-auto">
+    <main class="px-0 sm:px-4 h-full overflow-auto">
       <slot />
     </main>
     <!-- <footer

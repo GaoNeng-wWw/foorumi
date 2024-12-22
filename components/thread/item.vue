@@ -6,7 +6,6 @@ const showReply = ref(false);
 const {
   showHeader = false,
   showToolBar = true,
-  showAside = true,
   authorId,
   authorName,
   content,
@@ -51,7 +50,6 @@ watch(() => hiddenReason, () => {
 watch(() => content, () => {
   _content.value = content;
 }, { immediate: true });
-console.log(title);
 </script>
 
 <template>

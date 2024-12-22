@@ -34,6 +34,7 @@ export const useThreadReply = (
         size: 5,
       },
       watch: [page],
+      server: false,
       immediate,
     },
   );

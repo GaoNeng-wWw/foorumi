@@ -5,7 +5,7 @@ import type { ThreadContext } from './context.type';
 const { id } = defineProps<{
   id: number;
 }>();
-const { threadList: staticThreadList, totalItems, size, author_id, to, filterByAuthorId, threadTitle } = useThreads({
+const { threadList: staticThreadList, page, totalItems, size, author_id, to, filterByAuthorId, toLast, threadTitle } = useThreads({
   id: computed(() => id),
 });
 const threadList = computed(() => [...staticThreadList.value]);
@@ -13,6 +13,7 @@ const onPageUpdate = (page: number) => {
   to(page);
   scrollTo({ top: 0, behavior: 'smooth' });
 };
+defineExpose({ toLast });
 provide<ThreadContext>('THREAD', { id: computed(() => id) });
 </script>
 
@@ -51,6 +52,7 @@ provide<ThreadContext>('THREAD', { id: computed(() => id) });
       <pagination
         :total-item="totalItems"
         :page-size="size"
+        :current="page"
         @page-update="onPageUpdate"
       />
     </div>

@@ -5,8 +5,9 @@ definePageMeta({
   auth: true,
 });
 const { params: { id } } = useRoute();
+const threadListComp = useTemplateRef('threadListRef');
 const realId = ref(Number.parseInt(id.toString()));
-const onClickSend = ({ content, success, isEmpty }: { content: string; success: () => void; isEmpty: boolean }) => {
+const onClickSend = ({ content, success, isEmpty, clear }: { content: string; success: () => void; isEmpty: boolean; clear: () => void }) => {
   if (isEmpty) {
     return success();
   }
@@ -27,6 +28,8 @@ const onClickSend = ({ content, success, isEmpty }: { content: string; success: 
         duration: 2000,
         type: 'success',
       });
+      clear();
+      threadListComp.value?.toLast();
     })
     .catch((err) => {
       console.log(err);
@@ -48,7 +51,10 @@ const onClickSend = ({ content, success, isEmpty }: { content: string; success: 
     <div
       class="w-full min-h-32 space-y-2"
     >
-      <thread-list :id="realId" />
+      <thread-list
+        :id="realId"
+        ref="threadListRef"
+      />
       <client-only>
         <comment-editor
           root-class="bg-default-200 rounded-md mb-4 p-4 flex flex-col gap-4"

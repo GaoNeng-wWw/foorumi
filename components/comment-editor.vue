@@ -60,12 +60,16 @@ const buttonState = ref<'pending' | 'loading'>('pending');
 const setButtoonStateToPending = () => {
   buttonState.value = 'pending';
 };
+const clear = () => {
+  quill.setContents([]);
+};
 
 const emit = defineEmits<{
   send: [{
     content: string;
     success: () => void;
     isEmpty: boolean;
+    clear: () => void;
   }];
   undo: [];
 }>();
@@ -78,7 +82,7 @@ const onClickSend = () => {
   const isEmpty = quill.getContents().length() === 1;
   const content = quill.getSemanticHTML();
   const success = setButtoonStateToPending;
-  emit('send', { isEmpty, content, success });
+  emit('send', { isEmpty, content, success, clear });
 };
 </script>
 
