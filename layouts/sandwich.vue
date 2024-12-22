@@ -11,27 +11,21 @@ const { header = false, footer = false, headerExtraClass = '', footerExtraClass 
 </script>
 
 <template>
-  <div
-    :class="[
-      'w-full h-full p-4 flex flex-col',
-      ...rootExtraClass,
-    ]"
-  >
+  <div class="flex flex-col h-full">
     <header
       v-if="header"
-      :class="['flex h-16 w-full bg-background dark:bg-default-200 dark:shadow-none shadow', headerExtraClass, { 'fixed top-0 left-0 p-4': headerFixed }]"
+      class="flex h-16 w-full bg-background dark:bg-default-200 dark:shadow-none shadow sticky top-0 left-0 z-10 px-4"
     >
       <slot name="header" />
     </header>
-    <main :class="['flex-grow pt-12 pb-4 h-full overflow-auto', mainExtraClass]">
+    <main class="px-4 h-full overflow-auto">
       <slot />
     </main>
-    <footer
+    <!-- <footer
       v-if="footer"
-      :class="[footerExtraClass]"
     >
       <slot name="footer" />
-    </footer>
+    </footer> -->
   </div>
 </template>
 

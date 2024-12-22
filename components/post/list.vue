@@ -33,7 +33,6 @@ const { postList: pinPostList, loading: pinLoading } = usePostList({
     <app-infinite-scroll
       :can-load-more="canLoadMore"
       :load-more="nextPage"
-      class="px-4 h-full"
     >
       <post-item
         v-for="item in postList"
