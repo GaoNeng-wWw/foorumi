@@ -36,7 +36,7 @@ type UseAccountList = {
 
 export const useAccountList = ({ initializationPage, name: _name }: UseAccountList) => {
   const page = ref(unref(initializationPage) ?? 1);
-  const name = computed(() => _name?.value ? _name.value : undefined);
+  const name = ref(_name?.value ? _name.value : undefined);
   const { data, error, status } = useFetch(
     '/api/account/list',
     {
@@ -114,5 +114,8 @@ export const useAccountList = ({ initializationPage, name: _name }: UseAccountLi
   watch(data, () => {
     accountList.value = data.value ? data.value.data : [];
   }, { immediate: true, deep: true });
+  watchDebounced(() => _name, () => {
+    name.value = _name?.value;
+  }, { debounce: 250, deep: true });
   return { accountList, error, status, isFinish, showAccountInfo, accountInfo, totalItems, page, size, loading, next, prev, patch, info, to };
 };

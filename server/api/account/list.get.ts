@@ -42,7 +42,9 @@ export default defineProtectedApi(async (event) => {
     },
     where: {
       profile: {
-        name: data.name,
+        name: {
+          contains: data.name,
+        },
       },
     },
   });
@@ -57,7 +59,9 @@ export default defineProtectedApi(async (event) => {
   const total = await prisma.account.count({
     where: {
       profile: {
-        name: data.name,
+        name: {
+          contains: data.name,
+        },
       },
     },
   });

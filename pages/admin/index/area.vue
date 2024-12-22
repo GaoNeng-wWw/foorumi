@@ -7,7 +7,7 @@ import UserSelect from './components/user-select.vue';
 const table = useTemplateRef<VxeTableInstance<Area>>('table');
 const showAddModal = ref(false);
 
-const { addNode, editRow, cancelEdit, save, removeRow, move, isEdit, treeSelectData, tableData } = useAreaTable({ table });
+const { putArea, addNode, editRow, cancelEdit, save, removeRow, move, isEdit, treeSelectData, tableData } = useAreaTable({ table });
 </script>
 
 <template>
@@ -33,7 +33,6 @@ const { addNode, editRow, cancelEdit, save, removeRow, move, isEdit, treeSelectD
               transform: true,
               rowField: 'id',
               parentField: 'parent',
-              showLine: true,
             }"
             :scroll-y="{ enabled: true, gt: 0 }"
             :column-config="{ resizable: true, useKey: true }"
@@ -67,7 +66,7 @@ const { addNode, editRow, cancelEdit, save, removeRow, move, isEdit, treeSelectD
               </template>
               <template #edit="{ row }">
                 <user-select
-                  v-model="row.manager"
+                  v-model:option="row.manager"
                   :default-id="row.manager?.value"
                 />
               </template>
@@ -146,6 +145,11 @@ const { addNode, editRow, cancelEdit, save, removeRow, move, isEdit, treeSelectD
         </div>
       </client-only>
     </div>
-    <add-area-modal v-model="showAddModal" />
+    <add-area-modal
+      v-if="showAddModal"
+      v-model="showAddModal"
+      @submit="putArea"
+      @cancel="() => showAddModal=false"
+    />
   </div>
 </template>

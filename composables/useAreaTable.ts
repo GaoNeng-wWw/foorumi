@@ -12,6 +12,12 @@ type AreaTable = {
   parent: number | null;
 };
 
+type CreateAreaBody = {
+  name: string;
+  manager_id?: number;
+  parent: number | null;
+};
+
 type UseAreaTableOptions = {
   table: Readonly<ShallowRef<VxeTableInstance<Area> | null>>;
 };
@@ -58,6 +64,17 @@ export const useAreaTable = ({ table }: UseAreaTableOptions) => {
   const editRow = async (row: Area) => {
     await table.value?.setEditRow(row);
   };
+  const putArea = (area: CreateAreaBody) => {
+    $fetch('/api/area', {
+      method: 'put',
+      body: {
+        ...area,
+      },
+    })
+      .then((realArea) => {
+        tableData.value.unshift(realArea);
+      });
+  };
   const cancelEdit = async (row: AreaTable) => {
     if (table.value?.isInsertByRow(row)) {
       await table.value.remove(row);
@@ -67,6 +84,7 @@ export const useAreaTable = ({ table }: UseAreaTableOptions) => {
   const save = (row: AreaTable) => {
     let invalidField = '';
     let i18nMessage = '';
+    console.log(row.manager.value);
     if (!row.manager || !row.manager.value) {
       invalidField = 'manager';
       i18nMessage = '管理员不能为空';
@@ -219,5 +237,5 @@ export const useAreaTable = ({ table }: UseAreaTableOptions) => {
   };
 
   const isEdit = (row: Area) => table.value?.isEditByRow(row);
-  return { addNode, editRow, cancelEdit, save, removeRow, move, isEdit, treeSelectData, tableData };
+  return { addNode, editRow, cancelEdit, save, removeRow, move, isEdit, putArea, treeSelectData, tableData };
 };
