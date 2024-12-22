@@ -6,7 +6,6 @@ const showReply = ref(false);
 const {
   showHeader = false,
   showToolBar = true,
-  showAside = true,
   authorId,
   authorName,
   content,

@@ -6,6 +6,7 @@ definePageMeta({
   auth: true,
 });
 const { params: { id } } = useRoute();
+const threadListComp = useTemplateRef('threadListRef');
 const realId = ref(Number.parseInt(id.toString()));
 const onClickSend = (
   { content, success, isEmpty, files }: ISend,
@@ -31,6 +32,8 @@ const onClickSend = (
         duration: 2000,
         type: 'success',
       });
+      clear();
+      threadListComp.value?.toLast();
     })
     .catch((err) => {
       console.log(err);
@@ -52,7 +55,10 @@ const onClickSend = (
     <div
       class="w-full min-h-32 space-y-2"
     >
-      <thread-list :id="realId" />
+      <thread-list
+        :id="realId"
+        ref="threadListRef"
+      />
       <client-only>
         <comment-editor
           root-class="bg-default-200 rounded-md mb-4 p-4 flex flex-col gap-4"

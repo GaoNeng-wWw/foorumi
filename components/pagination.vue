@@ -17,6 +17,9 @@ const emits = defineEmits<{
 watch(currentPage, () => {
   emits('pageUpdate', currentPage.value);
 });
+watch(() => current, () => {
+  currentPage.value = current;
+});
 </script>
 
 <template>
