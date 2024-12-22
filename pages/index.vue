@@ -31,7 +31,7 @@ const appState = useState<AppState>('appState');
         </div>
       </nav>
     </template>
-    <section class="max-w-7xl w-full mx-auto h-full">
+    <section class="max-w-7xl w-full mx-auto">
       <nuxt-page />
     </section>
     <template #footer>

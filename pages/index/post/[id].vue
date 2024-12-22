@@ -46,7 +46,7 @@ const onClickSend = ({ content, success, isEmpty }: { content: string; success: 
     layout-root-external-class="gap-2 py-4 z-0"
   >
     <div
-      class="w-full h-32 space-y-2"
+      class="w-full min-h-32 space-y-2"
     >
       <thread-list :id="realId" />
       <client-only>

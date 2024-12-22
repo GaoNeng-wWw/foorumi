@@ -67,14 +67,20 @@ console.log(title);
         <slot name="title-suffix" />
       </template>
     </thread-header>
-    <div class="w-full px-4 grid grid-cols-[120px,minmax(0,1fr)]">
+    <div class="w-full px-4 grid grid-cols-1 md:grid-cols-[120px,minmax(0,1fr)]">
       <thread-aside
-        v-if="showAside"
+        class="hidden md:flex"
         :author-id="authorId"
         :author-name="authorName"
       />
-      <div class="flex flex-col justify-between px-4 py-4 bg-default-200 border-b border-default-400 min-h-60">
-        <div class="text-base text-foreground leading-7 flex-shrink-0 flex-grow basis-60">
+      <div class="flex flex-col justify-between md:px-4 md:py-4 bg-default-200 border-b border-default-400 min-h-60">
+        <thread-author
+          :author-id="authorId"
+          :author-name="authorName"
+          class="flex !flex-row border-none md:hidden p-4 bg-default"
+          avatar-class="!size-10 !m-0"
+        />
+        <div class="px-4 mt-4 md:mt-0 md:p-0 text-base text-foreground leading-7 flex-shrink-0 flex-grow basis-60">
           <!-- We filter html in server side -->
           <!-- eslint-disable vue/no-v-html -->
           <div
@@ -88,7 +94,7 @@ console.log(title);
             :content="`理由是: ${hiddenReason}`"
           />
         </div>
-        <div class="">
+        <div class="pb-4 p-4 md:px-0 md:pb-0">
           <thread-toolbar
             v-if="showToolBar"
             v-model="showReply"
