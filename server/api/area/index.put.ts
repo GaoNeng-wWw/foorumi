@@ -45,9 +45,16 @@ export default defineProtectedApi(async (event) => {
         parent: data.parent,
       },
       select: {
-        id: true,
-        manager_id: true,
         name: true,
+        parent: true,
+        manager: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        manager_id: true,
+        id: true,
       },
     });
     return area;

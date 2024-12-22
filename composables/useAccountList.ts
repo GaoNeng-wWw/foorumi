@@ -29,12 +29,29 @@ export type PatchData = {
   roleIds?: number[];
 };
 
-export const useAccountList = ({ initializationPage }: { initializationPage?: Ref<number> | number }) => {
+type UseAccountList = {
+  name?: Ref<string>;
+  initializationPage?: Ref<number> | number;
+};
+
+export const useAccountList = ({ initializationPage, name: _name }: UseAccountList) => {
   const page = ref(unref(initializationPage) ?? 1);
-  const { data, error, status } = useFetch('/api/account/list', { method: 'get', query: { page }, cache: 'default', watch: [page], server: false });
+  const name = ref(_name?.value ? _name.value : undefined);
+  const { data, error, status } = useFetch(
+    '/api/account/list',
+    {
+      method: 'get',
+      query: { page, name },
+      cache: 'default',
+      watch: [page, name],
+      server: false,
+    },
+  );
   const isFinish = computed(() => data.value?.end);
   const accountList: Ref<AdminAccountData[]> = ref(data.value ? data.value.data : []);
   const totalItems = computed<number>(() => data.value?.total ?? 0);
+  const size = computed<number>(() => data.value?.size ?? 20);
+  const loading = computed(() => status.value === 'pending');
   const showAccountInfo = ref(false);
   const accountInfo: Ref<
     Simplify<AdminAccountData | null>
@@ -93,8 +110,12 @@ export const useAccountList = ({ initializationPage }: { initializationPage?: Re
         });
       });
   };
+
   watch(data, () => {
     accountList.value = data.value ? data.value.data : [];
   }, { immediate: true, deep: true });
-  return { accountList, error, status, isFinish, next, prev, patch, info, to, showAccountInfo, accountInfo, totalItems, page };
+  watchDebounced(() => _name, () => {
+    name.value = _name?.value;
+  }, { debounce: 250, deep: true });
+  return { accountList, error, status, isFinish, showAccountInfo, accountInfo, totalItems, page, size, loading, next, prev, patch, info, to };
 };

@@ -72,7 +72,7 @@ watch(value, () => {
   <app-popover
     v-model:open="show"
     :side-offset="sideOffset"
-    :content-width-follow-trigger="contentWidthFollowTrigger"
+    :content-follow-trigger-width="contentWidthFollowTrigger"
     :content-class="contentClass"
     :align="align"
     :auto-close="autoClose"
@@ -88,9 +88,14 @@ watch(value, () => {
     </template>
     <div class="px-1 py-2 bg-default-200 rounded">
       <tree
+        v-if="realData.length"
         :data="realData"
         :default-select="defaultSelect"
         @select="onSelect"
+      />
+      <slot
+        v-if="!realData.length"
+        name="empty"
       />
     </div>
   </app-popover>

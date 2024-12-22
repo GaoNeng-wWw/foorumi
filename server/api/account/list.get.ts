@@ -1,9 +1,14 @@
 import status from 'http-status';
+import { z } from 'zod';
 import prisma from '~/lib/prisma';
 import { PageQuery } from '~/server/utils/pagination';
 
+export const ListAccountQuery = z.object({
+  name: z.string().optional(),
+}).merge(PageQuery);
+
 export default defineProtectedApi(async (event) => {
-  const { data, success, error } = await getValidatedQuery(event, PageQuery.safeParseAsync);
+  const { data, success, error } = await getValidatedQuery(event, ListAccountQuery.safeParseAsync);
   if (!success) {
     throw createError({
       status: status.BAD_REQUEST,
@@ -35,6 +40,13 @@ export default defineProtectedApi(async (event) => {
       ban_expire: true,
       reason: true,
     },
+    where: {
+      profile: {
+        name: {
+          contains: data.name,
+        },
+      },
+    },
   });
   if (!accounts) {
     return {
@@ -44,7 +56,15 @@ export default defineProtectedApi(async (event) => {
       end: true,
     };
   }
-  const total = await prisma.account.count();
+  const total = await prisma.account.count({
+    where: {
+      profile: {
+        name: {
+          contains: data.name,
+        },
+      },
+    },
+  });
   return {
     data: accounts,
     size,
