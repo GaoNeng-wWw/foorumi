@@ -21,7 +21,8 @@ await callOnce(async () => {
 <style>
 html,body,#__nuxt {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
+  height: 100% !important;
   padding: 0;
   margin: 0;
 }

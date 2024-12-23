@@ -15,6 +15,7 @@ const onClickPrefix = (id: string, node: TreeData<T>) => {
 const onClickNode = (node: TreeData<T>) => {
   select(node);
 };
+const selectId = computed(() => selected.value.map(selectNode => selectNode.id));
 </script>
 
 <template>
@@ -30,7 +31,7 @@ const onClickNode = (node: TreeData<T>) => {
         :id="node.id"
         :leaf="!node.children || !node.children.length"
         :expand="openId.includes(node.id)"
-        :selected="selected.includes(node)"
+        :selected="selectId.includes(node.id)"
         :padding="padding"
         @click-prefix="(id: string) => onClickPrefix(id, node)"
         @click-node="() => onClickNode(node)"
