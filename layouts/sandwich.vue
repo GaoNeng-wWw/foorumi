@@ -18,7 +18,7 @@ const { header = false } = defineProps<{
     >
       <slot name="header" />
     </header>
-    <main class="px-0 sm:px-4 h-full overflow-auto">
+    <main class="px-0 h-full overflow-auto">
       <slot />
     </main>
     <!-- <footer
