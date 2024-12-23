@@ -13,9 +13,10 @@ const emits = defineEmits<{
   reply: [{ content: string; success: () => void }];
 }>();
 watchDebounced([() => show], () => {
-  if (show) {
-    execute();
+  if (!show) {
+    return;
   }
+  execute();
 }, { debounce: 200, immediate: true, deep: true });
 const onClickSend = (args: { content: string; success: () => void }) => {
   emits('reply', args);
