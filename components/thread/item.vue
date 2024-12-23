@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TransitionCollapse } from '@miraiui-org/vue-transition-collapse';
 import { THREAD_ITEM_CONTEXT_KEY, type ThreadContext } from './context.type';
 
 const showReply = ref(false);
@@ -103,14 +104,19 @@ watch(() => content, () => {
             :patch="patch"
             @hidden-success="onHiddenSuccess"
           />
-          <div class="w-full">
-            <reply-list
-              :id="id"
-              :show="showReply"
-              :floor="floor"
-              class="border-0 bg-default-300"
-            />
-          </div>
+          <transition-collapse>
+            <div
+              v-if="showReply"
+              class="w-full"
+            >
+              <reply-list
+                :id="id"
+                :show="showReply"
+                :floor="floor"
+                class="border-0 bg-default-300"
+              />
+            </div>
+          </transition-collapse>
         </div>
       </div>
     </div>

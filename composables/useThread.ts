@@ -65,7 +65,7 @@ export const useThreads = (
   const route = useRoute();
   const pageSize = computed(() => unref(size));
   const threadId = computed(() => isRef(id) ? id.value : id);
-  const page = ref(Number.parseInt(route.params.page?.toString() ?? '1') ?? defaultPage);
+  const page = ref(defaultPage);
   const author_id: Ref<number | undefined> = ref(undefined);
   const { data, error, status } = useFetch(`/api/threads/`, {
     query: {

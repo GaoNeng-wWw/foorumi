@@ -5,8 +5,13 @@ import type { ThreadContext } from './context.type';
 const { id } = defineProps<{
   id: number;
 }>();
+
+const route = useRoute();
+const _page = route.query.page?.toString() ?? '1';
+const defaultPage = Number.isNaN(Number.parseInt(_page)) ? 1 : Number.parseInt(_page);
 const { threadList: staticThreadList, page, totalItems, size, author_id, to, filterByAuthorId, toLast, threadTitle } = useThreads({
   id: computed(() => id),
+  defaultPage,
 });
 const threadList = computed(() => [...staticThreadList.value]);
 const onPageUpdate = (page: number) => {
