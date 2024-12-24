@@ -3,7 +3,6 @@ import { Bars3Icon } from '@heroicons/vue/24/solid';
 
 const { data } = useFetch<SiteMeta>('/api/site', { method: 'get', pick: ['siteName'], cache: 'reload' });
 const appState = useState<AppState>('appState');
-const route = useRoute();
 const openDrawer = () => {
   appState.value.drawer = !appState.value.drawer;
 };
