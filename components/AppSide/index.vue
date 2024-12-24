@@ -18,6 +18,7 @@ const onClickNode = ([node]: TreeData[]) => {
     return;
   }
   router.replace({
+    path: '/',
     query: {
       area: node.id,
     },
@@ -78,8 +79,8 @@ const closeEditorModal = (ev: PointerEvent) => {
     <app-drawer
       v-model="editModalVisibility"
       direction="bottom"
-      default-size="fit-content"
-      default-width="100%"
+      height="fit-content"
+      width="100%"
       transparent
     >
       <div

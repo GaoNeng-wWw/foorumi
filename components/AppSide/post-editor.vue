@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { ArrowsPointingOutIcon, MinusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { useMessage } from '@miraiui-org/vue-message';
-import { TransitionCollapse } from '@miraiui-org/vue-transition-collapse';
 import type { TreeSelectData } from '~/components/AppTreeSelect/index.vue';
 
 const postTitle = ref('');
