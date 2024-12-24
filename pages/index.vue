@@ -23,7 +23,7 @@ const openDrawer = () => {
         <div class="flex items-center gap-4">
           <ghost-button
             class="!p-1 block md:hidden"
-            @click="() => appState.drawer = !appState.drawer"
+            @click="openDrawer"
           >
             <bars3-icon class="w-6" />
           </ghost-button>
@@ -47,7 +47,8 @@ const openDrawer = () => {
     <app-drawer
       v-model="appState.drawer"
       direction="left"
-      default-size="50vw"
+      width="320px"
+      should-scale-background
     >
       <div class="w-full h-full">
         <app-side class="w-full px-4" />
