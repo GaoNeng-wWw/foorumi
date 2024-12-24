@@ -30,7 +30,7 @@ const openDrawer = () => {
             {{ data?.siteName }}
           </nuxt-link>
         </div>
-        <div class=" items-center gap-2 hidden sm:flex">
+        <div class=" items-center gap-2 flex">
           <color-switch />
         </div>
       </nav>
