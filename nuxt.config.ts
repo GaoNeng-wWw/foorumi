@@ -1,3 +1,5 @@
+import { join } from 'node:path';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
@@ -31,6 +33,11 @@ export default defineNuxtConfig({
       refresh_token: {
         expiresIn: '1d',
       },
+    },
+    storage: {
+      avatar: join(process.cwd(), './storage/avatar'),
+      image: join(process.cwd(), './storage/image'),
+      file: join(process.cwd(), './storage/file'),
     },
   },
   sourcemap: {
