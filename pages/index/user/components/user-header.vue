@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { useMessage } from '@miraiui-org/vue-message';
 
+const file = useTemplateRef('file');
+const router = useRouter();
 const { id } = defineProps<{ id: string }>();
 const userId = computed(() => id.toString());
 const url = ref('');
@@ -54,6 +56,33 @@ const getUserAvatar = () => {
       url.value = imageUrl;
     });
 };
+const changeAvatar = () => {
+  if (!file.value) {
+    router.go(0);
+    return;
+  }
+  const fileInput = file.value;
+  fileInput.click();
+};
+const onFileChange = () => {
+  const fileInput = file.value;
+  const files = fileInput?.files ?? [];
+  const image = files[0];
+  const formData = new FormData();
+  formData.append('avatar', image);
+  $fetch(`/api/avatar`, {
+    query: { id: unref(id) },
+    method: 'post',
+    body: formData,
+  })
+    .then(() => {
+      getUserAvatar();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 getUserAvatar();
 watch(data, () => {
   profile.bio = data.value?.bio;
@@ -68,10 +97,18 @@ watch(data, () => {
   >
     <div class="w-full px-4 py-4 flex items-center justify-center max-[320px]:flex-wrap gap-2">
       <img
-        class="size-20 aspect-square object-contain"
+        class="size-20 aspect-square object-contain data-[can-edit=true]:cursor-pointer"
+        :data-can-edit="user?.id.toString() === userId"
         :src="url"
+        @click="changeAvatar"
       >
-      <!-- <div class="bg-default size-20 shrink-0" /> -->
+      <input
+        ref="file"
+        class="fixed invisible top-0 left-0"
+        type="file"
+        accept="image/gif,image/png,image/jpeg,image/webp,image/avif"
+        @change="onFileChange"
+      >
       <div class="flex-auto flex flex-col justify-around">
         <input
           v-model="profile.name"

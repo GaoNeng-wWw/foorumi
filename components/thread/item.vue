@@ -32,6 +32,13 @@ const isHidden = ref(hidden);
 const reason = ref(hiddenReason);
 const _content = ref(content);
 const { id } = inject<ThreadContext>('THREAD')!;
+const avatarUrl = ref('');
+$fetch(`/api/avatar/${unref(authorId)}`, { method: 'get' })
+  .then(resp => resp as Blob)
+  .then (blob => URL.createObjectURL(blob))
+  .then((url) => {
+    avatarUrl.value = url;
+  });
 const onHiddenSuccess = (_reason: string) => {
   reason.value = _reason;
   isHidden.value = true;
@@ -51,7 +58,6 @@ watch(() => hiddenReason, () => {
 watch(() => content, () => {
   _content.value = content;
 }, { immediate: true });
-console.log(title);
 </script>
 
 <template>
@@ -72,6 +78,7 @@ console.log(title);
         v-if="showAside"
         :author-id="authorId"
         :author-name="authorName"
+        :author-avatar="avatarUrl"
       />
       <div class="flex flex-col justify-between px-4 py-4 bg-default-200 border-b border-default-400 min-h-60">
         <div class="text-base text-foreground leading-7 flex-shrink-0 flex-grow basis-60">

@@ -99,6 +99,7 @@ export function defineProtectedApi<T extends EventHandlerRequest, D>(
         const response = await handler(event);
         return response;
       } catch (err) {
+        console.log(err);
         // setResponseStatus(err.statsu)
         const error: any = err;
         setResponseStatus(event, error.statusCode ?? 500, error.statusMessage);

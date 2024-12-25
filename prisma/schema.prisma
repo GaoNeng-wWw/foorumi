@@ -88,6 +88,7 @@ model Profile {
   thread Thread[]
   role   Role[]
   area   Area[]
+  avatar String? 
 }
 
 // Post set, can have many subarea.
@@ -199,4 +200,25 @@ model ReplyComment {
   hot BigInt  @default(1)
   create_at DateTime @default(now())
   update_at DateTime @updatedAt  
+}
+
+enum FileType {
+  IMAGE
+  FILE
+}
+enum TargetType {
+  ACCOUNT
+  POST
+}
+model Files {
+  id Int @id  @default(autoincrement())
+  file_hash String
+  file_type FileType
+  target_id Int
+  target_type TargetType
+  size  BigInt
+  create_at DateTime @default(now())
+  update_at DateTime  @default(now()) @updatedAt
+
+  @@index([file_hash,file_type,target_id,target_type])
 }
