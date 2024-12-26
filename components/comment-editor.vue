@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { BoldIcon, ItalicIcon, ArrowUturnDownIcon, PaperAirplaneIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@miraiui-org/vue-button';
+import { ImageDropAndPaste } from '~/quill-modules/DropAndPasteUploadImage';
 import 'quill/dist/quill.bubble.css';
 import 'quill/dist/quill.core.css';
+import type ImageData from '~/quill-modules/image-data';
 
 const props = withDefaults(
   defineProps<{
@@ -28,10 +30,39 @@ const props = withDefaults(
 let Quill: typeof import('quill').default;
 if (import.meta.client) {
   Quill = (await import('quill')).default;
+  Quill.register('modules/imageDropAndPasteUpload', ImageDropAndPaste);
 }
 const editor = useTemplateRef('editor');
 const canUndo = ref(false);
 let quill: import('quill').default;
+
+const handleImageUpload = (dataurl: string, _: string, file: ImageData) => {
+  const oldIndex = quill.getSelection();
+  fetch(dataurl)
+    .then(resp => resp.blob())
+    .then((blob) => {
+      const formData = new FormData();
+      formData.set(file.name, blob);
+      return $fetch(
+        '/api/threads/image',
+        {
+          method: 'put',
+          body: formData,
+          query: {},
+        },
+      )
+        .then(paths => paths);
+    })
+    .then((paths) => {
+      console.log(paths);
+      paths.forEach((path) => {
+        if (path.status === 'success') {
+          return quill.insertEmbed(oldIndex?.index ?? 0, 'image', path.url);
+        }
+      });
+    });
+};
+
 onMounted(() => {
   if (!editor.value || !import.meta.client) {
     return;
@@ -46,6 +77,9 @@ onMounted(() => {
         delay: 2000,
         maxStack: 500,
         userOnly: true,
+      },
+      imageDropAndPasteUpload: {
+        handler: handleImageUpload,
       },
     },
     placeholder: props.placeholder,
@@ -119,6 +153,8 @@ const onClickSend = () => {
         <div
           ref="editor"
           class="relative text-default-foreground"
+          @drag.prevent.stop
+          @drop.prevent.stop
         />
       </div>
       <div

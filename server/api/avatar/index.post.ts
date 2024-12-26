@@ -57,10 +57,7 @@ export default defineProtectedApi(async (event) => {
       avatar.data,
     );
   }
-
-  const transactionQueue = [];
-
-  const updateProfile = prisma.profile.update({
+  await prisma.profile.update({
     where: {
       account_id: id,
     },
@@ -70,43 +67,6 @@ export default defineProtectedApi(async (event) => {
       },
     },
   });
-  transactionQueue.push(updateProfile);
-
-  const oldAccountAvatar = await prisma.files.findFirst({
-    where: {
-      target_id: id,
-      file_type: 'IMAGE',
-      target_type: 'ACCOUNT',
-    },
-  });
-
-  if (oldAccountAvatar) {
-    const updateAvatarFile = prisma.files.update({
-      where: {
-        id: oldAccountAvatar.id,
-      },
-      data: {
-        file_hash: sha256,
-        file_type: 'IMAGE',
-        target_id: id,
-        target_type: 'ACCOUNT',
-      },
-    });
-    transactionQueue.push(updateAvatarFile);
-  } else {
-    const addImageRefRecord = prisma.files.create({
-      data: {
-        file_hash: sha256,
-        file_type: 'IMAGE',
-        size: avatar.data.byteLength,
-        target_id: id,
-        target_type: 'ACCOUNT',
-      },
-    });
-    transactionQueue.push(addImageRefRecord);
-  }
-
-  await prisma.$transaction(transactionQueue);
 
   return;
 }, ['profile::update::other', 'profile::update::self']);
