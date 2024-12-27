@@ -157,6 +157,9 @@ const onClickSend = () => {
           @drop.prevent.stop
         />
       </div>
+      <div class="w-full h-fit">
+        <comment-editor-files name="hello world" />
+      </div>
       <div
         :class="[
           props.footerClass ? props.footerClass : 'w-full h-fit flex-grow-0 flex-shrink basis-auto',

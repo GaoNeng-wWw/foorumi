@@ -39,6 +39,9 @@ export default defineNuxtConfig({
       image: join(process.cwd(), './storage/image'),
       file: join(process.cwd(), './storage/file'),
     },
+    // byte
+    storage_limit: 10000000,
+    chunk_limit: 1048576,
   },
   sourcemap: {
     client: true,
