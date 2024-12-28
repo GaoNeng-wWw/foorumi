@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BoldIcon, ItalicIcon, ArrowUturnDownIcon, PaperAirplaneIcon } from '@heroicons/vue/24/solid';
+import { BoldIcon, ItalicIcon, ArrowUturnDownIcon, PaperAirplaneIcon, PaperClipIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@miraiui-org/vue-button';
 import { ImageDropAndPaste } from '~/quill-modules/DropAndPasteUploadImage';
 import 'quill/dist/quill.bubble.css';
@@ -35,6 +35,8 @@ if (import.meta.client) {
 const editor = useTemplateRef('editor');
 const canUndo = ref(false);
 let quill: import('quill').default;
+const fileList = useTemplateRef('fileList');
+const fileSelect = useTemplateRef('fileSelect');
 
 const handleImageUpload = (dataurl: string, _: string, file: ImageData) => {
   const oldIndex = quill.getSelection();
@@ -114,6 +116,19 @@ const onClickSend = () => {
   const success = setButtoonStateToPending;
   emit('send', { isEmpty, content, success });
 };
+const uploadFile = () => {
+  fileSelect.value?.click();
+};
+const onFileChange = () => {
+  if (!fileSelect.value?.files) {
+    return;
+  }
+  Array.from(fileSelect.value.files)
+    .forEach((file) => {
+      fileList.value?.addFile(file);
+    });
+  fileSelect.value.value = '';
+};
 </script>
 
 <template>
@@ -134,6 +149,19 @@ const onClickSend = () => {
         </button>
         <button class="ql-italic">
           <italic-icon class="size-4 text-foreground cursor-pointer" />
+        </button>
+        <button>
+          <paper-clip-icon
+            class="size-4 text-foreground cursor-pointer"
+            @click="uploadFile"
+          />
+          <input
+            ref="fileSelect"
+            type="file"
+            class="hidden"
+            multiple
+            @change="onFileChange"
+          >
         </button>
         <button
           :data-can-undo="canUndo"
@@ -158,7 +186,8 @@ const onClickSend = () => {
         />
       </div>
       <div class="w-full h-fit">
-        <comment-editor-files name="hello world" />
+        <comment-editor-file-list ref="fileList" />
+        <!-- <comment-editor-files name="hello world" /> -->
       </div>
       <div
         :class="[
