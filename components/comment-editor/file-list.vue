@@ -7,7 +7,6 @@ type BaseFile = {
   hash?: string;
   status: 'pending' | 'success' | 'fail' | 'uploading';
   reason: string;
-  progress: number;
   file: File;
 };
 type IFile = BaseFile;
@@ -25,7 +24,6 @@ const uploadFile = (file: IFile) => {
     },
   )
     .then(() => {
-      file.progress = 1;
       file.status = 'success';
     });
 };
@@ -55,7 +53,6 @@ const addFile = (file: File) => {
         name: file.name,
         status: 'pending',
         reason: '',
-        progress: 0,
         file: new File([file], hash, { type: file.type, lastModified: file.lastModified }),
       };
       return _file;
@@ -87,7 +84,6 @@ defineExpose({ addFile });
           :key="idx"
           :name="item.name"
           :type="item.status"
-          :progress="item.status === 'uploading' ? item.progress : 100"
           @close="() => removeFile(item)"
         />
       </transition-group>

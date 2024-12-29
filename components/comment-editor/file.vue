@@ -2,10 +2,9 @@
 import { PaperClipIcon, PlusIcon } from '@heroicons/vue/24/solid';
 import { Icon } from '@iconify/vue';
 
-const { name, type = 'pending', progress } = defineProps<{
+const { name, type = 'pending' } = defineProps<{
   name: string;
   type: 'pending' | 'uploading' | 'success' | 'fail';
-  progress: number;
 }>();
 const emits = defineEmits<{
   close: [string];
@@ -18,7 +17,6 @@ const handleDelete = () => {
 <template>
   <div
     :data-type="type"
-    :data-progress="progress"
     class="
     w-fit p-2 rounded flex items-center gap-2
     data-[type=success]:bg-primary data-[type=success]:text-primary-foreground
