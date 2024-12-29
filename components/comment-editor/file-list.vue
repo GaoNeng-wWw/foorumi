@@ -66,6 +66,9 @@ const addFile = (file: File) => {
     })
     .then(uploadFile);
 };
+const removeFile = (file: IFile) => {
+  files.value = files.value.filter(f => f !== file);
+};
 
 defineExpose({ addFile });
 </script>
