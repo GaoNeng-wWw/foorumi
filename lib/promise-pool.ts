@@ -1,39 +1,31 @@
-type Task<R = unknown> = () => Promise<R>;
-export default class PromisePool {
-  private size: number;
-  private queue: Set<Task>;
-  private waitQueue: Task[];
-  constructor(size: number) {
-    this.size = size;
-    this.queue = new Set();
-    this.waitQueue = [];
-  }
-
-  add(
-    task: Task,
-  ) {
-    return new Promise((resolve, reject) => {
-      const handle = () => {
-        return task()
-          .finally(() => {
-            this.queue.delete(handle);
-            const f = this.waitQueue.shift();
-            if (f) {
-              this.queue.add(f);
-            }
-            setTimeout(() => {
-              f?.();
-            });
-          })
-          .then(resolve)
-          .catch(reject);
+export const usePromisePool = <R, F extends (...args: any[]) => Promise<R>>(fn: F, limit: number) => {
+  type T = Parameters<F>;
+  const waitQueue: (
+    () => void
+  )[] = [];
+  let runnedCount = 0;
+  const run = (...args: T[]) => {
+    return fn(...args)
+      .finally(() => {
+        runnedCount -= 1;
+        if (waitQueue.length) {
+          waitQueue.shift()!();
+        }
+      });
+  };
+  return (...args: T[]) => {
+    const { promise, resolve } = Promise.withResolvers<Promise<R>>();
+    if (runnedCount >= limit) {
+      const g = () => {
+        runnedCount += 1;
+        const ret = resolve(run(...args));
+        return ret;
       };
-      if (this.queue.size >= this.size) {
-        this.waitQueue.push(handle);
-        return;
-      }
-      this.queue.add(handle);
-      handle();
-    });
-  }
-}
+      waitQueue.push(g);
+      return promise;
+    } else {
+      runnedCount += 1;
+      return run(...args);
+    }
+  };
+};
