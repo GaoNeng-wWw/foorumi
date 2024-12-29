@@ -51,7 +51,6 @@ const addFile = (file: File) => {
   }
   getHash(file)
     .then((hash) => {
-      // file.name = hash;
       const _file: IFile = {
         name: file.name,
         status: 'pending',
