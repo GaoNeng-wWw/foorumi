@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useMessage } from '@miraiui-org/vue-message';
 import SparkMd5 from 'spark-md5';
+import { usePromisePool } from '~/lib/promise-pool';
 
 type BaseFile = {
   name: string;
@@ -12,11 +13,11 @@ type BaseFile = {
 type IFile = BaseFile;
 const files = ref<IFile[]>([]);
 const { public: { storage_limit } } = useRuntimeConfig();
-const uploadFile = (file: IFile) => {
+const uploadFile = usePromisePool((file: IFile) => {
   const formData = new FormData();
   formData.append('data', file.file);
   file.status = 'uploading';
-  $fetch(
+  return $fetch(
     '/api/files',
     {
       method: 'put',
@@ -24,9 +25,17 @@ const uploadFile = (file: IFile) => {
     },
   )
     .then(() => {
-      file.status = 'success';
+      const idx = files.value.findIndex(f => f.file === file.file);
+      if (idx === -1) {
+        return file;
+      }
+      files.value.splice(idx, 1, {
+        ...file,
+        status: 'success',
+      });
+      return file;
     });
-};
+}, 1);
 const getHash = (blob: Blob) => {
   return new Promise<string>((resolve) => {
     const md5 = new SparkMd5();
@@ -61,13 +70,15 @@ const addFile = (file: File) => {
       files.value.push(file);
       return file;
     })
-    .then(uploadFile);
+    .then((file) => {
+      return uploadFile(file);
+    });
 };
 const removeFile = (file: IFile) => {
   files.value = files.value.filter(f => f !== file);
 };
-
-defineExpose({ addFile });
+const getFiles = () => unref(files);
+defineExpose({ addFile, getFiles });
 </script>
 
 <template>

@@ -12,17 +12,13 @@ export default defineProtectedApi(async (event) => {
   const { filename, data } = file;
   const { storage: { file: fileBasePath }, storage_limit } = useRuntimeConfig(event);
   const md5 = createHash('md5').update(data).digest('hex');
-  const path = join(fileBasePath, filename ?? md5);
-  if (md5 !== (filename ?? md5)) {
-    throw createError({
-      status: status.BAD_REQUEST,
-      message: '哈希值与服务器计算不一致',
-    });
-  }
+  const realFileName = filename ?? md5;
+  const path = join(fileBasePath, md5);
   if (data.byteLength > storage_limit) {
     throw createError({
       status: status.REQUESTED_RANGE_NOT_SATISFIABLE,
     });
   }
   writeFileSync(path, data);
+  return realFileName;
 }, ['file::put']);

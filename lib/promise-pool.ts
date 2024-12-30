@@ -1,10 +1,13 @@
-export const usePromisePool = <R, F extends (...args: any[]) => Promise<R>>(fn: F, limit: number) => {
-  type T = Parameters<F>;
+import type { F, L } from 'ts-toolbelt';
+
+export const usePromisePool = <Fn extends F.Function>(fn: Fn, limit: number) => {
+  type T = Parameters<Fn>;
+  type R = ReturnType<Fn>;
   const waitQueue: (
     () => void
   )[] = [];
   let runnedCount = 0;
-  const run = (...args: T[]) => {
+  const run = (...args: any[]) => {
     return fn(...args)
       .finally(() => {
         runnedCount -= 1;
@@ -13,7 +16,7 @@ export const usePromisePool = <R, F extends (...args: any[]) => Promise<R>>(fn: 
         }
       });
   };
-  return (...args: T[]) => {
+  return ((...args: any[]) => {
     const { promise, resolve } = Promise.withResolvers<Promise<R>>();
     if (runnedCount >= limit) {
       const g = () => {
@@ -27,5 +30,5 @@ export const usePromisePool = <R, F extends (...args: any[]) => Promise<R>>(fn: 
       runnedCount += 1;
       return run(...args);
     }
-  };
+  }) as Fn;
 };

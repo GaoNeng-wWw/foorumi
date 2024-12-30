@@ -183,6 +183,9 @@ importers:
       supertest:
         specifier: ^7.0.0
         version: 7.0.0
+      ts-toolbelt:
+        specifier: ^9.6.0
+        version: 9.6.0
       typescript:
         specifier: ^5.6.3
         version: 5.7.2
@@ -4771,6 +4774,9 @@ packages:
 
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
+
+  ts-toolbelt@9.6.0:
+    resolution: {integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==}
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
@@ -10521,6 +10527,8 @@ snapshots:
       typescript: 5.7.2
 
   ts-interface-checker@0.1.13: {}
+
+  ts-toolbelt@9.6.0: {}
 
   tslib@2.8.1: {}
 

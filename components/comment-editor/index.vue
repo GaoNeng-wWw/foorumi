@@ -56,7 +56,6 @@ const handleImageUpload = (dataurl: string, _: string, file: ImageData) => {
         .then(paths => paths);
     })
     .then((paths) => {
-      console.log(paths);
       paths.forEach((path) => {
         if (path.status === 'success') {
           return quill.insertEmbed(oldIndex?.index ?? 0, 'image', path.url);
@@ -114,7 +113,8 @@ const onClickSend = () => {
   const isEmpty = quill.getContents().length() === 1;
   const content = quill.getSemanticHTML();
   const success = setButtoonStateToPending;
-  emit('send', { isEmpty, content, success });
+  console.log(fileList.value?.getFiles());
+  // emit('send', { isEmpty, content, success });
 };
 const uploadFile = () => {
   fileSelect.value?.click();
