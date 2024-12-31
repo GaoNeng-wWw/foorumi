@@ -1,7 +1,6 @@
-import type { F, L } from 'ts-toolbelt';
+import type { F } from 'ts-toolbelt';
 
 export const usePromisePool = <Fn extends F.Function>(fn: Fn, limit: number) => {
-  type T = Parameters<Fn>;
   type R = ReturnType<Fn>;
   const waitQueue: (
     () => void

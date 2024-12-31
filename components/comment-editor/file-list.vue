@@ -16,7 +16,14 @@ const { public: { storage_limit } } = useRuntimeConfig();
 const uploadFile = usePromisePool((file: IFile) => {
   const formData = new FormData();
   formData.append('data', file.file);
-  file.status = 'uploading';
+  const idx = files.value.findIndex(f => f.file === file.file);
+  if (idx === -1) {
+    return file;
+  }
+  files.value.splice(idx, 1, {
+    ...file,
+    status: 'uploading',
+  });
   return $fetch(
     '/api/files',
     {
@@ -24,7 +31,7 @@ const uploadFile = usePromisePool((file: IFile) => {
       body: formData,
     },
   )
-    .then(() => {
+    .then((hash) => {
       const idx = files.value.findIndex(f => f.file === file.file);
       if (idx === -1) {
         return file;
@@ -32,6 +39,7 @@ const uploadFile = usePromisePool((file: IFile) => {
       files.value.splice(idx, 1, {
         ...file,
         status: 'success',
+        hash,
       });
       return file;
     });

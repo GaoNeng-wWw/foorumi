@@ -96,12 +96,18 @@ const setButtoonStateToPending = () => {
   buttonState.value = 'pending';
 };
 
+export type ISend = {
+  content: string;
+  success: () => void;
+  isEmpty: boolean;
+  files: {
+    rawName: string;
+    hash: string;
+  }[];
+};
+
 const emit = defineEmits<{
-  send: [{
-    content: string;
-    success: () => void;
-    isEmpty: boolean;
-  }];
+  send: [ISend];
   undo: [];
 }>();
 const undo = () => {
@@ -113,8 +119,15 @@ const onClickSend = () => {
   const isEmpty = quill.getContents().length() === 1;
   const content = quill.getSemanticHTML();
   const success = setButtoonStateToPending;
-  console.log(fileList.value?.getFiles());
-  // emit('send', { isEmpty, content, success });
+  const files = fileList.value?.getFiles()
+    .filter(file => file.hash?.length && file.status === 'success')
+    .map((file) => {
+      return {
+        rawName: file.name,
+        hash: file.hash!,
+      };
+    }) ?? [];
+  emit('send', { isEmpty, content, success, files });
 };
 const uploadFile = () => {
   fileSelect.value?.click();

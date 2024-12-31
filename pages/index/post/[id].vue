@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { useMessage } from '@miraiui-org/vue-message';
+import type { ISend } from '~/components/comment-editor/index.vue';
 
 definePageMeta({
   auth: true,
 });
 const { params: { id } } = useRoute();
 const realId = ref(Number.parseInt(id.toString()));
-const onClickSend = ({ content, success, isEmpty }: { content: string; success: () => void; isEmpty: boolean }) => {
+const onClickSend = (
+  { content, success, isEmpty, files }: ISend,
+) => {
   if (isEmpty) {
     return success();
   }
@@ -16,6 +19,7 @@ const onClickSend = ({ content, success, isEmpty }: { content: string; success: 
       body: {
         postId: realId.value,
         content,
+        files,
       },
       method: 'post',
     },
