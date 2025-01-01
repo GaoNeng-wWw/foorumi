@@ -87,7 +87,7 @@ watch(() => content, () => {
           :author-id="authorId"
           :author-name="authorName"
           class="flex !flex-row border-none md:hidden p-4 bg-default"
-          avatar-class="!size-10 !m-0"
+          :author-avatar="avatarUrl"
         />
         <div class="px-4 mt-4 md:mt-0 md:p-0 text-base text-foreground leading-7 flex-shrink-0 flex-grow basis-60">
           <!-- We filter html in server side -->
@@ -106,16 +106,18 @@ watch(() => content, () => {
         </div>
         <div
           v-if="files.length"
-          class="w-full space-y-2 p-2 bg-default"
+          class="w-full px-2 md:px-0"
         >
-          <p>附件:</p>
-          <div class="flex flex-wrap gap-2">
-            <thread-file
-              v-for="file in files"
-              :key="file.hash"
-              :hash="file.hash"
-              :raw-name="file.rawName"
-            />
+          <div class="p-2 space-y-2 bg-default">
+            <p>附件:</p>
+            <div class="flex flex-wrap gap-2">
+              <thread-file
+                v-for="file in files"
+                :key="file.hash"
+                :hash="file.hash"
+                :raw-name="file.rawName"
+              />
+            </div>
           </div>
         </div>
         <div class="pb-4 p-4 md:px-0 md:pb-0">
