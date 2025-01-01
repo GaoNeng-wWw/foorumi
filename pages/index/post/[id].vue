@@ -32,7 +32,6 @@ const onClickSend = (
         duration: 2000,
         type: 'success',
       });
-      clear();
       threadListComp.value?.toLast();
     })
     .catch((err) => {
