@@ -27,11 +27,20 @@ const {
   threadId: number;
   hidden: boolean;
   hiddenReason: string;
+  files: ThreadFile[];
 }>();
 const isHidden = ref(hidden);
 const reason = ref(hiddenReason);
 const _content = ref(content);
 const { id } = inject<ThreadContext>('THREAD')!;
+const avatarUrl = ref('/images/a4fa5161369727154bc3a7d1c52bb9c0.png');
+$fetch(`/api/avatar/${unref(authorId)}`, { method: 'get', onResponseError: () => {}, onRequestError: () => {} })
+  .then(resp => resp as Blob)
+  .then (blob => URL.createObjectURL(blob))
+  .then((url) => {
+    avatarUrl.value = url;
+  })
+  .catch(() => {});
 const onHiddenSuccess = (_reason: string) => {
   reason.value = _reason;
   isHidden.value = true;
@@ -51,7 +60,6 @@ watch(() => hiddenReason, () => {
 watch(() => content, () => {
   _content.value = content;
 }, { immediate: true });
-console.log(title);
 </script>
 
 <template>
@@ -72,21 +80,37 @@ console.log(title);
         v-if="showAside"
         :author-id="authorId"
         :author-name="authorName"
+        :author-avatar="avatarUrl"
       />
       <div class="flex flex-col justify-between px-4 py-4 bg-default-200 border-b border-default-400 min-h-60">
         <div class="text-base text-foreground leading-7 flex-shrink-0 flex-grow basis-60">
           <!-- We filter html in server side -->
-          <!-- eslint-disable vue/no-v-html -->
-          <div
-            v-if="!isHidden"
-            v-html="_content"
-          />
+          <div v-if="!isHidden">
+            <!-- eslint-disable vue/no-v-html -->
+            <div
+              v-html="_content"
+            />
+          </div>
           <app-alert
             v-else
             type="warning"
             title="该楼层被管理员隐藏"
             :content="`理由是: ${hiddenReason}`"
           />
+        </div>
+        <div
+          v-if="files.length"
+          class="w-full space-y-2 p-2 bg-default"
+        >
+          <p>附件:</p>
+          <div class="flex flex-wrap gap-2">
+            <thread-file
+              v-for="file in files"
+              :key="file.hash"
+              :hash="file.hash"
+              :raw-name="file.rawName"
+            />
+          </div>
         </div>
         <div class="">
           <thread-toolbar

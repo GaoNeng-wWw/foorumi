@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { BoldIcon, ItalicIcon, ArrowUturnDownIcon, PaperAirplaneIcon } from '@heroicons/vue/24/solid';
+import { BoldIcon, ItalicIcon, ArrowUturnDownIcon, PaperAirplaneIcon, PaperClipIcon } from '@heroicons/vue/24/solid';
 import { Button } from '@miraiui-org/vue-button';
+import { ImageDropAndPaste } from '~/quill-modules/DropAndPasteUploadImage';
 import 'quill/dist/quill.bubble.css';
 import 'quill/dist/quill.core.css';
+import type ImageData from '~/quill-modules/image-data';
 
 const props = withDefaults(
   defineProps<{
@@ -28,10 +30,40 @@ const props = withDefaults(
 let Quill: typeof import('quill').default;
 if (import.meta.client) {
   Quill = (await import('quill')).default;
+  Quill.register('modules/imageDropAndPasteUpload', ImageDropAndPaste);
 }
 const editor = useTemplateRef('editor');
 const canUndo = ref(false);
 let quill: import('quill').default;
+const fileList = useTemplateRef('fileList');
+const fileSelect = useTemplateRef('fileSelect');
+
+const handleImageUpload = (dataurl: string, _: string, file: ImageData) => {
+  const oldIndex = quill.getSelection();
+  fetch(dataurl)
+    .then(resp => resp.blob())
+    .then((blob) => {
+      const formData = new FormData();
+      formData.set(file.name, blob);
+      return $fetch(
+        '/api/threads/image',
+        {
+          method: 'put',
+          body: formData,
+          query: {},
+        },
+      )
+        .then(paths => paths);
+    })
+    .then((paths) => {
+      paths.forEach((path) => {
+        if (path.status === 'success') {
+          return quill.insertEmbed(oldIndex?.index ?? 0, 'image', path.url);
+        }
+      });
+    });
+};
+
 onMounted(() => {
   if (!editor.value || !import.meta.client) {
     return;
@@ -47,6 +79,9 @@ onMounted(() => {
         maxStack: 500,
         userOnly: true,
       },
+      imageDropAndPasteUpload: {
+        handler: handleImageUpload,
+      },
     },
     placeholder: props.placeholder,
   });
@@ -61,12 +96,19 @@ const setButtoonStateToPending = () => {
   buttonState.value = 'pending';
 };
 
+export type ISend = {
+  content: string;
+  success: () => void;
+  isEmpty: boolean;
+  files: {
+    rawName: string;
+    hash: string;
+    mime: string;
+  }[];
+};
+
 const emit = defineEmits<{
-  send: [{
-    content: string;
-    success: () => void;
-    isEmpty: boolean;
-  }];
+  send: [ISend];
   undo: [];
 }>();
 const undo = () => {
@@ -78,7 +120,29 @@ const onClickSend = () => {
   const isEmpty = quill.getContents().length() === 1;
   const content = quill.getSemanticHTML();
   const success = setButtoonStateToPending;
-  emit('send', { isEmpty, content, success });
+  const files = fileList.value?.getFiles()
+    .filter(file => file.hash?.length && file.status === 'success')
+    .map((file) => {
+      return {
+        rawName: file.name,
+        hash: file.hash!,
+        mime: file.mime,
+      };
+    }) ?? [];
+  emit('send', { isEmpty, content, success, files });
+};
+const uploadFile = () => {
+  fileSelect.value?.click();
+};
+const onFileChange = () => {
+  if (!fileSelect.value?.files) {
+    return;
+  }
+  Array.from(fileSelect.value.files)
+    .forEach((file) => {
+      fileList.value?.addFile(file);
+    });
+  fileSelect.value.value = '';
 };
 </script>
 
@@ -101,6 +165,19 @@ const onClickSend = () => {
         <button class="ql-italic">
           <italic-icon class="size-4 text-foreground cursor-pointer" />
         </button>
+        <button>
+          <paper-clip-icon
+            class="size-4 text-foreground cursor-pointer"
+            @click="uploadFile"
+          />
+          <input
+            ref="fileSelect"
+            type="file"
+            class="hidden"
+            multiple
+            @change="onFileChange"
+          >
+        </button>
         <button
           :data-can-undo="canUndo"
           class="group"
@@ -119,7 +196,12 @@ const onClickSend = () => {
         <div
           ref="editor"
           class="relative text-default-foreground"
+          @drag.prevent.stop
+          @drop.prevent.stop
         />
+      </div>
+      <div class="w-full h-fit">
+        <comment-editor-file-list ref="fileList" />
       </div>
       <div
         :class="[

@@ -6,6 +6,7 @@ const patchBody = z.object({
   name: z.string().min(1).optional(),
   bio: z.string().optional(),
   role: z.array(z.number()).optional(),
+  avatar: z.instanceof(File).optional(),
 });
 
 export default defineProtectedApi(async (event) => {

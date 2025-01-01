@@ -1,12 +1,20 @@
 import { z } from 'zod';
 import { filterXSS } from 'xss';
 import status from 'http-status';
+import type { Prisma } from '@prisma/client';
 import prisma from '~/lib/prisma';
 import { TRHEADS } from '~/server/utils';
 
 export const SendThread = z.object({
   postId: z.number({ coerce: true }),
   content: z.string().min(1),
+  files: z.array(
+    z.object({
+      rawName: z.string(),
+      hash: z.string(),
+      mime: z.string(),
+    }),
+  ),
 });
 
 export default defineProtectedApi(async (event) => {
@@ -51,6 +59,17 @@ export default defineProtectedApi(async (event) => {
   const cnt = !counter ? 1 : Number.parseInt(counter.toString() ?? '1') + 1;
   await redis.setItem(key, cnt);
 
+  const createThreadQueue: Prisma.Prisma__FilesClient<{
+    id: number;
+    hash: string;
+    rawName: string;
+    threadId: number | null;
+    uploaderId: number | null;
+    createAt: Date;
+    updateAt: Date;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  }, never, any>[] = [];
+
   const thread = await prisma.thread.create({
     data: {
       content: filterXSS(content),
@@ -79,7 +98,25 @@ export default defineProtectedApi(async (event) => {
       floor: true,
     },
   });
-
+  if (data.files) {
+    data.files.forEach((file) => {
+      const handle = prisma.files.create({
+        data: {
+          thread: {
+            connect: thread,
+          },
+          uploader: {
+            connect: profile,
+          },
+          hash: file.hash,
+          rawName: file.rawName,
+          mime: file.mime,
+        },
+      });
+      createThreadQueue.push(handle);
+    });
+  }
+  const files = await prisma.$transaction(createThreadQueue);
   return {
     id: thread.id,
     content: thread.content,
@@ -89,5 +126,6 @@ export default defineProtectedApi(async (event) => {
       id: thread.author.account_id,
     },
     floor: thread.floor.toString(),
+    files: files,
   };
 }, ['post::create']);

@@ -129,6 +129,14 @@ declare type PermissionTable =
   | 'permission::query'
   // 获取权限详细信息
   | 'permission::get'
+  // 文件获取
+  | 'file::get'
+  // 文件删除
+  | 'file::delete'
+  // 文件修改
+  | 'file::update'
+  // 上传文件
+  | 'file::put'
   ;
 
 declare type Operator = 'and' | 'or' | 'not' | 'AND' | 'OR' | 'NOT' | 'And' | 'Or' | 'Not' | '&' | '|' | '!';

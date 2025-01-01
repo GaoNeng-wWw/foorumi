@@ -88,6 +88,9 @@ model Profile {
   thread Thread[]
   role   Role[]
   area   Area[]
+  avatar String? 
+
+  Files Files[]
 }
 
 // Post set, can have many subarea.
@@ -168,6 +171,8 @@ model Thread {
 
   hidden  Boolean @default(false)
   reason  String @default("")
+
+  Files Files[]
 }
 
 // eg.
@@ -199,4 +204,22 @@ model ReplyComment {
   hot BigInt  @default(1)
   create_at DateTime @default(now())
   update_at DateTime @updatedAt  
+}
+
+enum FileType {
+  IMAGE
+  FILE
+  NULL
+}
+model Files {
+  id Int @id  @default(autoincrement())
+  hash  String @default("")
+  rawName String  @default("")
+  thread  Thread? @relation(fields: [threadId], references: [id])
+  threadId Int?
+  uploader  Profile? @relation(fields: [uploaderId], references: [id])
+  uploaderId  Int?
+  mime    String
+  createAt DateTime   @default(now())
+  updateAt  DateTime  @default(now()) @updatedAt
 }

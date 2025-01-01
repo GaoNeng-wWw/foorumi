@@ -31,6 +31,14 @@ export type RawThreadList = SerializeObject<{
   size: number;
 }>;
 
+export type ThreadFile = {
+  id: number;
+  hash: string;
+  rawName: string;
+  updateAt: string;
+  createAt: string;
+};
+
 export type Thread = {
   id: number;
   authorId: number;
@@ -43,6 +51,7 @@ export type Thread = {
   floor: string;
   hidden: boolean;
   reason: string;
+  files: ThreadFile[];
 };
 
 export type UseThreadsOptions = {
@@ -115,6 +124,7 @@ export const useThreads = (
         id: rawThread.id,
         hidden: rawThread.hidden,
         reason: rawThread.reason,
+        files: rawThread.files,
       };
     });
   });

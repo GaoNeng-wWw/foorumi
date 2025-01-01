@@ -35,6 +35,15 @@ export default defineProtectedApi(async (event) => {
       floor: true,
       hidden: true,
       reason: true,
+      Files: {
+        select: {
+          id: true,
+          hash: true,
+          rawName: true,
+          createAt: true,
+          updateAt: true,
+        },
+      },
       author: {
         include: {
           account: {
@@ -85,6 +94,7 @@ export default defineProtectedApi(async (event) => {
       id: thread.id,
       hidden: thread.hidden,
       reason: thread.reason,
+      files: thread.Files,
     };
   });
   const redis = useRedis();
