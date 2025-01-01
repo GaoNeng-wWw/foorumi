@@ -7,6 +7,13 @@ export const CreatePost = z.object({
   title: z.string(),
   content: z.string(),
   area_id: z.number({ coerce: true }),
+  files: z.array(
+    z.object({
+      rawName: z.string(),
+      hash: z.string(),
+      mime: z.string(),
+    }),
+  ),
 });
 
 export default defineProtectedApi(async (ctx) => {
@@ -65,6 +72,31 @@ export default defineProtectedApi(async (ctx) => {
       },
     },
   });
+  const thread = await prisma.thread.findFirst({
+    where: {
+      post: {
+        id: post.id,
+      },
+    },
+  });
+  if (data.files) {
+    const queue = data.files.map((file) => {
+      return prisma.files.create({
+        data: {
+          thread: {
+            connect: thread!,
+          },
+          uploader: {
+            connect: profile,
+          },
+          hash: file.hash,
+          rawName: file.rawName,
+          mime: file.mime,
+        },
+      });
+    });
+    await prisma.$transaction(queue);
+  }
   const redis = useRedis();
   await redis.setItem(TRHEADS(post.id), 1);
   return post;

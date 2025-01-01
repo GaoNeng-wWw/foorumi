@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ArrowsPointingOutIcon, MinusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { useMessage } from '@miraiui-org/vue-message';
+import type { ISend } from '../comment-editor/index.vue';
 import type { TreeSelectData } from '~/components/AppTreeSelect/index.vue';
 
 const postTitle = ref('');
@@ -24,7 +25,7 @@ const props = withDefaults(
   },
 );
 
-const onSend = ({ content, success }: { content: string; success: () => void }) => {
+const onSend = ({ content, success, files }: ISend) => {
   if (!postTitle.value.length) {
     canPost.value = false;
     titleErrMessage.value = '帖子名不能为空';
@@ -44,6 +45,7 @@ const onSend = ({ content, success }: { content: string; success: () => void }) 
       title: postTitle.value,
       content: content,
       area_id: sendTo.value.value,
+      files,
     },
     method: 'post',
   })
