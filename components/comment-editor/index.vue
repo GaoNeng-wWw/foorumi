@@ -103,6 +103,7 @@ export type ISend = {
   files: {
     rawName: string;
     hash: string;
+    mime: string;
   }[];
 };
 
@@ -125,6 +126,7 @@ const onClickSend = () => {
       return {
         rawName: file.name,
         hash: file.hash!,
+        mime: file.mime,
       };
     }) ?? [];
   emit('send', { isEmpty, content, success, files });
@@ -200,7 +202,6 @@ const onFileChange = () => {
       </div>
       <div class="w-full h-fit">
         <comment-editor-file-list ref="fileList" />
-        <!-- <comment-editor-files name="hello world" /> -->
       </div>
       <div
         :class="[

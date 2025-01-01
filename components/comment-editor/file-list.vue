@@ -9,6 +9,7 @@ type BaseFile = {
   status: 'pending' | 'success' | 'fail' | 'uploading';
   reason: string;
   file: File;
+  mime: string;
 };
 type IFile = BaseFile;
 const files = ref<IFile[]>([]);
@@ -71,6 +72,7 @@ const addFile = (file: File) => {
         status: 'pending',
         reason: '',
         file: new File([file], hash, { type: file.type, lastModified: file.lastModified }),
+        mime: file.type,
       };
       return _file;
     })

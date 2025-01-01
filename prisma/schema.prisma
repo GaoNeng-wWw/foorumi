@@ -219,6 +219,7 @@ model Files {
   threadId Int?
   uploader  Profile? @relation(fields: [uploaderId], references: [id])
   uploaderId  Int?
+  mime    String
   createAt DateTime   @default(now())
   updateAt  DateTime  @default(now()) @updatedAt
 }

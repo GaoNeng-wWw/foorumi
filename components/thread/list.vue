@@ -31,6 +31,7 @@ provide<ThreadContext>('THREAD', { id: computed(() => id) });
         :hidden="thread.hidden"
         :hidden-reason="thread.reason"
         :title="threadTitle"
+        :files="thread.files"
       >
         <template #title-prefix>
           <ghost-button @click="() => $router.back()">

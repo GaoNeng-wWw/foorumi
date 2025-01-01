@@ -12,6 +12,7 @@ export const SendThread = z.object({
     z.object({
       rawName: z.string(),
       hash: z.string(),
+      mime: z.string(),
     }),
   ),
 });
@@ -109,6 +110,7 @@ export default defineProtectedApi(async (event) => {
           },
           hash: file.hash,
           rawName: file.rawName,
+          mime: file.mime,
         },
       });
       createThreadQueue.push(handle);

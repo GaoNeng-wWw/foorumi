@@ -1,5 +1,6 @@
 import status from 'http-status';
 import { z } from 'zod';
+import { filterXSS } from 'xss';
 import prisma from '~/lib/prisma';
 
 export const CreatePost = z.object({
