@@ -33,13 +33,14 @@ const isHidden = ref(hidden);
 const reason = ref(hiddenReason);
 const _content = ref(content);
 const { id } = inject<ThreadContext>('THREAD')!;
-const avatarUrl = ref('');
-$fetch(`/api/avatar/${unref(authorId)}`, { method: 'get' })
+const avatarUrl = ref('/images/a4fa5161369727154bc3a7d1c52bb9c0.png');
+$fetch(`/api/avatar/${unref(authorId)}`, { method: 'get', onResponseError: () => {}, onRequestError: () => {} })
   .then(resp => resp as Blob)
   .then (blob => URL.createObjectURL(blob))
   .then((url) => {
     avatarUrl.value = url;
-  });
+  })
+  .catch(() => {});
 const onHiddenSuccess = (_reason: string) => {
   reason.value = _reason;
   isHidden.value = true;

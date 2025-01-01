@@ -5,9 +5,15 @@ const file = useTemplateRef('file');
 const router = useRouter();
 const { id } = defineProps<{ id: string }>();
 const userId = computed(() => id.toString());
-const url = ref('');
+const url = ref('/images/a4fa5161369727154bc3a7d1c52bb9c0.png');
 const { user } = useUserSession();
-const { data, status } = useFetch(`/api/profile/${userId.value}`, { method: 'get' });
+const { data, status } = useFetch(
+  `/api/profile/${userId.value}`,
+  {
+    method: 'get',
+    onResponseError: () => {},
+  },
+);
 const profile = reactive({
   bio: data.value?.bio,
   name: data.value?.name,
@@ -54,6 +60,9 @@ const getUserAvatar = () => {
     })
     .then((imageUrl) => {
       url.value = imageUrl;
+    })
+    .catch(() => {
+
     });
 };
 const changeAvatar = () => {
