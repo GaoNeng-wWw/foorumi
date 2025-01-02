@@ -19,6 +19,8 @@ export default defineNuxtConfig({
   devtools: { enabled: import.meta.dev },
   colorMode: {
     classSuffix: '',
+    storage: 'sessionStorage',
+    storageKey: '__COLOR_SCHEMA__',
   },
   runtimeConfig: {
     sitePublic: true,
