@@ -3,7 +3,6 @@ const router = useRouter();
 const area = computed(() => router.currentRoute.value.query.area?.toString());
 
 definePageMeta({
-  auth: true,
   drawer: {
     component: '@/components/AppSide/index.vue',
   },

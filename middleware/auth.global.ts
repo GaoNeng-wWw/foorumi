@@ -1,13 +1,9 @@
 import { parseSetCookie, parse, serialize } from 'cookie-es';
 
 export default defineNuxtRouteMiddleware(async (to) => {
-  if (!to.meta.auth) {
+  if (to.meta.public) {
     return;
   }
-  // const nuxtApp = useNuxtApp();
-  // if (import.meta.client && nuxtApp.isHydrating && nuxtApp.payload.serverRendered) {
-  //   return;
-  // }
   const { loggedIn, fetch: fetchSession, clear: clearSession } = useUserSession();
   if (!loggedIn.value) {
     clearSession();

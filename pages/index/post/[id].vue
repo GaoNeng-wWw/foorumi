@@ -2,9 +2,6 @@
 import { useMessage } from '@miraiui-org/vue-message';
 import type { ISend } from '~/components/comment-editor/index.vue';
 
-definePageMeta({
-  auth: true,
-});
 const { params: { id } } = useRoute();
 const threadListComp = useTemplateRef('threadListRef');
 const realId = ref(Number.parseInt(id.toString()));

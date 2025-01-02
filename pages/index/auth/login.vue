@@ -56,10 +56,13 @@ const onLogin = () => {
       });
     });
 };
+definePageMeta({
+  public: true,
+});
 </script>
 
 <template>
-  <div class="w-full h-full flex">
+  <div class="w-full h-full flex m-auto px-2">
     <form
       class="max-w-md w-full h-full mx-auto flex flex-col items-center justify-center"
       @submit.prevent

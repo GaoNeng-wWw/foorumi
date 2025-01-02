@@ -35,7 +35,7 @@ const openDrawer = () => {
         </div>
       </nav>
     </template>
-    <section class="max-w-7xl w-full mx-auto">
+    <section class="max-w-7xl w-full h-full mx-auto">
       <nuxt-page />
     </section>
     <template #footer>
