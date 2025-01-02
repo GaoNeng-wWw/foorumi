@@ -39,7 +39,7 @@ const closeDrawer = () => {
           data-[drawer=false]:md:block data-[drawer=false]:md:static data-[drawer=false]:hidden
           data-[drawer=true]:bg-default-200 data-[drawer=true]:z-50 data-[drawer=true]:p-4
           data-[drawer=true]:fixed data-[drawer=true]:top-0 data-[drawer=true]:left-0
-          data-[sticky=true]:data-[drawer=false]:sticky data-[sticky=true]:data-[drawer=false]:top-20
+          data-[sticky=true]:data-[drawer=false]:sticky data-[sticky=true]:data-[drawer=false]:top-6
       "
         :class="{
           [asideExternalClass]: true,

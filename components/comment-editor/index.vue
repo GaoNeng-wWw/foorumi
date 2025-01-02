@@ -95,6 +95,9 @@ const buttonState = ref<'pending' | 'loading'>('pending');
 const setButtoonStateToPending = () => {
   buttonState.value = 'pending';
 };
+const clear = () => {
+  quill.setContents([]);
+};
 
 export type ISend = {
   content: string;

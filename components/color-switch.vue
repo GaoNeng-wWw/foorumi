@@ -21,16 +21,16 @@ watch(mode, () => {
       mode="out-in"
     >
       <sun-icon
-        v-if="$colorMode.value === 'light'"
+        v-if="$colorMode.preference === 'light'"
         key="sun"
         class="size-6 cursor-pointer"
-        @click="$colorMode.value = 'dark'"
+        @click="$colorMode.preference = 'dark'"
       />
       <moon-icon
         v-else
         key="moon"
         class="size-6 cursor-pointer"
-        @click="$colorMode.value = 'light'"
+        @click="$colorMode.preference = 'light'"
       />
     </transition>
   </color-scheme>

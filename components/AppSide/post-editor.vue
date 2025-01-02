@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ArrowsPointingOutIcon, MinusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { useMessage } from '@miraiui-org/vue-message';
+import type { ISend } from '../comment-editor/index.vue';
 import type { TreeSelectData } from '~/components/AppTreeSelect/index.vue';
 
 const postTitle = ref('');
@@ -24,7 +25,7 @@ const props = withDefaults(
   },
 );
 
-const onSend = ({ content, success }: { content: string; success: () => void }) => {
+const onSend = ({ content, success, files }: ISend) => {
   if (!postTitle.value.length) {
     canPost.value = false;
     titleErrMessage.value = '帖子名不能为空';
@@ -44,6 +45,7 @@ const onSend = ({ content, success }: { content: string; success: () => void }) 
       title: postTitle.value,
       content: content,
       area_id: sendTo.value.value,
+      files,
     },
     method: 'post',
   })
@@ -66,7 +68,7 @@ const onSend = ({ content, success }: { content: string; success: () => void }) 
 
 <template>
   <div
-    class="max-w-xl h-full mx-auto flex flex-col py-4"
+    class="max-w-xl h-full mx-auto flex flex-col py-4 transition-all"
     @click.stop="props.restoreMinimze"
   >
     <div class="w-fit h-8 ml-auto mr-0 flex gap-2">
@@ -112,7 +114,7 @@ const onSend = ({ content, success }: { content: string; success: () => void }) 
                 v-model:node="sendTo"
                 :data="treeSelectData"
                 align="start"
-                class="z-40 mt-2 hidden sm:block"
+                class="!z-[1000] mt-2 hidden sm:block"
               >
                 <template #trigger>
                   <button class="text-sm leading-none p-2 outline-0 hidden sm:block">
@@ -128,7 +130,7 @@ const onSend = ({ content, success }: { content: string; success: () => void }) 
         v-model:node="sendTo"
         :data="treeSelectData"
         align="start"
-        class="z-40 mt-2 block sm:hidden"
+        class="!z-[1000] mt-2 block sm:hidden"
       >
         <template #trigger>
           <button class="text-sm leading-none p-2 outline-0 block sm:hidden">
@@ -136,7 +138,10 @@ const onSend = ({ content, success }: { content: string; success: () => void }) 
           </button>
         </template>
       </app-tree-select>
-      <div class="w-full h-full grow flex flex-col overflow-hidden">
+      <div
+        :data-show="props.showEditor"
+        class="group w-full h-full grow flex flex-col overflow-hidden data-[show=false]:invisible data-[show=true]:visible"
+      >
         <comment-editor
           v-show="props.showEditor"
           class="!px-0"

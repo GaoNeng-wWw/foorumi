@@ -13,7 +13,17 @@ await callOnce(async () => {
 </script>
 
 <template>
-  <div class="w-full h-screen bg-default-100 overflow-auto">
+  <div class="w-full h-full bg-default-100 overflow-auto">
     <nuxt-page />
   </div>
 </template>
+
+<style>
+html,body,#__nuxt {
+  width: 100%;
+  min-height: 100%;
+  height: 100% !important;
+  padding: 0;
+  margin: 0;
+}
+</style>

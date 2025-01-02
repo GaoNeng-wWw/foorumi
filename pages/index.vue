@@ -3,6 +3,9 @@ import { Bars3Icon } from '@heroicons/vue/24/solid';
 
 const { data } = useFetch<SiteMeta>('/api/site', { method: 'get', pick: ['siteName'], cache: 'reload' });
 const appState = useState<AppState>('appState');
+const openDrawer = () => {
+  appState.value.drawer = !appState.value.drawer;
+};
 </script>
 
 <template>
@@ -12,13 +15,14 @@ const appState = useState<AppState>('appState');
     footer
     header-fixed
     header-extra-class="z-10"
+    vaul-drawer-wrapper
   >
     <template #header>
       <nav class="h-full max-w-6xl w-full flex items-center justify-between mx-auto">
         <div class="flex items-center gap-4">
           <ghost-button
             class="!p-1 block md:hidden"
-            @click="() => appState.drawer = !appState.drawer"
+            @click="openDrawer"
           >
             <bars3-icon class="w-6" />
           </ghost-button>
@@ -26,12 +30,12 @@ const appState = useState<AppState>('appState');
             {{ data?.siteName }}
           </nuxt-link>
         </div>
-        <div class=" items-center gap-2 hidden sm:flex">
+        <div class=" items-center gap-2 flex">
           <color-switch />
         </div>
       </nav>
     </template>
-    <section class="max-w-7xl w-full mx-auto h-full">
+    <section class="max-w-7xl w-full h-full mx-auto">
       <nuxt-page />
     </section>
     <template #footer>
@@ -39,6 +43,16 @@ const appState = useState<AppState>('appState');
         footer
       </div>
     </template>
+    <app-drawer
+      v-model="appState.drawer"
+      direction="left"
+      width="320px"
+      should-scale-background
+    >
+      <div class="w-full h-full">
+        <app-side class="w-full px-4" />
+      </div>
+    </app-drawer>
   </NuxtLayout>
 </template>
 

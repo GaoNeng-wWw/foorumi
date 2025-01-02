@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TransitionCollapse } from '@miraiui-org/vue-transition-collapse';
 import { THREAD_ITEM_CONTEXT_KEY, type ThreadContext } from './context.type';
 
 const showReply = ref(false);
@@ -6,7 +7,6 @@ const showReply = ref(false);
 const {
   showHeader = false,
   showToolBar = true,
-  showAside = true,
   authorId,
   authorName,
   content,
@@ -75,15 +75,21 @@ watch(() => content, () => {
         <slot name="title-suffix" />
       </template>
     </thread-header>
-    <div class="w-full px-4 grid grid-cols-[120px,minmax(0,1fr)]">
+    <div class="w-full px-4 grid grid-cols-1 md:grid-cols-[120px,minmax(0,1fr)]">
       <thread-aside
-        v-if="showAside"
+        class="hidden md:flex"
         :author-id="authorId"
         :author-name="authorName"
         :author-avatar="avatarUrl"
       />
-      <div class="flex flex-col justify-between px-4 py-4 bg-default-200 border-b border-default-400 min-h-60">
-        <div class="text-base text-foreground leading-7 flex-shrink-0 flex-grow basis-60">
+      <div class="flex flex-col justify-between md:px-4 md:py-4 bg-default-200 border-b border-default-400 min-h-60">
+        <thread-author
+          :author-id="authorId"
+          :author-name="authorName"
+          class="flex !flex-row border-none md:hidden p-4 bg-default"
+          :author-avatar="avatarUrl"
+        />
+        <div class="px-4 mt-4 md:mt-0 md:p-0 text-base text-foreground leading-7 flex-shrink-0 flex-grow basis-60">
           <!-- We filter html in server side -->
           <div v-if="!isHidden">
             <!-- eslint-disable vue/no-v-html -->
@@ -100,19 +106,21 @@ watch(() => content, () => {
         </div>
         <div
           v-if="files.length"
-          class="w-full space-y-2 p-2 bg-default"
+          class="w-full px-2 md:px-0"
         >
-          <p>附件:</p>
-          <div class="flex flex-wrap gap-2">
-            <thread-file
-              v-for="file in files"
-              :key="file.hash"
-              :hash="file.hash"
-              :raw-name="file.rawName"
-            />
+          <div class="p-2 space-y-2 bg-default">
+            <p>附件:</p>
+            <div class="flex flex-wrap gap-2">
+              <thread-file
+                v-for="file in files"
+                :key="file.hash"
+                :hash="file.hash"
+                :raw-name="file.rawName"
+              />
+            </div>
           </div>
         </div>
-        <div class="">
+        <div class="pb-4 p-4 md:px-0 md:pb-0">
           <thread-toolbar
             v-if="showToolBar"
             v-model="showReply"
@@ -123,14 +131,19 @@ watch(() => content, () => {
             :patch="patch"
             @hidden-success="onHiddenSuccess"
           />
-          <div class="w-full">
-            <reply-list
-              :id="id"
-              :show="showReply"
-              :floor="floor"
-              class="border-0 bg-default-300"
-            />
-          </div>
+          <transition-collapse>
+            <div
+              v-if="showReply"
+              class="w-full"
+            >
+              <reply-list
+                :id="id"
+                :show="showReply"
+                :floor="floor"
+                class="border-0 bg-default-300"
+              />
+            </div>
+          </transition-collapse>
         </div>
       </div>
     </div>

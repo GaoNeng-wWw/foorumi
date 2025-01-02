@@ -37,15 +37,18 @@ const register = () => {
       });
     });
 };
+definePageMeta({
+  public: true,
+});
 </script>
 
 <template>
-  <div class="w-full h-full flex py-8">
+  <div class="w-full h-full flex px-2">
     <form
-      class="max-w-md w-full h-full mx-auto flex flex-col items-center justify-center space-y-4"
+      class="max-w-md w-full h-full mx-auto flex flex-col items-center justify-start space-y-2 pt-4"
       @submit.prevent
     >
-      <div class="w-full space-y-2">
+      <div class="w-full">
         <h1 class="text-4xl text-center leading-none">
           {{ $t('ui.auth.register.title') }}
         </h1>
