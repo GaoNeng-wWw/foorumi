@@ -19,7 +19,9 @@ const forwardProps = useForwardProps(props);
     :data-popover="true"
     :class="['w-full', props.rootClass]"
   >
-    <popover-trigger :class="['w-fit', props.rootClass]">
+    <popover-trigger
+      :class="['w-fit', props.rootClass]"
+    >
       <slot name="trigger" />
     </popover-trigger>
     <popover-portal>

@@ -1,11 +1,5 @@
 <script lang="ts" setup>
-import { Bars3Icon } from '@heroicons/vue/24/solid';
-
-const { data } = useFetch<SiteMeta>('/api/site', { method: 'get', pick: ['siteName'], cache: 'reload' });
 const appState = useState<AppState>('appState');
-const openDrawer = () => {
-  appState.value.drawer = !appState.value.drawer;
-};
 </script>
 
 <template>
@@ -18,22 +12,7 @@ const openDrawer = () => {
     vaul-drawer-wrapper
   >
     <template #header>
-      <nav class="h-full max-w-6xl w-full flex items-center justify-between mx-auto">
-        <div class="flex items-center gap-4">
-          <ghost-button
-            class="!p-1 block md:hidden"
-            @click="openDrawer"
-          >
-            <bars3-icon class="w-6" />
-          </ghost-button>
-          <nuxt-link :href="'/'">
-            {{ data?.siteName }}
-          </nuxt-link>
-        </div>
-        <div class=" items-center gap-2 flex">
-          <color-switch />
-        </div>
-      </nav>
+      <navbar />
     </template>
     <section class="max-w-7xl w-full h-full mx-auto">
       <nuxt-page />
