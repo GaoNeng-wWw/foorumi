@@ -34,7 +34,6 @@ const openDrawer = () => {
       </nuxt-link>
     </div>
     <div class="items-center gap-2 flex">
-      <color-switch />
       <auth-state>
         <template #default="{ user }">
           <tooltip-provider
@@ -84,6 +83,7 @@ const openDrawer = () => {
           </tooltip-provider>
         </template>
       </auth-state>
+      <color-switch />
     </div>
   </nav>
 </template>
