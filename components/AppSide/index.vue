@@ -2,6 +2,7 @@
 import { vOnClickOutside } from '@vueuse/components';
 import { Button as MButton } from '@miraiui-org/vue-button';
 import type { TreeData } from '~/components/tree/index.vue';
+import { useProfile } from '~/composables/store';
 
 const { treeData } = useAreaTree();
 const router = useRouter();
@@ -10,6 +11,8 @@ const defaultSelect = computed(() => area.value ? [area.value] : []);
 const isFullscreen = ref(false);
 const showEditor = ref(false);
 const editModalVisibility = ref(false);
+const profile = useProfile();
+const { clear } = useUserSession();
 const onClickNode = ([node]: TreeData[]) => {
   if (!node) {
     router.replace({
@@ -58,6 +61,12 @@ const closeEditorModal = (ev: PointerEvent) => {
   }
   close();
 };
+const logout = () => {
+  clear()
+    .then(() => {
+      router.go(0);
+    });
+};
 </script>
 
 <template>
@@ -68,6 +77,9 @@ const closeEditorModal = (ev: PointerEvent) => {
     >
       发布帖子
     </m-button>
+    <p class="block md:hidden">
+      区域选择
+    </p>
     <tree
       :data="treeData"
       :default-select="defaultSelect"
@@ -75,7 +87,33 @@ const closeEditorModal = (ev: PointerEvent) => {
       :padding="false"
       @select="onClickNode"
     />
-
+    <div
+      v-if="profile"
+      class="w-full md:hidden space-y-2"
+    >
+      <div class="flex gap-4 w-full">
+        <div class="shrink-0 w-fit">
+          <app-avatar
+            :id="profile?.account_id"
+            size="xs"
+            rounded="full"
+          />
+        </div>
+        <div class="overflow-hidden flex items-center">
+          <nuxt-link :to="`/user`">
+            <p class="truncate">
+              {{ profile.name }}
+            </p>
+          </nuxt-link>
+        </div>
+      </div>
+      <ghost-button
+        class="w-full !text-center"
+        @click="logout"
+      >
+        退出登录
+      </ghost-button>
+    </div>
     <app-drawer
       v-model="editModalVisibility"
       direction="bottom"
