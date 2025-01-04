@@ -77,6 +77,9 @@ const logout = () => {
     >
       发布帖子
     </m-button>
+    <p class="block md:hidden">
+      区域选择
+    </p>
     <tree
       :data="treeData"
       :default-select="defaultSelect"
