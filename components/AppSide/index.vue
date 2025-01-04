@@ -12,6 +12,7 @@ const isFullscreen = ref(false);
 const showEditor = ref(false);
 const editModalVisibility = ref(false);
 const profile = useProfile();
+const { clear } = useUserSession();
 const onClickNode = ([node]: TreeData[]) => {
   if (!node) {
     router.replace({
@@ -60,6 +61,12 @@ const closeEditorModal = (ev: PointerEvent) => {
   }
   close();
 };
+const logout = () => {
+  clear()
+    .then(() => {
+      router.go(0);
+    });
+};
 </script>
 
 <template>
@@ -90,12 +97,17 @@ const closeEditorModal = (ev: PointerEvent) => {
           />
         </div>
         <div class="overflow-hidden flex items-center">
-          <p class="truncate">
-            {{ profile.name }}
-          </p>
+          <nuxt-link :to="`/user`">
+            <p class="truncate">
+              {{ profile.name }}
+            </p>
+          </nuxt-link>
         </div>
       </div>
-      <ghost-button class="w-full !text-center">
+      <ghost-button
+        class="w-full !text-center"
+        @click="logout"
+      >
         退出登录
       </ghost-button>
     </div>
